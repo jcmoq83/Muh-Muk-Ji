@@ -1,14 +1,1161 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>뭐먹지</title>
+  <meta name="description" content="메뉴 토너먼트로 오늘의 한 끼를 결정하세요. 최종 메뉴는 네이버지도/카카오맵으로 바로 검색!" />
+  <style>
+    :root{
+      --bg:#0b0c10;
+      --card:#14161d;
+      --card2:#10121a;
+      --text:#eef1ff;
+      --muted:#aab0c5;
+      --line:#2a2f40;
+      --accent:#7c5cff;
+      --accent2:#24d3ee;
+      --danger:#ff4d6d;
+      --ok:#33d17a;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", Segoe UI, Roboto, Helvetica, Arial, "맑은 고딕", "Malgun Gothic", sans-serif;
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(124,92,255,.18), transparent 60%),
+                  radial-gradient(1000px 700px at 85% 20%, rgba(36,211,238,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+    }
+    a{ color:inherit; }
+    .wrap{
+      width:min(980px, 100%);
+      padding: 26px 18px 40px;
+    }
+    header{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:14px;
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(36,211,238,.85));
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo::after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.45), transparent 55%);
+      transform: rotate(20deg);
+    }
+    h1{
+      font-size: 20px;
+      margin:0 0 4px;
+      letter-spacing:-.3px;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      line-height:1.45;
+      font-size: 13.5px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 999px;
+      background: rgba(20,22,29,.55);
+      backdrop-filter: blur(10px);
+      color: var(--muted);
+      font-size: 12.5px;
+      user-select:none;
+      white-space:nowrap;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+    }
+    @media (max-width: 880px){
+      .grid{ grid-template-columns: 1fr; }
+      header{ flex-direction:column; align-items:stretch; }
+      .pill{ justify-content:center; }
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .inner{ padding:16px; }
+    .section-title{
+      margin:0 0 10px;
+      font-size: 14px;
+      letter-spacing:-.2px;
+      color: #dfe4ff;
+    }
+    .muted{ color:var(--muted); }
+    .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .row.space{ justify-content:space-between; }
+    .btn{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      padding: 11px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.10);
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+      touch-action: manipulation;
+    }
+    .btn:hover{ background: rgba(255,255,255,.09); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(36,211,238,.78));
+      border-color: rgba(255,255,255,.16);
+    }
+    .btn.primary:hover{ filter: brightness(1.06); }
+    .btn.ghost{
+      background: transparent;
+      border-color: rgba(255,255,255,.12);
+    }
+    .btn.danger{
+      background: rgba(255,77,109,.12);
+      border-color: rgba(255,77,109,.25);
+    }
+    .btn.ok{
+      background: rgba(51,209,122,.12);
+      border-color: rgba(51,209,122,.22);
+    }
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+    .chip{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(16,18,26,.65);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .hr{ height:1px; background: rgba(255,255,255,.08); margin: 12px 0; }
+
+    /* Setup controls */
+    .range-wrap{
+      display:grid;
+      grid-template-columns: 1fr 120px;
+      gap:10px;
+      align-items:center;
+      margin-top:10px;
+    }
+    input[type="range"]{ width:100%; }
+    input[type="number"]{
+      width:100%;
+      padding: 11px 10px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(12,14,20,.65);
+      color: var(--text);
+      outline:none;
+    }
+    details{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(10,12,16,.35);
+      overflow:hidden;
+    }
+    summary{
+      padding: 12px 14px;
+      cursor:pointer;
+      user-select:none;
+      color:#dfe4ff;
+      font-size: 13.5px;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    .details-inner{ padding: 0 14px 14px; color: var(--muted); }
+    textarea{
+      width:100%;
+      min-height: 160px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(12,14,20,.65);
+      color: var(--text);
+      outline:none;
+      resize: vertical;
+      line-height:1.5;
+      font-size: 13px;
+    }
+    .hint{ font-size:12px; color:var(--muted); line-height:1.4; margin-top:8px; }
+
+    /* Tournament */
+    .arena{
+      display:grid;
+      grid-template-columns: 1fr 120px 1fr;
+      gap: 12px;
+      padding: 14px;
+      align-items:stretch;
+    }
+    @media (max-width: 880px){
+      .arena{
+        grid-template-columns: 1fr;
+      }
+      .vs{
+        display:none;
+      }
+    }
+    .pick{
+      display:flex;
+      flex-direction:column;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(16,18,26,.55);
+      overflow:hidden;
+      cursor:pointer;
+      min-height: 290px;
+      transition: transform .06s ease, border-color .15s ease, filter .15s ease;
+      touch-action: manipulation;
+    }
+    .pick:hover{
+      border-color: rgba(255,255,255,.18);
+      filter: brightness(1.03);
+    }
+    .pick:active{ transform: translateY(1px); }
+    .imgbox{
+      position:relative;
+      width:100%;
+      height: 220px;
+      background: linear-gradient(135deg, rgba(124,92,255,.18), rgba(36,211,238,.12));
+      overflow:hidden;
+    }
+    .imgbox img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      transform: scale(1.02);
+    }
+    .fallback{
+      width:100%; height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 44px;
+      color: rgba(255,255,255,.75);
+    }
+    .label{
+      padding: 12px 12px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .menu-name{
+      font-size: 18px;
+      margin:0;
+      letter-spacing:-.3px;
+    }
+    .menu-sub{
+      margin:0;
+      color:var(--muted);
+      font-size: 12.5px;
+      line-height:1.35;
+    }
+    .vs{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 18px;
+      border:1px dashed rgba(255,255,255,.14);
+      color: rgba(255,255,255,.55);
+      font-weight: 700;
+      letter-spacing:.8px;
+      background: rgba(12,14,20,.35);
+    }
+    .progress{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(124,92,255,.95), rgba(36,211,238,.78));
+      transition: width .2s ease;
+    }
+
+    /* Result */
+    .winner{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      gap: 14px;
+      padding: 14px;
+      align-items:stretch;
+    }
+    @media (max-width: 720px){
+      .winner{ grid-template-columns: 1fr; }
+    }
+    .winner .imgbox{ height: 220px; border-radius: 18px; border:1px solid rgba(255,255,255,.10); }
+    .winner .imgbox img{ border-radius: 18px; }
+    .big{
+      font-size: 26px;
+      margin: 0 0 8px;
+      letter-spacing:-.6px;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      padding: 3px 7px;
+      border-radius: 9px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      color: rgba(255,255,255,.75);
+    }
+    .toast{
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20,22,29,.92);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 10px 12px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      color: rgba(255,255,255,.88);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      max-width: calc(100vw - 24px);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
+    }
+    .small-note{
+      font-size: 12px;
+      color: var(--muted);
+      line-height:1.45;
+      margin: 10px 0 0;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>뭐먹지</h1>
+          <p class="sub">메뉴 토너먼트로 오늘의 한 끼를 뽑고, 바로 지도 앱에서 주변 맛집을 찾아요.</p>
+        </div>
+      </div>
+      <div class="pill" id="envPill">로딩…</div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT: main -->
+      <section class="card" id="mainCard">
+        <div class="inner" id="setupView">
+          <h2 class="section-title">토너먼트 설정</h2>
+          <div class="row space">
+            <span class="chip">8강 ~ 128강 (짝수) 지원</span>
+            <span class="chip">부전승 자동 처리</span>
+          </div>
+
+          <div class="range-wrap">
+            <div>
+              <label class="muted" for="countRange">참가 메뉴 수</label>
+              <input id="countRange" type="range" min="8" max="128" step="2" value="16" />
+              <div class="row" style="margin-top:8px;">
+                <button class="btn ghost" data-quick="8">8강</button>
+                <button class="btn ghost" data-quick="16">16강</button>
+                <button class="btn ghost" data-quick="32">32강</button>
+                <button class="btn ghost" data-quick="64">64강</button>
+                <button class="btn ghost" data-quick="128">128강</button>
+              </div>
+              <p class="hint">
+                * 2의 거듭제곱이 아닌 경우, 내부적으로 다음 브라켓(예: 128강)에 맞추기 위해 일부는 부전승으로 자동 진출합니다.
+              </p>
+            </div>
+            <div>
+              <label class="muted" for="countNum">직접 입력</label>
+              <input id="countNum" type="number" min="8" max="128" step="2" value="16" />
+              <p class="hint" style="margin-top:8px;">
+                권장: 8~128(짝수)
+              </p>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <details id="advanced">
+            <summary>고급 설정: 메뉴 후보 편집(선택)</summary>
+            <div class="details-inner">
+              <p class="hint" style="margin-top:0;">
+                줄바꿈으로 메뉴를 추가/삭제하세요. (중복/빈 줄은 자동 제거)
+              </p>
+              <textarea id="menuTextarea" spellcheck="false"></textarea>
+              <div class="row" style="margin-top:10px;">
+                <button class="btn" id="resetMenusBtn">기본 메뉴로 되돌리기</button>
+                <span class="chip" id="menuCountChip">후보: 0개</span>
+              </div>
+              <p class="hint">
+                이미지: 기본은 온라인에서 “메뉴명 food”로 자동 사진을 불러옵니다(실서비스는 직접 이미지 업로드 방식으로 바꾸는 걸 추천).
+              </p>
+            </div>
+          </details>
+
+          <div class="hr"></div>
+
+          <div class="row space">
+            <button class="btn primary" id="startBtn">토너먼트 시작</button>
+            <button class="btn" id="shuffleStartBtn">후보 섞고 시작</button>
+          </div>
+
+          <p class="small-note">
+            지도 연결은 모바일에서 가장 자연스럽게 동작합니다. PC에서는 “카카오맵 웹 검색”은 정상 동작하지만,
+            네이버 지도 앱 스킴은 환경에 따라 열리지 않을 수 있어요.
+          </p>
+        </div>
+
+        <div class="inner" id="playView" style="display:none;">
+          <div class="row space">
+            <div class="row">
+              <span class="chip" id="roundChip">-</span>
+              <span class="chip" id="matchChip">-</span>
+            </div>
+            <div class="row">
+              <button class="btn" id="undoBtn" title="되돌리기 (가능한 경우)">되돌리기</button>
+              <button class="btn danger" id="restartBtn">처음부터</button>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="progress" aria-label="진행률">
+            <div class="bar" id="progressBar"></div>
+          </div>
+
+          <div class="arena" id="arena">
+            <div class="pick" id="pickLeft" role="button" tabindex="0" aria-label="왼쪽 메뉴 선택">
+              <div class="imgbox" id="imgLeft">
+                <div class="fallback" aria-hidden="true">🍽️</div>
+              </div>
+              <div class="label">
+                <p class="menu-name" id="nameLeft">-</p>
+                <p class="menu-sub">이걸로 간다</p>
+              </div>
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div class="pick" id="pickRight" role="button" tabindex="0" aria-label="오른쪽 메뉴 선택">
+              <div class="imgbox" id="imgRight">
+                <div class="fallback" aria-hidden="true">🍽️</div>
+              </div>
+              <div class="label">
+                <p class="menu-name" id="nameRight">-</p>
+                <p class="menu-sub">이게 더 땡긴다</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="small-note" id="byeNote" style="display:none;">
+            부전승(BYE)이 섞여 있으면 자동으로 다음 라운드로 넘어갑니다.
+          </p>
+        </div>
+
+        <div class="inner" id="resultView" style="display:none;">
+          <h2 class="section-title">최종 선택</h2>
+          <div class="winner">
+            <div class="imgbox" id="winnerImg">
+              <div class="fallback" aria-hidden="true">🏆</div>
+            </div>
+            <div>
+              <h3 class="big" id="winnerName">-</h3>
+              <p class="sub" id="winnerDesc">이제 주변 맛집을 바로 찾아볼까요?</p>
+
+              <div class="row" style="margin-top:12px;">
+                <button class="btn primary" id="naverBtn">네이버 지도 앱에서 검색</button>
+                <button class="btn primary" id="kakaoBtn">카카오맵 앱에서 검색</button>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <a class="btn ghost" id="kakaoWebLink" href="#" target="_blank" rel="noopener">카카오맵 웹으로 열기</a>
+                <button class="btn" id="copyBtn">결과 복사</button>
+              </div>
+
+              <p class="small-note">
+                * “내 주변” 정확도를 높이려면 위치 권한을 허용해 주세요. (카카오맵 앱 검색은 좌표 중심 검색을 지원)
+              </p>
+              <div class="hr"></div>
+
+              <div class="row">
+                <button class="btn ok" id="againBtn">다시 토너먼트</button>
+                <button class="btn" id="backToSetupBtn">설정으로</button>
+              </div>
+
+              <p class="small-note">
+                팁: <span class="kbd">되돌리기</span>로 직전 선택을 1번 되돌릴 수 있어요.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: info -->
+      <aside class="card">
+        <div class="inner">
+          <h2 class="section-title">사용 방법</h2>
+          <ol class="muted" style="line-height:1.6; margin: 0; padding-left: 18px;">
+            <li>참가 메뉴 수(8~128 짝수)를 고릅니다.</li>
+            <li>사진 2개 중 더 땡기는 메뉴를 클릭합니다.</li>
+            <li>최종 1개가 남을 때까지 반복합니다.</li>
+            <li>우승 메뉴를 지도 앱에서 바로 검색합니다.</li>
+          </ol>
+          <div class="hr"></div>
+          <h2 class="section-title">메모</h2>
+          <p class="muted" style="margin:0; line-height:1.55;">
+            - 기본 이미지 소스는 온라인 자동 로딩 방식이라 데모에 적합합니다.<br/>
+            - 실서비스 품질을 원하면, 메뉴별 사진을 직접 업로드(정적 파일)하고 URL만 바꾸는 걸 추천합니다.<br/>
+            - 2의 거듭제곱이 아닌 경우, 내부적으로 다음 브라켓에 맞춰 “부전승”이 들어갑니다.
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="toast" id="toast">-</div>
+  </div>
+
+  <script>
+    /********************
+     * Utility
+     ********************/
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => [...document.querySelectorAll(sel)];
+
+    function clampEven(n, min, max){
+      n = Number(n);
+      if (Number.isNaN(n)) n = min;
+      n = Math.max(min, Math.min(max, n));
+      // enforce even step
+      if (n % 2 !== 0) n = n - 1;
+      if (n < min) n = min;
+      return n;
+    }
+    function shuffle(arr){
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function nextPow2(n){
+      let p = 1;
+      while (p < n) p <<= 1;
+      return p;
+    }
+    function hash32(str){
+      // simple deterministic hash for stable image query variation
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++){
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return (h >>> 0);
+    }
+    function makeImageUrl(menuName){
+      // Demo용 자동 이미지(온라인 필요). 실서비스는 로컬 이미지로 교체 추천.
+      const q = encodeURIComponent(menuName + " food");
+      const sig = hash32(menuName) % 1000;
+      return `https://source.unsplash.com/800x600/?${q}&sig=${sig}`;
+    }
+    function uniqClean(lines){
+      const out = [];
+      const seen = new Set();
+      for (const raw of lines){
+        const s = String(raw).trim();
+        if (!s) continue;
+        const key = s.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(s);
+      }
+      return out;
+    }
+
+    /********************
+     * Default menu pool (한국 사용자 기준)
+     * - 필요하면 고급 설정에서 편집
+     ********************/
+    const DEFAULT_MENUS = uniqClean([
+      "삼겹살","목살","갈비","소고기","곱창","대창","막창","양꼬치","닭갈비","닭강정","양념치킨","간장치킨","후라이드치킨","닭똥집","치즈닭갈비","찜닭","닭볶음탕",
+      "김치찌개","된장찌개","순두부찌개","부대찌개","갈비탕","설렁탕","곰탕","육개장","닭개장","감자탕","해장국",
+      "국밥","순대국","콩나물국밥","비빔밥","돌솥비빔밥","김밥","라면","떡볶이","떡볶이(엽기 스타일)","국물떡볶이","라볶이","즉석떡볶이","크림떡볶이","튀김","새우튀김","어묵","분식",
+      "냉면","물냉면","비냉","밀면","칼국수","수제비","쌀국수","우동","소바","짜장면","짬뽕","탕수육",
+      "마라탕","마라샹궈","훠궈","깐풍기","유린기",
+      "초밥","회","연어","참치","돈부리","라멘","야키소바","가츠동","규동","돈카츠","김치나베돈까스","우나기","텐동","오니기리","타코라이스",
+      "파스타","토마토파스타","까르보나라","피자","햄버거","스테이크","샐러드","샌드위치","카츠산도","브런치","타코","부리또",
+      "커리","탄두리치킨","인도커리",
+      "족발","보쌈","수육","전","모듬전","파전","해물파전","빈대떡","떡국","만두","만둣국",
+      "오징어볶음","낙지볶음","주꾸미볶음","제육볶음","불고기","닭발","쭈꾸미","낙곱새","해물찜","아구찜","오징어순대",
+      "간장게장","양념게장","꽃게탕","새우구이","조개구이","조개찜","대게","킹크랩",
+      "장어구이","생선구이","고등어구이","갈치조림","삼치구이","매운탕","동태탕","알탕","추어탕",
+      "샤브샤브","전골","곱창전골",
+      "덮밥","오므라이스","볶음밥","김치볶음밥","오일파스타",
+      "토스트","핫도그",
+      // 추가 후보
+      "백반","한정식","(한솥)도시락","쌈밥","두루치기","비빔국수","잔치국수","콩국수",
+      "닭한마리","수제버거","로제떡볶이","치즈돈까스","카레우동",
+      "해물짬뽕","나가사키짬뽕","탄탄면","볶음면","딤섬","북경오리",
+      "베트남분짜","반미","팟타이","똠얌꿍","나시고렝",
+      "텍사스바베큐",
+      "크림파스타","로제파스타","수프카레",
+      "부리또볼","포케",
+      "고기국수","돼지국밥","밀푀유나베",
+      "리조또","오코노미야키",
+      "라자냐","미트볼",
+      "떡갈비","고추장불고기","차돌박이",
+      "회덮밥","물회",
+      "짜글이","청국장","동태찌개",
+      "편의점"
+    ]);
+
+    /********************
+     * State
+     ********************/
+    let pool = DEFAULT_MENUS.slice(); // string[]
+    let selectedCount = 16;
+
+    // tournament state
+    let bracketSize = 16;
+    let byes = 0;
+
+    let current = [];   // {name, img, bye?}[]
+    let next = [];
+    let matchIndex = 0; // which pair
+    let totalMatchesThisRound = 0;
+
+    // history for undo
+    let history = [];
+
+    // winner
+    let winner = null; // {name,img}
+
+    /********************
+     * DOM refs
+     ********************/
+    const envPill = $("#envPill");
+
+    const setupView = $("#setupView");
+    const playView = $("#playView");
+    const resultView = $("#resultView");
+
+    const countRange = $("#countRange");
+    const countNum = $("#countNum");
+    const startBtn = $("#startBtn");
+    const shuffleStartBtn = $("#shuffleStartBtn");
+
+    const menuTextarea = $("#menuTextarea");
+    const resetMenusBtn = $("#resetMenusBtn");
+    const menuCountChip = $("#menuCountChip");
+
+    const roundChip = $("#roundChip");
+    const matchChip = $("#matchChip");
+    const progressBar = $("#progressBar");
+
+    const pickLeft = $("#pickLeft");
+    const pickRight = $("#pickRight");
+    const nameLeft = $("#nameLeft");
+    const nameRight = $("#nameRight");
+    const imgLeft = $("#imgLeft");
+    const imgRight = $("#imgRight");
+    const byeNote = $("#byeNote");
+
+    const undoBtn = $("#undoBtn");
+    const restartBtn = $("#restartBtn");
+
+    const winnerName = $("#winnerName");
+    const winnerImg = $("#winnerImg");
+    const winnerDesc = $("#winnerDesc");
+    const naverBtn = $("#naverBtn");
+    const kakaoBtn = $("#kakaoBtn");
+    const kakaoWebLink = $("#kakaoWebLink");
+    const copyBtn = $("#copyBtn");
+    const againBtn = $("#againBtn");
+    const backToSetupBtn = $("#backToSetupBtn");
+
+    const toast = $("#toast");
+
+    /********************
+     * Environment badge
+     ********************/
+    function getEnvText(){
+      const ua = navigator.userAgent || "";
+      const isAndroid = /Android/i.test(ua);
+      const isIOS = /iPhone|iPad|iPod/i.test(ua);
+      const isMobile = isAndroid || isIOS || /Mobile/i.test(ua);
+      const https = location.protocol === "https:";
+      const geo = !!navigator.geolocation;
+      let platform = "PC";
+      if (isAndroid) platform = "Android";
+      else if (isIOS) platform = "iOS";
+      else if (isMobile) platform = "Mobile";
+      return `${platform} · ${https ? "HTTPS" : "HTTP"} · 위치권한 ${geo ? "가능" : "불가"}`;
+    }
+
+    /********************
+     * Toast
+     ********************/
+    let toastTimer = null;
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+    }
+
+    /********************
+     * Pool editing
+     ********************/
+    function syncPoolFromTextarea(){
+      const lines = menuTextarea.value.split(/\r?\n/);
+      pool = uniqClean(lines);
+      menuCountChip.textContent = `후보: ${pool.length}개`;
+    }
+    function loadDefaultPool(){
+      pool = DEFAULT_MENUS.slice();
+      menuTextarea.value = pool.join("\n");
+      menuCountChip.textContent = `후보: ${pool.length}개`;
+    }
+
+    /********************
+     * Bracket preparation (NO bye-vs-bye)
+     ********************/
+    function pickCandidates(count){
+      if (pool.length < count){
+        // 후보 부족하면 pool을 섞어서 중복 없이 가능한 만큼만.
+        // (실서비스라면 이 경우 입력을 더 받는 게 좋음)
+        showToast(`후보가 ${pool.length}개라서 가능한 만큼만 진행합니다.`);
+        count = pool.length;
+      }
+      const chosen = shuffle(pool).slice(0, count);
+      return chosen.map(name => ({
+        name,
+        img: makeImageUrl(name),
+        bye: false
+      }));
+    }
+
+    function makeInitialBracket(count){
+      bracketSize = nextPow2(count);
+      byes = bracketSize - count;
+
+      const menus = pickCandidates(count);
+      const slots = new Array(bracketSize).fill(null);
+
+      // choose random pairs to place byes: ensures no bye-bye
+      const pairCount = bracketSize / 2;
+      const pairIdxs = shuffle([...Array(pairCount)].map((_,i)=>i)).slice(0, byes);
+
+      for (const p of pairIdxs){
+        const pos = 2*p + (Math.random() < 0.5 ? 0 : 1);
+        slots[pos] = { name:"BYE", img:"", bye:true };
+      }
+
+      // fill remaining slots with shuffled menus
+      const shuffledMenus = shuffle(menus);
+      let mi = 0;
+      for (let i = 0; i < slots.length; i++){
+        if (slots[i] === null){
+          slots[i] = shuffledMenus[mi++];
+        }
+      }
+      return slots;
+    }
+
+    /********************
+     * Tournament rendering
+     ********************/
+    function stageLabel(n){
+      // n is current candidates length (power of 2)
+      if (n <= 1) return "결승";
+      return `${n}강`;
+    }
+
+    function updateTopInfo(){
+      roundChip.textContent = `${stageLabel(current.length)} 진행 중`;
+      matchChip.textContent = `${matchIndex+1} / ${totalMatchesThisRound} 경기`;
+      const done = Math.min(matchIndex, totalMatchesThisRound);
+      const pct = totalMatchesThisRound ? (done / totalMatchesThisRound) * 100 : 0;
+      progressBar.style.width = `${pct}%`;
+
+      undoBtn.disabled = history.length === 0;
+    }
+
+    function setImg(el, url){
+      el.innerHTML = ""; // clear
+      const img = document.createElement("img");
+      img.alt = "";
+      img.loading = "eager";
+      img.decoding = "async";
+      img.referrerPolicy = "no-referrer";
+      img.src = url;
+      img.onerror = () => {
+        el.innerHTML = `<div class="fallback" aria-hidden="true">🍽️</div>`;
+      };
+      el.appendChild(img);
+    }
+
+    function renderCurrentMatch(){
+      // auto-resolve BYE matches
+      while (true){
+        const left = current[2*matchIndex];
+        const right = current[2*matchIndex + 1];
+
+        if (!left || !right) break;
+
+        if (left.bye && right.bye){
+          // shouldn't happen due to placement, but safe-guard
+          matchIndex++;
+          continue;
+        } else if (left.bye && !right.bye){
+          next.push(right);
+          matchIndex++;
+          continue;
+        } else if (!left.bye && right.bye){
+          next.push(left);
+          matchIndex++;
+          continue;
+        }
+        break;
+      }
+
+      if (matchIndex >= totalMatchesThisRound){
+        // round finished
+        if (next.length === 1){
+          winner = next[0];
+          showResult();
+          return;
+        }
+        // go next round
+        history = []; // undo는 라운드 단위가 바뀌면 초기화(간단 MVP)
+        current = next;
+        next = [];
+        matchIndex = 0;
+        totalMatchesThisRound = current.length / 2;
+        updateTopInfo();
+        renderCurrentMatch();
+        return;
+      }
+
+      const left = current[2*matchIndex];
+      const right = current[2*matchIndex + 1];
+
+      nameLeft.textContent = left.name;
+      nameRight.textContent = right.name;
+
+      setImg(imgLeft, left.img);
+      setImg(imgRight, right.img);
+
+      byeNote.style.display = (byes > 0) ? "block" : "none";
+
+      updateTopInfo();
+    }
+
+    function choose(side){
+      const left = current[2*matchIndex];
+      const right = current[2*matchIndex + 1];
+      const picked = (side === "L") ? left : right;
+
+      // save snapshot for undo (minimal)
+      history.push({
+        current: current.slice(),
+        next: next.slice(),
+        matchIndex
+      });
+
+      next.push(picked);
+      matchIndex++;
+      renderCurrentMatch();
+    }
+
+    function undo(){
+      const snap = history.pop();
+      if (!snap) return;
+      current = snap.current;
+      next = snap.next;
+      matchIndex = snap.matchIndex;
+      renderCurrentMatch();
+      showToast("직전 선택을 되돌렸어요");
+    }
+
+    /********************
+     * Views
+     ********************/
+    function showSetup(){
+      setupView.style.display = "";
+      playView.style.display = "none";
+      resultView.style.display = "none";
+    }
+    function showPlay(){
+      setupView.style.display = "none";
+      playView.style.display = "";
+      resultView.style.display = "none";
+    }
+    function showResult(){
+      setupView.style.display = "none";
+      playView.style.display = "none";
+      resultView.style.display = "";
+
+      winnerName.textContent = winner?.name ?? "-";
+      winnerDesc.textContent = `“${winner?.name ?? ""}” 먹으러 가자!`;
+
+      winnerImg.innerHTML = "";
+      if (winner?.img){
+        const img = document.createElement("img");
+        img.alt = "";
+        img.loading = "eager";
+        img.decoding = "async";
+        img.referrerPolicy = "no-referrer";
+        img.src = winner.img;
+        img.onerror = () => winnerImg.innerHTML = `<div class="fallback" aria-hidden="true">🏆</div>`;
+        winnerImg.appendChild(img);
+      } else {
+        winnerImg.innerHTML = `<div class="fallback" aria-hidden="true">🏆</div>`;
+      }
+
+      // Kakao web link works on desktop too
+      const q = encodeURIComponent(`${winner.name} 맛집`);
+      kakaoWebLink.href = `https://map.kakao.com/link/search/${q}`;
+
+      showToast("우승 메뉴가 결정됐어요!");
+    }
+
+    /********************
+     * Map deep links
+     * - NAVER: nmap://search?query=...&appname=... (appname required)
+     * - NAVER Android Web fallback: intent://...#Intent;scheme=nmap;...;package=com.nhn.android.nmap;end
+     * - Kakao: kakaomap://search?q=...&p=lat,lng
+     * - Kakao web: https://map.kakao.com/link/search/검색어
+     ********************/
+    function isAndroid(){
+      return /Android/i.test(navigator.userAgent || "");
+    }
+    function isIOS(){
+      return /iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+    }
+    function isMobile(){
+      return isAndroid() || isIOS() || /Mobile/i.test(navigator.userAgent || "");
+    }
+
+    function getAppName(){
+      // naver doc: 웹 페이지는 웹 페이지 URL을 appname으로 사용
+      // 너무 길어질 수 있어 origin 정도만 사용
+      return location.origin;
+    }
+
+    function openNaverMapSearch(query){
+      const q = encodeURIComponent(query);
+      const appname = encodeURIComponent(getAppName());
+
+      const scheme = `nmap://search?query=${q}&appname=${appname}`;
+
+      if (isAndroid()){
+        // Android mobile web: intent URL (app 미설치 시 Play로)
+        const intent = `intent://search?query=${q}&appname=${appname}` +
+                       `#Intent;scheme=nmap;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.nhn.android.nmap;end`;
+        location.href = intent;
+      } else {
+        // iOS / others
+        // iOS mobile web에서는 타이머로 앱스토어 분기하는 방식이 문서에 있으나,
+        // UX를 위해 여기서는 단순히 스킴만 호출하고, 설치 안내는 별도로 하지 않음.
+        location.href = scheme;
+      }
+    }
+
+    function requestGeo(){
+      return new Promise((resolve) => {
+        if (!navigator.geolocation){
+          resolve(null);
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          () => resolve(null),
+          { enableHighAccuracy:false, timeout: 4000, maximumAge: 60000 }
+        );
+      });
+    }
+
+    async function openKakaoMapSearch(query){
+      const geo = await requestGeo();
+
+      const q = encodeURIComponent(query);
+      if (geo){
+        const p = `${geo.lat},${geo.lng}`;
+        // App scheme
+        const appUrl = `kakaomap://search?q=${q}&p=${p}`;
+        // Mobile web scheme (works if app not installed too)
+        const webScheme = `http://m.map.kakao.com/scheme/search?q=${q}&p=${p}`;
+
+        // Try app scheme first on mobile; otherwise open web scheme
+        if (isMobile()){
+          location.href = appUrl;
+          // If the app scheme is blocked, user can still click "카카오맵 웹으로" 버튼.
+          showToast("카카오맵을 여는 중…");
+        } else {
+          window.open(`https://map.kakao.com/link/search/${q}`, "_blank", "noopener");
+        }
+      } else {
+        // no geo: open web search
+        window.open(`https://map.kakao.com/link/search/${q}`, "_blank", "noopener");
+      }
+    }
+
+    /********************
+     * Start / restart
+     ********************/
+    function startTournament({shuffleFirst=false} = {}){
+      syncPoolFromTextarea();
+
+      // selectedCount is from inputs
+      selectedCount = clampEven(selectedCount, 8, 128);
+      // allow any even count up to 128
+
+      if (pool.length < 8){
+        showToast("메뉴 후보가 너무 적어요(최소 8개).");
+        return;
+      }
+
+      if (shuffleFirst){
+        pool = shuffle(pool);
+        menuTextarea.value = pool.join("\n");
+      }
+
+      current = makeInitialBracket(selectedCount);
+      next = [];
+      matchIndex = 0;
+      history = [];
+
+      totalMatchesThisRound = current.length / 2;
+
+      showPlay();
+      updateTopInfo();
+      renderCurrentMatch();
+    }
+
+    function resetAll(){
+      winner = null;
+      current = [];
+      next = [];
+      matchIndex = 0;
+      history = [];
+      byes = 0;
+      bracketSize = selectedCount;
+      showSetup();
+    }
+
+    /********************
+     * Events
+     ********************/
+    function syncCountUI(val){
+      const v = clampEven(val, 8, 128);
+      selectedCount = v;
+
+      countRange.value = String(v);
+      countNum.value = String(v);
+    }
+
+    countRange.addEventListener("input", (e)=> syncCountUI(e.target.value));
+    countNum.addEventListener("input", (e)=> syncCountUI(e.target.value));
+
+    $$(".btn[data-quick]").forEach(btn => {
+      btn.addEventListener("click", () => syncCountUI(btn.dataset.quick));
+    });
+
+    startBtn.addEventListener("click", () => startTournament({shuffleFirst:false}));
+    shuffleStartBtn.addEventListener("click", () => startTournament({shuffleFirst:true}));
+
+    resetMenusBtn.addEventListener("click", () => {
+      loadDefaultPool();
+      showToast("기본 메뉴로 되돌렸어요");
+    });
+
+    menuTextarea.addEventListener("input", () => syncPoolFromTextarea());
+
+    pickLeft.addEventListener("click", () => choose("L"));
+    pickRight.addEventListener("click", () => choose("R"));
+
+    // keyboard accessibility
+    pickLeft.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); choose("L"); }});
+    pickRight.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); choose("R"); }});
+
+    undoBtn.addEventListener("click", undo);
+    restartBtn.addEventListener("click", () => {
+      showToast("처음부터 다시 시작합니다");
+      resetAll();
+    });
+
+    naverBtn.addEventListener("click", () => {
+      if (!winner) return;
+      // "내 주변" 뉘앙스를 위해 '맛집' 포함 (네이버는 query 기반 검색)
+      openNaverMapSearch(`${winner.name} 맛집`);
+    });
+
+    kakaoBtn.addEventListener("click", async () => {
+      if (!winner) return;
+      await openKakaoMapSearch(`${winner.name} 맛집`);
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      if (!winner) return;
+      const text = `오늘 메뉴: ${winner.name}`;
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast("클립보드에 복사했어요");
+      }catch{
+        showToast("복사에 실패했어요");
+      }
+    });
+
+    againBtn.addEventListener("click", () => startTournament({shuffleFirst:true}));
+    backToSetupBtn.addEventListener("click", resetAll);
+
+    /********************
+     * Init
+     ********************/
+    envPill.textContent = getEnvText();
+    loadDefaultPool();
+    syncCountUI(16);
+  </script>
 </body>
 </html>
