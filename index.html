@@ -404,7 +404,7 @@
         <div class="inner" id="setupView">
           <h2 class="section-title">토너먼트 설정</h2>
           <div class="row space">
-            <span class="chip">8강 ~ 128강 (짝수) 권장</span>
+            <span class="chip">4~128강 선택</span>
           </div>
 
           <div class="range-wrap">
@@ -413,21 +413,19 @@
               <input id="countRange" type="range" min="4" max="128" step="2" value="16" />
               <div class="row" style="margin-top:8px;">
                 <button class="btn ghost" data-quick="4">4강</button>
+                <button class="btn ghost" data-quick="6">6강</button>
                 <button class="btn ghost" data-quick="8">8강</button>
+                <button class="btn ghost" data-quick="12">12강</button>
                 <button class="btn ghost" data-quick="16">16강</button>
+                <button class="btn ghost" data-quick="24">24강</button>
                 <button class="btn ghost" data-quick="32">32강</button>
+                <button class="btn ghost" data-quick="48">48강</button>
                 <button class="btn ghost" data-quick="64">64강</button>
+                <button class="btn ghost" data-quick="96">96강</button>
                 <button class="btn ghost" data-quick="128">128강</button>
               </div>
               <p class="hint">
-                * 2의 거듭제곱이 아닌 경우, 내부적으로 다음 브라켓에 맞추기 위해 일부는 부전승으로 자동 진출합니다.
-              </p>
-            </div>
-            <div>
-              <label class="muted" for="countNum">직접 입력</label>
-              <input id="countNum" type="number" min="4" step="1" value="16" />
-              <p class="hint" style="margin-top:8px;">
-                권장: 8~128(짝수), 그 외는 부전승 자동
+                * 선택한 인원에 맞춰 부전승을 자동 배치합니다.
               </p>
             </div>
           </div>
@@ -554,7 +552,7 @@
         <div class="inner">
           <h2 class="section-title">사용 방법</h2>
           <ol class="muted" style="line-height:1.6; margin: 0; padding-left: 18px;">
-            <li>참가 메뉴 수(4강 이상)를 입력합니다. (8~128 짝수 권장, 그 외는 부전승 자동)</li>
+            <li>참가 메뉴 수를 선택합니다. (4/6/8/12/16/24/32/48/64/96/128)</li>
             <li>사진 2개 중 더 땡기는 메뉴를 클릭합니다.</li>
             <li>최종 1개가 남을 때까지 반복합니다.</li>
             <li>우승 메뉴를 지도 앱에서 바로 검색합니다.</li>
@@ -586,6 +584,21 @@
         [a[i], a[j]] = [a[j], a[i]];
       }
       return a;
+    }
+    const ALLOWED_COUNTS = [4,6,8,12,16,24,32,48,64,96,128];
+    function snapCount(n){
+      const val = Number(n);
+      if (Number.isNaN(val)) return ALLOWED_COUNTS[0];
+      let best = ALLOWED_COUNTS[0];
+      let bestDiff = Math.abs(val - best);
+      for (const c of ALLOWED_COUNTS){
+        const d = Math.abs(val - c);
+        if (d < bestDiff){
+          best = c;
+          bestDiff = d;
+        }
+      }
+      return best;
     }
     function nextPow2(n){
       let p = 1;
@@ -698,7 +711,6 @@
     const resultView = $("#resultView");
 
     const countRange = $("#countRange");
-    const countNum = $("#countNum");
     const startBtn = $("#startBtn");
     const shuffleStartBtn = $("#shuffleStartBtn");
 
@@ -1070,9 +1082,8 @@
     function startTournament({shuffleFirst=false} = {}){
       syncPoolFromTextarea();
 
-      // selectedCount is from inputs (allow any number >= 4)
-      const rawNum = countNum.value === "" ? Number(countRange.value) : Number(countNum.value);
-      selectedCount = clampMin(rawNum, 4);
+      // selectedCount is from inputs (snap to allowed list)
+      selectedCount = snapCount(countRange.value);
 
       if (pool.length < 4){
         showToast("메뉴 후보가 너무 적어요(최소 4개).");
@@ -1111,30 +1122,12 @@
      * Events
      ********************/
     function syncCountUI(val, {fromInput=false} = {}){
-      if (fromInput && val === ""){
-        selectedCount = NaN;
-        return;
-      }
-      const n = Number(val);
-      if (Number.isNaN(n)) return;
-
+      const n = snapCount(val);
       selectedCount = n;
-      if (n >= 4 && n <= 128){
-        countRange.value = String(n);
-      }
-      if (!fromInput){
-        countNum.value = String(n);
-      }
+      countRange.value = String(n);
     }
 
     countRange.addEventListener("input", (e)=> syncCountUI(e.target.value));
-    countNum.addEventListener("input", (e)=> syncCountUI(e.target.value, {fromInput:true}));
-    countNum.addEventListener("blur", (e)=> {
-      if (e.target.value === "") return;
-      const n = clampMin(e.target.value, 4);
-      e.target.value = String(n);
-      syncCountUI(n);
-    });
 
     $$(".btn[data-quick]").forEach(btn => {
       btn.addEventListener("click", () => syncCountUI(btn.dataset.quick));
