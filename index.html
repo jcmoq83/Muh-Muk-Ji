@@ -6,26 +6,28 @@
   <title>뭐먹지</title>
   <meta name="description" content="메뉴 토너먼트로 오늘의 한 끼를 결정하세요. 최종 메뉴는 네이버지도/카카오맵으로 바로 검색!" />
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+KR:wght@400;600;700&display=swap");
     :root{
-      --bg:#0b0c10;
-      --card:#14161d;
-      --card2:#10121a;
-      --text:#eef1ff;
-      --muted:#aab0c5;
-      --line:#2a2f40;
-      --accent:#7c5cff;
-      --accent2:#24d3ee;
-      --danger:#ff4d6d;
-      --ok:#33d17a;
-      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --bg:#fff7e9;
+      --card:#ffffff;
+      --card2:#fff2d9;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:#f3d7a6;
+      --accent:#ff7a59;
+      --accent2:#ffd166;
+      --danger:#ff6b6b;
+      --ok:#35c78a;
+      --shadow: 0 16px 35px rgba(255,122,89,.18);
       --radius: 18px;
     }
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", Segoe UI, Roboto, Helvetica, Arial, "맑은 고딕", "Malgun Gothic", sans-serif;
-      background: radial-gradient(1200px 700px at 20% 10%, rgba(124,92,255,.18), transparent 60%),
-                  radial-gradient(1000px 700px at 85% 20%, rgba(36,211,238,.12), transparent 55%),
+      font-family: "Fredoka","Noto Sans KR",sans-serif;
+      background: radial-gradient(1200px 700px at 15% 0%, rgba(255,122,89,.18), transparent 60%),
+                  radial-gradient(900px 650px at 90% 10%, rgba(255,209,102,.25), transparent 55%),
+                  radial-gradient(1000px 700px at 60% 100%, rgba(255,154,140,.15), transparent 60%),
                   var(--bg);
       color:var(--text);
       min-height:100vh;
@@ -51,7 +53,7 @@
     }
     .logo{
       width:44px;height:44px;border-radius:14px;
-      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(36,211,238,.85));
+      background: linear-gradient(135deg, rgba(255,122,89,.95), rgba(255,209,102,.95));
       box-shadow: var(--shadow);
       position:relative;
       overflow:hidden;
@@ -78,9 +80,9 @@
       align-items:center;
       gap:8px;
       padding: 10px 12px;
-      border: 1px solid rgba(255,255,255,.08);
+      border: 1px solid rgba(31,41,55,.12);
       border-radius: 999px;
-      background: rgba(20,22,29,.55);
+      background: rgba(255,255,255,.75);
       backdrop-filter: blur(10px);
       color: var(--muted);
       font-size: 12.5px;
@@ -99,8 +101,8 @@
       .pill{ justify-content:center; }
     }
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-      border: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,248,235,.95));
+      border: 1px solid rgba(31,41,55,.08);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
@@ -110,7 +112,7 @@
       margin:0 0 10px;
       font-size: 14px;
       letter-spacing:-.2px;
-      color: #dfe4ff;
+      color: #1f2937;
     }
     .muted{ color:var(--muted); }
     .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
@@ -121,23 +123,23 @@
       cursor:pointer;
       padding: 11px 12px;
       border-radius: 14px;
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.9);
       color: var(--text);
-      border: 1px solid rgba(255,255,255,.10);
+      border: 1px solid rgba(31,41,55,.12);
       transition: transform .06s ease, background .15s ease, border-color .15s ease;
       user-select:none;
       touch-action: manipulation;
     }
-    .btn:hover{ background: rgba(255,255,255,.09); }
+    .btn:hover{ background: rgba(255,255,255,1); }
     .btn:active{ transform: translateY(1px); }
     .btn.primary{
-      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(36,211,238,.78));
-      border-color: rgba(255,255,255,.16);
+      background: linear-gradient(135deg, rgba(255,122,89,.95), rgba(255,209,102,.95));
+      border-color: rgba(255,122,89,.35);
     }
     .btn.primary:hover{ filter: brightness(1.06); }
     .btn.ghost{
       background: transparent;
-      border-color: rgba(255,255,255,.12);
+      border-color: rgba(31,41,55,.16);
     }
     .btn.danger{
       background: rgba(255,77,109,.12);
@@ -154,12 +156,12 @@
     .chip{
       padding: 8px 10px;
       border-radius: 999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(16,18,26,.65);
+      border:1px solid rgba(31,41,55,.12);
+      background: rgba(255,248,235,.9);
       color: var(--muted);
       font-size: 12px;
     }
-    .hr{ height:1px; background: rgba(255,255,255,.08); margin: 12px 0; }
+    .hr{ height:1px; background: rgba(31,41,55,.08); margin: 12px 0; }
 
     /* Setup controls */
     .range-wrap{
@@ -174,15 +176,15 @@
       width:100%;
       padding: 11px 10px;
       border-radius: 14px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(12,14,20,.65);
+      border:1px solid rgba(31,41,55,.12);
+      background: rgba(255,255,255,.9);
       color: var(--text);
       outline:none;
     }
     details{
       border-radius: var(--radius);
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(10,12,16,.35);
+      border:1px solid rgba(31,41,55,.08);
+      background: rgba(255,248,235,.7);
       overflow:hidden;
     }
     summary{
@@ -200,8 +202,8 @@
       min-height: 160px;
       padding: 12px 12px;
       border-radius: 14px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(12,14,20,.65);
+      border:1px solid rgba(31,41,55,.12);
+      background: rgba(255,255,255,.9);
       color: var(--text);
       outline:none;
       resize: vertical;
@@ -209,6 +211,23 @@
       font-size: 13px;
     }
     .hint{ font-size:12px; color:var(--muted); line-height:1.4; margin-top:8px; }
+
+    body.state-play header,
+    body.state-play aside{
+      display:none;
+    }
+    body.state-play .grid{
+      grid-template-columns: 1fr;
+    }
+    body.state-play #mainCard{
+      width:100%;
+    }
+    body.state-result aside{
+      display:none;
+    }
+    body.state-result .grid{
+      grid-template-columns: 1fr;
+    }
 
     /* Tournament */
     .arena{
@@ -392,8 +411,9 @@
           <div class="range-wrap">
             <div>
               <label class="muted" for="countRange">참가 메뉴 수</label>
-              <input id="countRange" type="range" min="8" max="128" step="2" value="16" />
+              <input id="countRange" type="range" min="4" max="128" step="2" value="16" />
               <div class="row" style="margin-top:8px;">
+                <button class="btn ghost" data-quick="4">4강</button>
                 <button class="btn ghost" data-quick="8">8강</button>
                 <button class="btn ghost" data-quick="16">16강</button>
                 <button class="btn ghost" data-quick="32">32강</button>
@@ -406,9 +426,9 @@
             </div>
             <div>
               <label class="muted" for="countNum">직접 입력</label>
-              <input id="countNum" type="number" min="8" max="128" step="2" value="16" />
+              <input id="countNum" type="number" min="4" max="128" step="1" value="16" />
               <p class="hint" style="margin-top:8px;">
-                권장: 8~128(짝수)
+                권장: 4~128(짝수)
               </p>
             </div>
           </div>
@@ -535,18 +555,11 @@
         <div class="inner">
           <h2 class="section-title">사용 방법</h2>
           <ol class="muted" style="line-height:1.6; margin: 0; padding-left: 18px;">
-            <li>참가 메뉴 수(8~128 짝수)를 고릅니다.</li>
+            <li>참가 메뉴 수(4~128 짝수)를 고릅니다.</li>
             <li>사진 2개 중 더 땡기는 메뉴를 클릭합니다.</li>
             <li>최종 1개가 남을 때까지 반복합니다.</li>
             <li>우승 메뉴를 지도 앱에서 바로 검색합니다.</li>
           </ol>
-          <div class="hr"></div>
-          <h2 class="section-title">메모</h2>
-          <p class="muted" style="margin:0; line-height:1.55;">
-            - 기본 이미지 소스는 온라인 자동 로딩 방식이라 데모에 적합합니다.<br/>
-            - 실서비스 품질을 원하면, 메뉴별 사진을 직접 업로드(정적 파일)하고 URL만 바꾸는 걸 추천합니다.<br/>
-            - 2의 거듭제곱이 아닌 경우, 내부적으로 다음 브라켓에 맞춰 “부전승”이 들어갑니다.
-          </p>
         </div>
       </aside>
     </div>
@@ -592,8 +605,17 @@
       }
       return (h >>> 0);
     }
+    const MENU_IMAGES = {
+      // 메뉴별 URL 매핑 (없으면 자동 이미지로 fallback)
+      // 예시:
+      // "김치찌개": "https://example.com/images/kimchi.jpg",
+      // "부대찌개": "https://example.com/images/budae.jpg",
+    };
+
     function makeImageUrl(menuName){
-      // Demo용 자동 이미지(온라인 필요). 실서비스는 로컬 이미지로 교체 추천.
+      const mapped = MENU_IMAGES[menuName];
+      if (mapped) return mapped;
+      // fallback: 자동 이미지(온라인 필요)
       const q = encodeURIComponent(menuName + " food");
       const sig = hash32(menuName) % 1000;
       return `https://source.unsplash.com/800x600/?${q}&sig=${sig}`;
@@ -617,7 +639,7 @@
      * - 필요하면 고급 설정에서 편집
      ********************/
     const DEFAULT_MENUS = uniqClean([
-      "삼겹살","목살","갈비","소고기","곱창","대창","막창","양꼬치","닭갈비","닭강정","양념치킨","간장치킨","후라이드치킨","닭똥집","치즈닭갈비","찜닭","닭볶음탕",
+      "삼겹살","목살","소갈비","돼지갈비","소고기","곱창","대창","막창","양꼬치","닭갈비","닭강정","양념치킨","간장치킨","후라이드치킨","닭똥집","치즈닭갈비","찜닭","닭볶음탕",
       "김치찌개","된장찌개","순두부찌개","부대찌개","갈비탕","설렁탕","곰탕","육개장","닭개장","감자탕","해장국",
       "국밥","순대국","콩나물국밥","비빔밥","돌솥비빔밥","김밥","라면","떡볶이","떡볶이(엽기 스타일)","국물떡볶이","라볶이","즉석떡볶이","크림떡볶이","튀김","새우튀김","어묵","분식",
       "냉면","물냉면","비냉","밀면","칼국수","수제비","쌀국수","우동","소바","짜장면","짬뽕","탕수육",
@@ -922,16 +944,21 @@
      * Views
      ********************/
     function showSetup(){
+      document.body.classList.remove("state-play","state-result");
       setupView.style.display = "";
       playView.style.display = "none";
       resultView.style.display = "none";
     }
     function showPlay(){
+      document.body.classList.add("state-play");
+      document.body.classList.remove("state-result");
       setupView.style.display = "none";
       playView.style.display = "";
       resultView.style.display = "none";
     }
     function showResult(){
+      document.body.classList.add("state-result");
+      document.body.classList.remove("state-play");
       setupView.style.display = "none";
       playView.style.display = "none";
       resultView.style.display = "";
@@ -1048,11 +1075,11 @@
       syncPoolFromTextarea();
 
       // selectedCount is from inputs
-      selectedCount = clampEven(selectedCount, 8, 128);
+      selectedCount = clampEven(selectedCount, 4, 128);
       // allow any even count up to 128
 
-      if (pool.length < 8){
-        showToast("메뉴 후보가 너무 적어요(최소 8개).");
+      if (pool.length < 4){
+        showToast("메뉴 후보가 너무 적어요(최소 4개).");
         return;
       }
 
@@ -1088,7 +1115,7 @@
      * Events
      ********************/
     function syncCountUI(val){
-      const v = clampEven(val, 8, 128);
+      const v = clampEven(val, 4, 128);
       selectedCount = v;
 
       countRange.value = String(v);
