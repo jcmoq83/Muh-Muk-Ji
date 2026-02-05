@@ -404,8 +404,7 @@
         <div class="inner" id="setupView">
           <h2 class="section-title">토너먼트 설정</h2>
           <div class="row space">
-            <span class="chip">8강 ~ 128강 (짝수) 지원</span>
-            <span class="chip">부전승 자동 처리</span>
+            <span class="chip">8강 ~ 128강 (짝수) 권장</span>
           </div>
 
           <div class="range-wrap">
@@ -421,14 +420,14 @@
                 <button class="btn ghost" data-quick="128">128강</button>
               </div>
               <p class="hint">
-                * 2의 거듭제곱이 아닌 경우, 내부적으로 다음 브라켓(예: 128강)에 맞추기 위해 일부는 부전승으로 자동 진출합니다.
+                * 2의 거듭제곱이 아닌 경우, 내부적으로 다음 브라켓에 맞추기 위해 일부는 부전승으로 자동 진출합니다.
               </p>
             </div>
             <div>
               <label class="muted" for="countNum">직접 입력</label>
-              <input id="countNum" type="number" min="4" max="128" step="1" value="16" />
+              <input id="countNum" type="number" min="4" step="1" value="16" />
               <p class="hint" style="margin-top:8px;">
-                권장: 4~128(짝수)
+                권장: 8~128(짝수), 그 외는 부전승 자동
               </p>
             </div>
           </div>
@@ -555,7 +554,7 @@
         <div class="inner">
           <h2 class="section-title">사용 방법</h2>
           <ol class="muted" style="line-height:1.6; margin: 0; padding-left: 18px;">
-            <li>참가 메뉴 수(4~128 짝수)를 고릅니다.</li>
+            <li>참가 메뉴 수(4강 이상)를 입력합니다. (8~128 짝수 권장, 그 외는 부전승 자동)</li>
             <li>사진 2개 중 더 땡기는 메뉴를 클릭합니다.</li>
             <li>최종 1개가 남을 때까지 반복합니다.</li>
             <li>우승 메뉴를 지도 앱에서 바로 검색합니다.</li>
@@ -574,13 +573,10 @@
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => [...document.querySelectorAll(sel)];
 
-    function clampEven(n, min, max){
+    function clampMin(n, min){
       n = Number(n);
-      if (Number.isNaN(n)) n = min;
-      n = Math.max(min, Math.min(max, n));
-      // enforce even step
-      if (n % 2 !== 0) n = n - 1;
-      if (n < min) n = min;
+      if (Number.isNaN(n)) return min;
+      if (n < min) return min;
       return n;
     }
     function shuffle(arr){
@@ -798,10 +794,10 @@
     }
 
     function makeInitialBracket(count){
-      bracketSize = nextPow2(count);
-      byes = bracketSize - count;
-
       const menus = pickCandidates(count);
+      const actualCount = menus.length;
+      bracketSize = nextPow2(actualCount);
+      byes = bracketSize - actualCount;
       const slots = new Array(bracketSize).fill(null);
 
       // choose random pairs to place byes: ensures no bye-bye
@@ -1074,9 +1070,9 @@
     function startTournament({shuffleFirst=false} = {}){
       syncPoolFromTextarea();
 
-      // selectedCount is from inputs
-      selectedCount = clampEven(selectedCount, 4, 128);
-      // allow any even count up to 128
+      // selectedCount is from inputs (allow any number >= 4)
+      const rawNum = countNum.value === "" ? Number(countRange.value) : Number(countNum.value);
+      selectedCount = clampMin(rawNum, 4);
 
       if (pool.length < 4){
         showToast("메뉴 후보가 너무 적어요(최소 4개).");
@@ -1114,16 +1110,31 @@
     /********************
      * Events
      ********************/
-    function syncCountUI(val){
-      const v = clampEven(val, 4, 128);
-      selectedCount = v;
+    function syncCountUI(val, {fromInput=false} = {}){
+      if (fromInput && val === ""){
+        selectedCount = NaN;
+        return;
+      }
+      const n = Number(val);
+      if (Number.isNaN(n)) return;
 
-      countRange.value = String(v);
-      countNum.value = String(v);
+      selectedCount = n;
+      if (n >= 4 && n <= 128){
+        countRange.value = String(n);
+      }
+      if (!fromInput){
+        countNum.value = String(n);
+      }
     }
 
     countRange.addEventListener("input", (e)=> syncCountUI(e.target.value));
-    countNum.addEventListener("input", (e)=> syncCountUI(e.target.value));
+    countNum.addEventListener("input", (e)=> syncCountUI(e.target.value, {fromInput:true}));
+    countNum.addEventListener("blur", (e)=> {
+      if (e.target.value === "") return;
+      const n = clampMin(e.target.value, 4);
+      e.target.value = String(n);
+      syncCountUI(n);
+    });
 
     $$(".btn[data-quick]").forEach(btn => {
       btn.addEventListener("click", () => syncCountUI(btn.dataset.quick));
