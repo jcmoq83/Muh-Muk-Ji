@@ -6,45 +6,63 @@
   <title>뭐먹지</title>
   <meta name="description" content="메뉴 토너먼트로 오늘의 한 끼를 결정하세요. 최종 메뉴는 네이버지도/카카오맵으로 바로 검색!" />
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+KR:wght@400;600;700&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredoka:wght@400;600;700&family=Noto+Sans+KR:wght@400;600;700&family=Press+Start+2P&display=swap");
     :root{
-      --bg:#fff7e9;
-      --card:#ffffff;
-      --card2:#fff2d9;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --line:#f3d7a6;
-      --accent:#ff7a59;
-      --accent2:#ffd166;
-      --danger:#ff6b6b;
-      --ok:#35c78a;
-      --shadow: 0 16px 35px rgba(255,122,89,.18);
-      --radius: 18px;
+      --bg:#0b1020;
+      --card:#0f172a;
+      --card2:#111827;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --line:#1f2937;
+      --accent:#7c5cff;
+      --accent2:#22d3ee;
+      --danger:#ff4d6d;
+      --ok:#2dd4bf;
+      --shadow: 0 22px 46px rgba(0,0,0,.45);
+      --radius: 20px;
+      --glow: 0 0 22px rgba(124,92,255,.35);
     }
     *{ box-sizing:border-box; }
     body{
       margin:0;
       font-family: "Fredoka","Noto Sans KR",sans-serif;
-      background: radial-gradient(1200px 700px at 15% 0%, rgba(255,122,89,.18), transparent 60%),
-                  radial-gradient(900px 650px at 90% 10%, rgba(255,209,102,.25), transparent 55%),
-                  radial-gradient(1000px 700px at 60% 100%, rgba(255,154,140,.15), transparent 60%),
-                  var(--bg);
+      background:
+        radial-gradient(900px 600px at 15% 0%, rgba(124,92,255,.25), transparent 60%),
+        radial-gradient(700px 500px at 90% 10%, rgba(34,211,238,.22), transparent 55%),
+        radial-gradient(900px 700px at 60% 100%, rgba(255,77,109,.18), transparent 60%),
+        linear-gradient(180deg, rgba(8,12,24,.9), rgba(10,16,32,.95)),
+        var(--bg);
+      background-blend-mode: screen, screen, screen, normal, normal;
       color:var(--text);
       min-height:100vh;
       display:flex;
       justify-content:center;
+      align-items:center;
+      padding: 6vh 0 8vh;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity:.35;
+      mix-blend-mode: soft-light;
     }
     a{ color:inherit; }
     .wrap{
       width:min(980px, 100%);
-      padding: 26px 18px 40px;
+      padding: 54px 18px 68px;
     }
     header{
       display:flex;
       gap:14px;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
-      margin-bottom:18px;
+      margin-bottom:22px;
     }
     .brand{
       display:flex;
@@ -53,8 +71,8 @@
     }
     .logo{
       width:44px;height:44px;border-radius:14px;
-      background: linear-gradient(135deg, rgba(255,122,89,.95), rgba(255,209,102,.95));
-      box-shadow: var(--shadow);
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(34,211,238,.95));
+      box-shadow: 0 0 0 2px rgba(255,255,255,.06), 0 12px 24px rgba(0,0,0,.35);
       position:relative;
       overflow:hidden;
     }
@@ -65,29 +83,31 @@
       transform: rotate(20deg);
     }
     h1{
-      font-size: 20px;
+      font-family: "Bebas Neue","Fredoka","Noto Sans KR",sans-serif;
+      font-size: 40px;
       margin:0 0 4px;
-      letter-spacing:-.3px;
+      letter-spacing: .6px;
     }
     .sub{
       margin:0;
       color:var(--muted);
-      line-height:1.45;
-      font-size: 13.5px;
+      line-height:1.6;
+      font-size: 16px;
     }
     .pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding: 10px 12px;
-      border: 1px solid rgba(31,41,55,.12);
+      padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,.12);
       border-radius: 999px;
-      background: rgba(255,255,255,.75);
-      backdrop-filter: blur(10px);
+      background: rgba(12,16,30,.7);
+      backdrop-filter: blur(12px);
       color: var(--muted);
       font-size: 12.5px;
       user-select:none;
       white-space:nowrap;
+      box-shadow: 0 10px 20px rgba(0,0,0,.35);
     }
 
     .grid{
@@ -101,8 +121,8 @@
       .pill{ justify-content:center; }
     }
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,248,235,.95));
-      border: 1px solid rgba(31,41,55,.08);
+      background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(8,12,24,.9));
+      border: 1px solid rgba(255,255,255,.08);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
@@ -110,9 +130,9 @@
     .card .inner{ padding:16px; }
     .section-title{
       margin:0 0 10px;
-      font-size: 14px;
+      font-size: 15px;
       letter-spacing:-.2px;
-      color: #1f2937;
+      color: #e2e8f0;
     }
     .muted{ color:var(--muted); }
     .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
@@ -123,31 +143,37 @@
       cursor:pointer;
       padding: 11px 12px;
       border-radius: 14px;
-      background: rgba(255,255,255,.9);
+      background: rgba(12,16,30,.85);
       color: var(--text);
-      border: 1px solid rgba(31,41,55,.12);
-      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 10px 22px rgba(0,0,0,.25);
+      transition: transform .06s ease, background .15s ease, border-color .15s ease, box-shadow .2s ease;
       user-select:none;
       touch-action: manipulation;
     }
-    .btn:hover{ background: rgba(255,255,255,1); }
+    .btn:hover{
+      background: rgba(20,26,44,.95);
+      box-shadow: 0 12px 26px rgba(0,0,0,.35);
+    }
     .btn:active{ transform: translateY(1px); }
     .btn.primary{
-      background: linear-gradient(135deg, rgba(255,122,89,.95), rgba(255,209,102,.95));
-      border-color: rgba(255,122,89,.35);
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(34,211,238,.95));
+      border-color: rgba(124,92,255,.5);
+      color:#0b1020;
+      text-shadow: 0 1px 0 rgba(255,255,255,.2);
     }
     .btn.primary:hover{ filter: brightness(1.06); }
     .btn.ghost{
-      background: transparent;
-      border-color: rgba(31,41,55,.16);
+      background: rgba(12,16,30,.55);
+      border-color: rgba(255,255,255,.14);
     }
     .btn.danger{
       background: rgba(255,77,109,.12);
-      border-color: rgba(255,77,109,.25);
+      border-color: rgba(255,77,109,.35);
     }
     .btn.ok{
-      background: rgba(51,209,122,.12);
-      border-color: rgba(51,209,122,.22);
+      background: rgba(45,212,191,.15);
+      border-color: rgba(45,212,191,.35);
     }
     .btn:disabled{
       opacity:.55;
@@ -156,12 +182,22 @@
     .chip{
       padding: 8px 10px;
       border-radius: 999px;
-      border:1px solid rgba(31,41,55,.12);
-      background: rgba(255,248,235,.9);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(12,16,30,.7);
       color: var(--muted);
       font-size: 12px;
     }
-    .hr{ height:1px; background: rgba(31,41,55,.08); margin: 12px 0; }
+    #roundChip,
+    #matchChip{
+      font-family: "Press Start 2P", "Bebas Neue", "Fredoka", "Noto Sans KR", sans-serif;
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: #0b1020;
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(34,211,238,.95));
+      border-color: rgba(34,211,238,.6);
+      text-shadow: 0 1px 0 rgba(255,255,255,.2);
+    }
+    .hr{ height:1px; background: rgba(255,255,255,.08); margin: 12px 0; }
 
     /* Setup controls */
     .range-wrap{
@@ -176,22 +212,22 @@
       width:100%;
       padding: 11px 10px;
       border-radius: 14px;
-      border:1px solid rgba(31,41,55,.12);
-      background: rgba(255,255,255,.9);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(12,16,30,.85);
       color: var(--text);
       outline:none;
     }
     details{
       border-radius: var(--radius);
-      border:1px solid rgba(31,41,55,.08);
-      background: rgba(255,248,235,.7);
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(12,16,30,.55);
       overflow:hidden;
     }
     summary{
       padding: 12px 14px;
       cursor:pointer;
       user-select:none;
-      color:#dfe4ff;
+      color:#dbeafe;
       font-size: 13.5px;
       list-style:none;
     }
@@ -202,8 +238,8 @@
       min-height: 160px;
       padding: 12px 12px;
       border-radius: 14px;
-      border:1px solid rgba(31,41,55,.12);
-      background: rgba(255,255,255,.9);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(12,16,30,.85);
       color: var(--text);
       outline:none;
       resize: vertical;
@@ -249,24 +285,31 @@
       display:flex;
       flex-direction:column;
       border-radius: 18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(16,18,26,.55);
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(18,24,42,.95), rgba(9,12,24,.9));
       overflow:hidden;
       cursor:pointer;
       min-height: 290px;
-      transition: transform .06s ease, border-color .15s ease, filter .15s ease;
+      box-shadow: 0 12px 28px rgba(0,0,0,.35);
+      transition: transform .06s ease, border-color .15s ease, filter .15s ease, box-shadow .2s ease;
       touch-action: manipulation;
     }
     .pick:hover{
-      border-color: rgba(255,255,255,.18);
-      filter: brightness(1.03);
+      border-color: rgba(124,92,255,.55);
+      box-shadow: 0 14px 34px rgba(124,92,255,.18), 0 12px 28px rgba(0,0,0,.35);
+      filter: brightness(1.05);
+    }
+    .pick.picked{
+      transform: translateY(-2px) scale(1.01);
+      border-color: rgba(34,211,238,.7);
+      box-shadow: 0 18px 40px rgba(34,211,238,.22), 0 12px 28px rgba(0,0,0,.35);
     }
     .pick:active{ transform: translateY(1px); }
     .imgbox{
       position:relative;
       width:100%;
       height: 220px;
-      background: linear-gradient(135deg, rgba(124,92,255,.18), rgba(36,211,238,.12));
+      background: linear-gradient(135deg, rgba(124,92,255,.22), rgba(36,211,238,.16));
       overflow:hidden;
     }
     .imgbox img{
@@ -291,14 +334,14 @@
       gap:6px;
     }
     .menu-name{
-      font-size: 18px;
+      font-size: 20px;
       margin:0;
       letter-spacing:-.3px;
     }
     .menu-sub{
       margin:0;
       color:var(--muted);
-      font-size: 12.5px;
+      font-size: 13px;
       line-height:1.35;
     }
     .vs{
@@ -306,22 +349,23 @@
       align-items:center;
       justify-content:center;
       border-radius: 18px;
-      border:1px dashed rgba(255,255,255,.14);
-      color: rgba(255,255,255,.55);
+      border:1px dashed rgba(255,255,255,.2);
+      color: rgba(255,255,255,.7);
       font-weight: 700;
       letter-spacing:.8px;
-      background: rgba(12,14,20,.35);
+      background: rgba(10,14,24,.6);
+      text-shadow: 0 0 12px rgba(124,92,255,.35);
     }
     .progress{
       height: 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,.08);
+      background: rgba(255,255,255,.12);
       overflow:hidden;
     }
     .bar{
       height:100%;
       width:0%;
-      background: linear-gradient(90deg, rgba(124,92,255,.95), rgba(36,211,238,.78));
+      background: linear-gradient(90deg, rgba(124,92,255,.95), rgba(34,211,238,.95));
       transition: width .2s ease;
     }
 
@@ -339,7 +383,7 @@
     .winner .imgbox{ height: 220px; border-radius: 18px; border:1px solid rgba(255,255,255,.10); }
     .winner .imgbox img{ border-radius: 18px; }
     .big{
-      font-size: 26px;
+      font-size: 30px;
       margin: 0 0 8px;
       letter-spacing:-.6px;
     }
@@ -382,6 +426,34 @@
       line-height:1.45;
       margin: 10px 0 0;
     }
+    @keyframes riseIn{
+      from{ opacity:0; transform: translateY(16px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+    @keyframes winPop{
+      0%{ opacity:0; transform: translateY(18px) scale(.98); }
+      60%{ opacity:1; transform: translateY(-2px) scale(1.01); }
+      100%{ opacity:1; transform: translateY(0) scale(1); }
+    }
+    @keyframes trophyPulse{
+      0%,100%{ box-shadow: 0 0 0 rgba(124,92,255,0), 0 0 0 rgba(34,211,238,0); }
+      50%{ box-shadow: 0 0 24px rgba(124,92,255,.35), 0 0 36px rgba(34,211,238,.25); }
+    }
+    header{
+      animation: riseIn .5s ease both;
+    }
+    .grid > .card{
+      animation: riseIn .6s ease both;
+    }
+    .grid > .card:nth-child(2){
+      animation-delay: .08s;
+    }
+    body.state-result .winner{
+      animation: winPop .6s ease both;
+    }
+    body.state-result #winnerImg{
+      animation: trophyPulse 1.6s ease-in-out infinite;
+    }
   </style>
 </head>
 
@@ -392,7 +464,7 @@
         <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>뭐먹지</h1>
-          <p class="sub">메뉴 토너먼트로 오늘의 한 끼를 뽑고, 바로 지도 앱에서 주변 맛집을 찾아요.</p>
+          <p class="sub">오늘의 한 끼를 뽑는 먹방 배틀! 더 끌리는 메뉴를 골라 결승까지 올라가세요.</p>
         </div>
       </div>
       <div class="pill" id="envPill">로딩…</div>
@@ -517,7 +589,7 @@
             </div>
             <div>
               <h3 class="big" id="winnerName">-</h3>
-              <p class="sub" id="winnerDesc">이제 주변 맛집을 바로 찾아볼까요?</p>
+              <p class="sub" id="winnerDesc">우승 메뉴 확정! 지금 바로 맛집을 찾아볼까요?</p>
 
               <div class="row" style="margin-top:12px;">
                 <button class="btn primary" id="naverBtn">네이버 지도 앱에서 검색</button>
@@ -866,6 +938,8 @@
     }
 
     function renderCurrentMatch(){
+      pickLeft.classList.remove("picked");
+      pickRight.classList.remove("picked");
       // auto-resolve BYE matches
       while (true){
         const left = current[2*matchIndex];
@@ -925,6 +999,7 @@
       const left = current[2*matchIndex];
       const right = current[2*matchIndex + 1];
       const picked = (side === "L") ? left : right;
+      const pickedEl = (side === "L") ? pickLeft : pickRight;
 
       // save snapshot for undo (minimal)
       history.push({
@@ -932,6 +1007,9 @@
         next: next.slice(),
         matchIndex
       });
+
+      pickedEl.classList.add("picked");
+      setTimeout(() => pickedEl.classList.remove("picked"), 220);
 
       next.push(picked);
       matchIndex++;
@@ -972,7 +1050,7 @@
       resultView.style.display = "";
 
       winnerName.textContent = winner?.name ?? "-";
-      winnerDesc.textContent = `“${winner?.name ?? ""}” 먹으러 가자!`;
+      winnerDesc.textContent = `WIN! “${winner?.name ?? ""}” 먹으러 가자!`;
 
       winnerImg.innerHTML = "";
       if (winner?.img){
