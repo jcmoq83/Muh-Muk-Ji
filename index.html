@@ -364,76 +364,98 @@
       background: rgba(8,12,24,.55);
       padding: 10px;
       overflow:auto;
-      max-height: 280px;
+      max-height: 320px;
     }
-    .mini-bracket-single{
+    .bracket-board{
       display:grid;
       grid-auto-flow: column;
-      grid-auto-columns: minmax(130px, 150px);
-      gap: 10px;
+      grid-auto-columns: minmax(170px, 200px);
+      gap: 16px;
       min-width: fit-content;
       align-items:start;
     }
-    .mini-bracket-split{
+    .bracket-split{
       display:grid;
       grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      min-width: fit-content;
+      align-items:start;
+    }
+    .bracket-side{
+      display:grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(160px, 190px);
       gap: 12px;
       min-width: fit-content;
       align-items:start;
     }
-    .mini-bracket-side{
-      display:grid;
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(120px, 140px);
-      gap: 8px;
-      align-items:start;
-    }
-    .mini-final{
-      align-self:center;
-      display:grid;
-      gap:8px;
-      min-width: 140px;
-    }
     .br-round{
-      display:grid;
-      gap: 6px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
     }
     .br-head{
       font-size: 10px;
-      color: rgba(229,231,235,.75);
+      color: rgba(229,231,235,.78);
+      letter-spacing: .9px;
       text-transform: uppercase;
-      letter-spacing:.8px;
-      margin-bottom: 2px;
     }
-    .br-slot{
+    .br-match{
       position:relative;
-      min-height: 26px;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius: 8px;
-      padding: 5px 8px;
+      border:1px solid rgba(148,163,184,.25);
+      border-radius: 10px;
+      background: rgba(15,23,42,.78);
+      padding: 6px;
+      display:grid;
+      gap:4px;
+      min-height: 58px;
+    }
+    .br-team{
+      border:1px solid rgba(148,163,184,.24);
+      border-radius: 6px;
+      padding: 4px 6px;
       font-size: 11px;
-      line-height: 1.25;
-      color: rgba(245,247,255,.92);
-      background: rgba(17,24,39,.8);
+      color: rgba(241,245,249,.95);
+      background: rgba(30,41,59,.9);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      line-height: 1.2;
     }
-    .br-slot.pending{
-      color: rgba(148,163,184,.95);
+    .br-team.pending{
+      color: rgba(148,163,184,.9);
       border-style: dashed;
-      background: rgba(12,16,30,.55);
+      background: rgba(15,23,42,.6);
     }
-    .br-slot.winner{
-      border-color: rgba(45,212,191,.55);
-      background: rgba(45,212,191,.12);
+    .br-team.winner{
       color: #d1fae5;
+      border-color: rgba(45,212,191,.6);
+      background: rgba(20,83,45,.35);
       font-weight: 700;
     }
-    .br-slot.bye{
-      border-color: rgba(251,191,36,.45);
-      background: rgba(251,191,36,.12);
-      color: #fde68a;
+    .br-team.loser{
+      color: rgba(203,213,225,.75);
+      border-color: rgba(248,113,113,.35);
+      background: rgba(127,29,29,.2);
+      text-decoration: line-through;
+    }
+    .br-note{
+      font-size: 10px;
+      color: rgba(148,163,184,.95);
+      letter-spacing:.2px;
+    }
+    .br-link{
+      position:absolute;
+      top:50%;
+      right:-12px;
+      width:12px;
+      border-top:1px solid rgba(148,163,184,.35);
+    }
+    .br-center{
+      align-self:center;
+      min-width: 210px;
+      display:grid;
+      gap: 14px;
     }
     @media (max-width: 880px){
       #roundChip{ font-size: 30px; }
@@ -547,7 +569,7 @@
         <div class="inner" id="setupView">
           <h2 class="section-title">토너먼트 설정</h2>
           <div class="row space">
-            <span class="chip">4~128강 선택</span>
+            <span class="chip">4~128강 선택 (2의 거듭제곱)</span>
           </div>
 
           <div class="range-wrap">
@@ -556,19 +578,14 @@
               <input id="countRange" type="range" min="4" max="128" step="2" value="16" />
               <div class="row" style="margin-top:8px;">
                 <button class="btn ghost" data-quick="4">4강</button>
-                <button class="btn ghost" data-quick="6">6강</button>
                 <button class="btn ghost" data-quick="8">8강</button>
-                <button class="btn ghost" data-quick="12">12강</button>
                 <button class="btn ghost" data-quick="16">16강</button>
-                <button class="btn ghost" data-quick="24">24강</button>
                 <button class="btn ghost" data-quick="32">32강</button>
-                <button class="btn ghost" data-quick="48">48강</button>
                 <button class="btn ghost" data-quick="64">64강</button>
-                <button class="btn ghost" data-quick="96">96강</button>
                 <button class="btn ghost" data-quick="128">128강</button>
               </div>
               <p class="hint">
-                * 선택한 인원에 맞춰 부전승을 자동 배치합니다.
+                * 2의 거듭제곱 강수(4/8/16/32/64/128)만 지원합니다.
               </p>
             </div>
           </div>
@@ -641,10 +658,6 @@
               </div>
             </div>
           </div>
-
-          <p class="small-note" id="byeNote" style="display:none;">
-            부전승(BYE)이 섞여 있으면 자동으로 다음 라운드로 넘어갑니다.
-          </p>
 
           <div class="mini-bracket-wrap" id="miniBracketWrap" aria-label="토너먼트 표"></div>
         </div>
@@ -725,7 +738,7 @@
       }
       return a;
     }
-    const ALLOWED_COUNTS = [4,6,8,12,16,24,32,48,64,96,128];
+    const ALLOWED_COUNTS = [4,8,16,32,64,128];
     function snapCount(n){
       const val = Number(n);
       if (Number.isNaN(val)) return ALLOWED_COUNTS[0];
@@ -739,11 +752,6 @@
         }
       }
       return best;
-    }
-    function nextPow2(n){
-      let p = 1;
-      while (p < n) p <<= 1;
-      return p;
     }
     function hash32(str){
       // simple deterministic hash for stable image query variation
@@ -827,16 +835,12 @@
     let selectedCount = 16;
 
     // tournament state
-    let bracketSize = 16;
-    let byes = 0;
-
-    let current = [];   // {name, img, bye?}[]
+    let current = [];   // {name, img}[]
     let next = [];
     let matchIndex = 0; // which pair
     let totalMatchesThisRound = 0;
     let currentRoundIndex = 0;
-    let nextInsertIndex = 0;
-    let bracketRounds = []; // round-wise slots for mini bracket rendering
+    let bracketMatches = []; // round-wise matches for bracket rendering
 
     // history for undo
     let history = [];
@@ -870,8 +874,6 @@
     const nameRight = $("#nameRight");
     const imgLeft = $("#imgLeft");
     const imgRight = $("#imgRight");
-    const byeNote = $("#byeNote");
-
     const undoBtn = $("#undoBtn");
     const restartBtn = $("#restartBtn");
 
@@ -930,48 +932,18 @@
     }
 
     /********************
-     * Bracket preparation (NO bye-vs-bye)
+     * Bracket preparation
      ********************/
     function pickCandidates(count){
-      if (pool.length < count){
-        // 후보 부족하면 pool을 섞어서 중복 없이 가능한 만큼만.
-        // (실서비스라면 이 경우 입력을 더 받는 게 좋음)
-        showToast(`후보가 ${pool.length}개라서 가능한 만큼만 진행합니다.`);
-        count = pool.length;
-      }
       const chosen = shuffle(pool).slice(0, count);
       return chosen.map(name => ({
         name,
-        img: makeImageUrl(name),
-        bye: false
+        img: makeImageUrl(name)
       }));
     }
 
     function makeInitialBracket(count){
-      const menus = pickCandidates(count);
-      const actualCount = menus.length;
-      bracketSize = nextPow2(actualCount);
-      byes = bracketSize - actualCount;
-      const slots = new Array(bracketSize).fill(null);
-
-      // choose random pairs to place byes: ensures no bye-bye
-      const pairCount = bracketSize / 2;
-      const pairIdxs = shuffle([...Array(pairCount)].map((_,i)=>i)).slice(0, byes);
-
-      for (const p of pairIdxs){
-        const pos = 2*p + (Math.random() < 0.5 ? 0 : 1);
-        slots[pos] = { name:"BYE", img:"", bye:true };
-      }
-
-      // fill remaining slots with shuffled menus
-      const shuffledMenus = shuffle(menus);
-      let mi = 0;
-      for (let i = 0; i < slots.length; i++){
-        if (slots[i] === null){
-          slots[i] = shuffledMenus[mi++];
-        }
-      }
-      return slots;
+      return pickCandidates(count);
     }
 
     /********************
@@ -985,102 +957,152 @@
 
     function cloneEntry(entry){
       if (!entry) return null;
-      return { name: entry.name, img: entry.img || "", bye: !!entry.bye };
+      return { name: entry.name, img: entry.img || "" };
     }
 
-    function initBracketRounds(initialSlots){
-      const rounds = [initialSlots.map(cloneEntry)];
+    function createMatch(left = null, right = null){
+      return {
+        left: cloneEntry(left),
+        right: cloneEntry(right),
+        winner: null,
+        loser: null
+      };
+    }
+
+    function initBracketMatches(initialSlots){
+      const rounds = [];
       let size = initialSlots.length;
+      let slots = initialSlots.map(cloneEntry);
       while (size > 1){
-        size = size / 2;
-        rounds.push(new Array(size).fill(null));
+        const matchCount = size / 2;
+        const round = [];
+        for (let i = 0; i < matchCount; i++){
+          const left = slots[2 * i] ?? null;
+          const right = slots[2 * i + 1] ?? null;
+          round.push(createMatch(left, right));
+        }
+        rounds.push(round);
+        size = matchCount;
+        slots = new Array(size).fill(null);
       }
       return rounds;
     }
 
-    function cloneBracketRounds(rounds){
-      return rounds.map(round => round.map(cloneEntry));
+    function cloneMatch(match){
+      return {
+        left: cloneEntry(match.left),
+        right: cloneEntry(match.right),
+        winner: cloneEntry(match.winner),
+        loser: cloneEntry(match.loser)
+      };
     }
 
-    function slotClass(slot, {isFinalWinner=false} = {}){
-      if (!slot) return "br-slot pending";
-      if (slot.bye) return "br-slot bye";
-      if (isFinalWinner) return "br-slot winner";
-      return "br-slot";
+    function cloneBracketMatches(rounds){
+      return rounds.map(round => round.map(cloneMatch));
     }
 
-    function slotLabel(slot){
-      if (!slot) return "대기";
-      return slot.name;
+    function teamLabel(match, side, roundIdx){
+      const team = match[side];
+      if (!team) return "대기";
+      if (roundIdx === 0 && !match.winner) return "대기";
+      return team.name;
+    }
+
+    function teamClass(match, side, roundIdx){
+      const team = match[side];
+      if (!team || (roundIdx === 0 && !match.winner)) return "br-team pending";
+      if (!match.winner) return "br-team";
+      return match.winner.name === team.name ? "br-team winner" : "br-team loser";
+    }
+
+    function renderMatch(match, roundIdx, showConnector){
+      const note = match.winner
+        ? `${match.winner.name}가 ${match.loser?.name || "상대"}를 이김`
+        : "진행 전";
+      return `
+        <div class="br-match">
+          <div class="${teamClass(match, "left", roundIdx)}">${teamLabel(match, "left", roundIdx)}</div>
+          <div class="${teamClass(match, "right", roundIdx)}">${teamLabel(match, "right", roundIdx)}</div>
+          <div class="br-note">${note}</div>
+          ${showConnector ? `<div class="br-link" aria-hidden="true"></div>` : ""}
+        </div>
+      `;
+    }
+
+    function roundTitle(roundSize){
+      if (roundSize === 2) return "결승";
+      return `${roundSize}강`;
     }
 
     function renderRoundColumns(rounds, {baseSize, reverse=false} = {}){
       const source = reverse ? rounds.slice().reverse() : rounds;
-      return source.map((slots, idx) => {
+      return source.map((matches, idx) => {
         const logicalIdx = reverse ? (rounds.length - 1 - idx) : idx;
-        const roundSize = Math.max(1, baseSize / (2 ** logicalIdx));
-        const title = roundSize === 1 ? "WIN" : `${roundSize}강`;
-        const isFinalRound = logicalIdx === rounds.length - 1;
-        const slotHtml = slots.map(slot => `<div class="${slotClass(slot, {isFinalWinner:isFinalRound && !!slot && !slot.bye})}">${slotLabel(slot)}</div>`).join("");
-        return `<div class="br-round"><div class="br-head">${title}</div>${slotHtml}</div>`;
+        const roundSize = Math.max(2, baseSize / (2 ** logicalIdx));
+        const showConnector = idx !== source.length - 1;
+        const matchHtml = matches.map(match => renderMatch(match, logicalIdx, showConnector)).join("");
+        return `<div class="br-round"><div class="br-head">${roundTitle(roundSize)}</div>${matchHtml}</div>`;
       }).join("");
     }
 
     function splitRoundsForDisplay(rounds){
-      const firstRoundSize = rounds[0].length;
-      const half = firstRoundSize / 2;
-      const sideDepth = Math.log2(half);
+      const firstRoundMatches = rounds[0].length;
+      const half = firstRoundMatches / 2;
       const left = [];
       const right = [];
-      for (let r = 0; r <= sideDepth; r++){
-        const sizeAtRound = half / (2 ** r);
-        left.push(rounds[r].slice(0, sizeAtRound));
-        right.push(rounds[r].slice(sizeAtRound, sizeAtRound * 2));
+      let matchCount = half;
+      for (let r = 0; r < rounds.length - 1; r++){
+        left.push(rounds[r].slice(0, matchCount));
+        right.push(rounds[r].slice(matchCount, matchCount * 2));
+        matchCount = Math.max(1, matchCount / 2);
       }
       return { left, right };
     }
 
     function renderMiniBracket(){
       if (!miniBracketWrap) return;
-      if (!bracketRounds.length){
+      if (!bracketMatches.length){
         miniBracketWrap.innerHTML = "";
         return;
       }
 
-      const initialSize = bracketRounds[0].length;
+      const initialSize = bracketMatches[0].length * 2;
       if (initialSize <= 32){
-        miniBracketWrap.innerHTML = `<div class="mini-bracket-single">${renderRoundColumns(bracketRounds, {baseSize: initialSize})}</div>`;
+        miniBracketWrap.innerHTML = `<div class="bracket-board">${renderRoundColumns(bracketMatches, {baseSize: initialSize})}</div>`;
         return;
       }
 
-      const { left, right } = splitRoundsForDisplay(bracketRounds);
-      const finalists = bracketRounds[bracketRounds.length - 2] || [null, null];
-      const champion = bracketRounds[bracketRounds.length - 1]?.[0] || null;
+      const { left, right } = splitRoundsForDisplay(bracketMatches);
+      const finalMatch = bracketMatches[bracketMatches.length - 1][0];
 
       miniBracketWrap.innerHTML = `
-        <div class="mini-bracket-split">
-          <div class="mini-bracket-side">${renderRoundColumns(left, {baseSize: left[0].length})}</div>
-          <div class="mini-final">
+        <div class="bracket-split">
+          <div class="bracket-side">${renderRoundColumns(left, {baseSize: left[0].length * 2})}</div>
+          <div class="br-center">
             <div class="br-round">
               <div class="br-head">결승</div>
-              <div class="${slotClass(finalists[0])}">${slotLabel(finalists[0])}</div>
-              <div class="${slotClass(finalists[1])}">${slotLabel(finalists[1])}</div>
-            </div>
-            <div class="br-round">
-              <div class="br-head">우승</div>
-              <div class="${slotClass(champion, {isFinalWinner: !!champion && !champion.bye})}">${slotLabel(champion)}</div>
+              ${renderMatch(finalMatch, bracketMatches.length - 1, false)}
             </div>
           </div>
-          <div class="mini-bracket-side">${renderRoundColumns(right, {baseSize: right[0].length, reverse:true})}</div>
+          <div class="bracket-side">${renderRoundColumns(right, {baseSize: right[0].length * 2, reverse:true})}</div>
         </div>
       `;
     }
 
-    function recordAdvancement(picked){
-      const targetRound = bracketRounds[currentRoundIndex + 1];
-      if (!targetRound) return;
-      targetRound[nextInsertIndex] = cloneEntry(picked);
-      nextInsertIndex++;
+    function recordAdvancement(left, right, picked){
+      const roundMatches = bracketMatches[currentRoundIndex];
+      const match = roundMatches[matchIndex];
+      match.left = cloneEntry(left);
+      match.right = cloneEntry(right);
+      match.winner = cloneEntry(picked);
+      match.loser = cloneEntry(picked.name === left.name ? right : left);
+
+      const nextRound = bracketMatches[currentRoundIndex + 1];
+      if (nextRound){
+        const nextMatch = nextRound[Math.floor(matchIndex / 2)];
+        const side = (matchIndex % 2 === 0) ? "left" : "right";
+        nextMatch[side] = cloneEntry(picked);
+      }
       renderMiniBracket();
     }
 
@@ -1106,30 +1128,6 @@
     function renderCurrentMatch(){
       pickLeft.classList.remove("picked");
       pickRight.classList.remove("picked");
-      // auto-resolve BYE matches
-      while (true){
-        const left = current[2*matchIndex];
-        const right = current[2*matchIndex + 1];
-
-        if (!left || !right) break;
-
-        if (left.bye && right.bye){
-          // shouldn't happen due to placement, but safe-guard
-          matchIndex++;
-          continue;
-        } else if (left.bye && !right.bye){
-          next.push(right);
-          recordAdvancement(right);
-          matchIndex++;
-          continue;
-        } else if (!left.bye && right.bye){
-          next.push(left);
-          recordAdvancement(left);
-          matchIndex++;
-          continue;
-        }
-        break;
-      }
 
       if (matchIndex >= totalMatchesThisRound){
         // round finished
@@ -1145,7 +1143,6 @@
         matchIndex = 0;
         totalMatchesThisRound = current.length / 2;
         currentRoundIndex++;
-        nextInsertIndex = 0;
         updateTopInfo();
         renderCurrentMatch();
         return;
@@ -1159,8 +1156,6 @@
 
       setImg(imgLeft, left.img);
       setImg(imgRight, right.img);
-
-      byeNote.style.display = (byes > 0) ? "block" : "none";
 
       updateTopInfo();
     }
@@ -1177,15 +1172,14 @@
         next: next.slice(),
         matchIndex,
         currentRoundIndex,
-        nextInsertIndex,
-        bracketRounds: cloneBracketRounds(bracketRounds)
+        bracketMatches: cloneBracketMatches(bracketMatches)
       });
 
       pickedEl.classList.add("picked");
       setTimeout(() => pickedEl.classList.remove("picked"), 220);
 
       next.push(picked);
-      recordAdvancement(picked);
+      recordAdvancement(left, right, picked);
       matchIndex++;
       renderCurrentMatch();
     }
@@ -1197,8 +1191,7 @@
       next = snap.next;
       matchIndex = snap.matchIndex;
       currentRoundIndex = snap.currentRoundIndex;
-      nextInsertIndex = snap.nextInsertIndex;
-      bracketRounds = snap.bracketRounds;
+      bracketMatches = snap.bracketMatches;
       renderMiniBracket();
       renderCurrentMatch();
       showToast("직전 선택을 되돌렸어요");
@@ -1345,6 +1338,10 @@
         showToast("메뉴 후보가 너무 적어요(최소 4개).");
         return;
       }
+      if (pool.length < selectedCount){
+        showToast(`후보가 ${pool.length}개라서 ${selectedCount}강을 진행할 수 없어요.`);
+        return;
+      }
 
       if (shuffleFirst){
         pool = shuffle(pool);
@@ -1355,9 +1352,8 @@
       next = [];
       matchIndex = 0;
       currentRoundIndex = 0;
-      nextInsertIndex = 0;
       history = [];
-      bracketRounds = initBracketRounds(current);
+      bracketMatches = initBracketMatches(current);
 
       totalMatchesThisRound = current.length / 2;
 
@@ -1373,11 +1369,8 @@
       next = [];
       matchIndex = 0;
       history = [];
-      byes = 0;
-      bracketSize = selectedCount;
       currentRoundIndex = 0;
-      nextInsertIndex = 0;
-      bracketRounds = [];
+      bracketMatches = [];
       renderMiniBracket();
       showSetup();
     }
