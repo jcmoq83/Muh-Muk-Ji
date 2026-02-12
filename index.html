@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>뭐먹지</title>
+  <title>머먹지!?</title>
   <meta name="description" content="메뉴 토너먼트로 오늘의 한 끼를 결정하세요. 최종 메뉴는 네이버지도/카카오맵으로 바로 검색!" />
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredoka:wght@400;600;700&family=Noto+Sans+KR:wght@400;600;700&family=Press+Start+2P&display=swap");
@@ -87,6 +87,10 @@
       font-size: 40px;
       margin:0 0 4px;
       letter-spacing: .6px;
+    }
+    .brand-subtitle{
+      font-size: 20px;
+      opacity: .92;
     }
     .sub{
       margin:0;
@@ -556,7 +560,7 @@
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <div>
-          <h1>뭐먹지</h1>
+          <h1>머먹지!? <span class="brand-subtitle">(muh-muk-ji)</span></h1>
           <p class="sub">오늘의 한 끼를 뽑는 먹방 배틀! 더 끌리는 메뉴를 골라 결승까지 올라가세요.</p>
         </div>
       </div>
@@ -798,7 +802,7 @@
     const DEFAULT_MENUS = uniqClean([
       "삼겹살","목살","소갈비","돼지갈비","소고기","곱창","대창","막창","양꼬치","닭갈비","닭강정","양념치킨","간장치킨","후라이드치킨","닭똥집","치즈닭갈비","찜닭","닭볶음탕",
       "김치찌개","된장찌개","순두부찌개","부대찌개","갈비탕","설렁탕","곰탕","육개장","닭개장","감자탕","해장국",
-      "국밥","순대국","콩나물국밥","비빔밥","돌솥비빔밥","김밥","라면","떡볶이","떡볶이(엽기 스타일)","국물떡볶이","라볶이","즉석떡볶이","크림떡볶이","튀김","새우튀김","어묵","분식",
+      "국밥","순대국","콩나물국밥","비빔밥","돌솥비빔밥","김밥","라면","떡볶이","떡볶이(엽기 스타일)","국물떡볶이","라볶이","즉석떡볶이","크림떡볶이","새우튀김","어묵","분식",
       "냉면","물냉면","비냉","밀면","칼국수","수제비","쌀국수","우동","소바","짜장면","짬뽕","탕수육",
       "마라탕","마라샹궈","훠궈","깐풍기","유린기",
       "초밥","회","연어","참치","돈부리","라멘","야키소바","가츠동","규동","김치나베돈까스","텐동","오니기리","타코라이스","돈까스(경양식)","돈까스(일본식)","우나기동",
@@ -1016,14 +1020,10 @@
     }
 
     function renderMatch(match, roundIdx, showConnector){
-      const note = match.winner
-        ? `${match.winner.name}가 ${match.loser?.name || "상대"}를 이김`
-        : "진행 전";
       return `
         <div class="br-match">
           <div class="${teamClass(match, "left", roundIdx)}">${teamLabel(match, "left", roundIdx)}</div>
           <div class="${teamClass(match, "right", roundIdx)}">${teamLabel(match, "right", roundIdx)}</div>
-          <div class="br-note">${note}</div>
           ${showConnector ? `<div class="br-link" aria-hidden="true"></div>` : ""}
         </div>
       `;
