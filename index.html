@@ -626,7 +626,7 @@
                 <span class="chip" id="menuCountChip">후보: 0개</span>
               </div>
               <p class="hint">
-                이미지: 기본은 온라인에서 “메뉴명 food”로 자동 사진을 불러옵니다(실서비스는 직접 이미지 업로드 방식으로 바꾸는 걸 추천).
+                이미지: images 폴더에 메뉴명과 같은 파일명을 올리면 자동 매칭됩니다. 예) images/김치찌개.jpg (지원: webp/jpg/jpeg/png/gif/avif)
               </p>
             </div>
           </details>
@@ -785,6 +785,8 @@
       }
       return (h >>> 0);
     }
+
+    const LOCAL_IMAGE_EXTENSIONS = ["webp","jpg","jpeg","png","gif","avif"];
     const MENU_IMAGES = {
       // 메뉴별 URL 매핑 (없으면 자동 이미지로 fallback)
       // 예시:
@@ -792,13 +794,49 @@
       // "부대찌개": "https://example.com/images/budae.jpg",
     };
 
-    function makeImageUrl(menuName){
-      const mapped = MENU_IMAGES[menuName];
-      if (mapped) return mapped;
-      // fallback: 자동 이미지(온라인 필요)
+    function normalizeMenuKey(menuName){
+      return String(menuName || "")
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "")
+        .replace(/[^0-9a-zA-Z가-힣]/g, "");
+    }
+
+    function buildLocalImageCandidates(menuName){
+      const raw = String(menuName || "").trim();
+      if (!raw) return [];
+
+      const normalized = normalizeMenuKey(raw);
+      const bases = [raw];
+      if (normalized && normalized !== raw) bases.push(normalized);
+
+      const out = [];
+      const seen = new Set();
+      for (const base of bases){
+        for (const ext of LOCAL_IMAGE_EXTENSIONS){
+          const file = `images/${base}.${ext}`;
+          if (seen.has(file)) continue;
+          seen.add(file);
+          out.push(file);
+        }
+      }
+      return out;
+    }
+
+    function makeRemoteImageUrl(menuName){
       const q = encodeURIComponent(menuName + " food");
       const sig = hash32(menuName) % 1000;
       return `https://source.unsplash.com/800x600/?${q}&sig=${sig}`;
+    }
+
+    function makeImageUrl(menuName){
+      const mapped = MENU_IMAGES[menuName];
+      if (mapped) return mapped;
+
+      const localCandidates = buildLocalImageCandidates(menuName);
+      if (localCandidates.length) return localCandidates[0];
+
+      return makeRemoteImageUrl(menuName);
     }
     function uniqClean(lines){
       const out = [];
@@ -819,37 +857,128 @@
      * - 필요하면 고급 설정에서 편집
      ********************/
     const DEFAULT_MENUS = uniqClean([
-      "삼겹살","목살","소갈비","돼지갈비","소고기","곱창","대창","막창","양꼬치","닭갈비","닭강정","양념치킨","간장치킨","후라이드치킨","닭똥집","치즈닭갈비","찜닭","닭볶음탕",
-      "김치찌개","된장찌개","순두부찌개","부대찌개","갈비탕","설렁탕","곰탕","육개장","닭개장","감자탕","해장국",
-      "국밥","순대국","콩나물국밥","비빔밥","돌솥비빔밥","김밥","라면","떡볶이","떡볶이(엽기 스타일)","국물떡볶이","라볶이","즉석떡볶이","크림떡볶이","새우튀김","어묵","분식",
-      "냉면","물냉면","비냉","밀면","칼국수","수제비","쌀국수","우동","소바","짜장면","짬뽕","탕수육",
-      "마라탕","마라샹궈","훠궈","깐풍기","유린기",
-      "초밥","회","연어","참치","돈부리","라멘","야키소바","가츠동","규동","김치나베돈까스","텐동","오니기리","타코라이스","돈까스(경양식)","돈까스(일본식)","우나기동",
-      "토마토파스타","까르보나라","스테이크","샐러드","샌드위치","카츠산도","타코","부리또","프랜차이즈버거","피자(이태리식)","피자(미국식)",
-      "탄두리치킨","인도커리","일본카레",
-      "족발","보쌈","수육","모듬전","해물파전","빈대떡","떡국","만두","만둣국",
-      "오징어볶음","낙지볶음","주꾸미볶음","제육볶음","불고기","닭발","쭈꾸미","낙곱새","해물찜","아구찜","오징어순대",
-      "간장게장","양념게장","꽃게탕","새우구이","조개구이","조개찜","대게","킹크랩",
-      "장어구이","고등어구이","갈치조림","삼치구이","매운탕","동태탕","알탕","추어탕",
-      "샤브샤브","전골","곱창전골",
-      "덮밥","오므라이스","볶음밥","김치볶음밥","오일파스타",
-      "토스트","핫도그",
-      // 추가 후보
-      "백반","한정식","(한솥)도시락","쌈밥","두루치기","비빔국수","잔치국수","콩국수",
-      "닭한마리","수제버거","로제떡볶이","치즈돈까스","카레우동","비빔밥","돌솥비빕밥",
-      "해물짬뽕","나가사키짬뽕","탄탄면","볶음면","딤섬","북경오리",
-      "베트남분짜","반미","팟타이","똠얌꿍","나시고렝",
-      "텍사스바베큐",
-      "크림파스타","로제파스타","수프카레",
-      "부리또볼","포케",
-      "고기국수","돼지국밥","밀푀유나베",
-      "리조또","오코노미야키",
-      "라자냐","미트볼",
-      "떡갈비","고추장불고기","차돌박이",
-      "회덮밥","물회",
-      "짜글이","청국장","동태찌개",
-      "편의점"
+      "가츠동",
+      "간장게장",
+      "간장치킨",
+      "갈치조림",
+      "고기국수",
+      "고등어구이",
+      "곱창",
+      "곱창전골",
+      "국수전골",
+      "규동",
+      "김치나베돈까스",
+      "김치볶음밥",
+      "김치찌개",
+      "까르보나라",
+      "꽃게탕",
+      "나시고렝",
+      "낙곱새",
+      "낙지볶음",
+      "닭갈비",
+      "닭강정",
+      "닭똥집",
+      "닭발",
+      "닭볶음탕",
+      "닭한마리",
+      "대창",
+      "도시락",
+      "돈까스(경양식)",
+      "돈까스(일본식)",
+      "돌솥비빕밥",
+      "동태탕",
+      "돼지갈비",
+      "돼지국밥",
+      "된장찌개",
+      "딤섬",
+      "떡갈비",
+      "똠얌꿍",
+      "라자냐",
+      "랍스타",
+      "로제떡볶이",
+      "로제파스타",
+      "리조또",
+      "막창",
+      "만둣국",
+      "매운탕",
+      "모듬전",
+      "목살",
+      "물회",
+      "반미",
+      "보쌈",
+      "부대찌개",
+      "부리또",
+      "부리또볼",
+      "북경오리",
+      "불고기",
+      "비빔냉면",
+      "비빔밥",
+      "삼겹살",
+      "삼계탕",
+      "삼치구이",
+      "샌드위치",
+      "샐러드",
+      "샤브샤브",
+      "소갈비",
+      "소고기",
+      "수육",
+      "수제버거",
+      "수프카레",
+      "순두부찌개",
+      "스테이크",
+      "쌀국수",
+      "아구찜",
+      "양꼬치",
+      "양념치킨",
+      "오니기리",
+      "오므라이스",
+      "오일파스타",
+      "오징어순대",
+      "오코노미야키",
+      "우나기동",
+      "인도커리",
+      "일본카레",
+      "잔치국수",
+      "장어구이",
+      "제육볶음",
+      "조개구이",
+      "족발",
+      "짬뽕",
+      "쭈꾸미볶음",
+      "찜닭",
+      "차돌박이",
+      "청국장",
+      "추어탕",
+      "치즈닭갈비",
+      "치즈돈까스",
+      "카레우동",
+      "카츠산도",
+      "코다리조림",
+      "콩국수",
+      "킹크랩",
+      "타코",
+      "타코라이스",
+      "탄두리치킨",
+      "탄탄면",
+      "텐동",
+      "토마토파스타",
+      "토스트",
+      "팟타이",
+      "편의점",
+      "평양냉면",
+      "포케",
+      "프랜차이즈버거",
+      "피자(미국식)",
+      "피자(이태리식)",
+      "한정식",
+      "함흥냉면",
+      "핫도그",
+      "해물찜",
+      "해물파전",
+      "회덮밥",
+      "후라이드치킨"
     ]);
+    const LOCAL_IMAGE_MENU_SET = new Set(DEFAULT_MENUS.map(normalizeMenuKey));
 
     /********************
      * State
@@ -945,7 +1074,13 @@
      ********************/
     function syncPoolFromTextarea(){
       const lines = menuTextarea.value.split(/\r?\n/);
-      pool = uniqClean(lines);
+      const cleaned = uniqClean(lines);
+      pool = cleaned.filter((name) => LOCAL_IMAGE_MENU_SET.has(normalizeMenuKey(name)));
+      const excluded = cleaned.length - pool.length;
+      if (excluded > 0){
+        showToast(`이미지 없는 메뉴 ${excluded}개는 제외됐어요`);
+      }
+      menuTextarea.value = pool.join("\n");
       menuCountChip.textContent = `후보: ${pool.length}개`;
     }
     function loadDefaultPool(){
@@ -1130,18 +1265,39 @@
       undoBtn.disabled = history.length === 0;
     }
 
-    function setImg(el, url){
+    function setImg(el, url, menuName, fallbackIcon = "🍽️"){
       el.innerHTML = ""; // clear
       const img = document.createElement("img");
       img.alt = "";
       img.loading = "eager";
       img.decoding = "async";
       img.referrerPolicy = "no-referrer";
-      img.src = url;
-      img.onerror = () => {
-        el.innerHTML = `<div class="fallback" aria-hidden="true">🍽️</div>`;
+
+      const localCandidates = buildLocalImageCandidates(menuName);
+      const remoteFallback = makeRemoteImageUrl(menuName);
+      const queue = [];
+      const pushUnique = (src) => {
+        if (!src) return;
+        if (queue.includes(src)) return;
+        queue.push(src);
       };
+
+      pushUnique(url);
+      for (const src of localCandidates) pushUnique(src);
+      pushUnique(remoteFallback);
+
+      let idx = 0;
+      const loadNext = () => {
+        if (idx >= queue.length){
+          el.innerHTML = `<div class="fallback" aria-hidden="true">${fallbackIcon}</div>`;
+          return;
+        }
+        img.src = queue[idx++];
+      };
+
+      img.onerror = loadNext;
       el.appendChild(img);
+      loadNext();
     }
 
     function renderCurrentMatch(){
@@ -1173,8 +1329,8 @@
       nameLeft.textContent = left.name;
       nameRight.textContent = right.name;
 
-      setImg(imgLeft, left.img);
-      setImg(imgRight, right.img);
+      setImg(imgLeft, left.img, left.name);
+      setImg(imgRight, right.img, right.name);
 
       updateTopInfo();
     }
@@ -1243,15 +1399,8 @@
       winnerDesc.textContent = `WIN! “${winner?.name ?? ""}” 먹으러 가자!`;
 
       winnerImg.innerHTML = "";
-      if (winner?.img){
-        const img = document.createElement("img");
-        img.alt = "";
-        img.loading = "eager";
-        img.decoding = "async";
-        img.referrerPolicy = "no-referrer";
-        img.src = winner.img;
-        img.onerror = () => winnerImg.innerHTML = `<div class="fallback" aria-hidden="true">🏆</div>`;
-        winnerImg.appendChild(img);
+      if (winner?.name){
+        setImg(winnerImg, winner.img, winner.name, "🏆");
       } else {
         winnerImg.innerHTML = `<div class="fallback" aria-hidden="true">🏆</div>`;
       }
