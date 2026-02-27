@@ -728,8 +728,8 @@
               <div class="row" style="margin-top:12px;">
                 <button class="btn naver" id="naverBtn">네이버지도</button>
                 <button class="btn kakao" id="kakaoBtn">카카오맵</button>
-                <button class="btn coupang" id="coupangEatsBtn">쿠팡이츠</button>
-                <button class="btn baemin" id="baeminBtn">배달의민족</button>
+                <button class="btn coupang" id="coupangEatsBtn">쿠팡이츠(모바일)</button>
+                <button class="btn baemin" id="baeminBtn">배달의민족(모바일)</button>
               </div>
 
               <div class="row" style="margin-top:10px;">
@@ -823,6 +823,8 @@
       // 예시:
       // "김치찌개": "https://example.com/images/kimchi.jpg",
       // "부대찌개": "https://example.com/images/budae.jpg",
+      "경양식 돈까스": "images/돈까스(경양식).png",
+      "일본식 돈까스": "images/돈까스(일본식).png",
     };
 
     function normalizeMenuKey(menuName){
@@ -914,8 +916,8 @@
       "닭한마리",
       "대창",
       "도시락",
-      "돈까스(경양식)",
-      "돈까스(일본식)",
+      "경양식 돈까스",
+      "일본식 돈까스",
       "돌솥비빕밥",
       "동태탕",
       "돼지갈비",
@@ -1466,9 +1468,15 @@
     function openNaverMapSearch(query){
       const q = encodeURIComponent(query);
       const appname = encodeURIComponent(getAppName());
+      const webUrl = `https://map.naver.com/v5/search/${q}`;
 
       const scheme = `nmap://search?query=${q}&appname=${appname}`;
+      if (!isMobile()){
+        window.open(webUrl, "_blank", "noopener");
+        return;
+      }
 
+      const start = Date.now();
       if (isAndroid()){
         // Android mobile web: intent URL (app 미설치 시 Play로)
         const intent = `intent://search?query=${q}&appname=${appname}` +
@@ -1480,6 +1488,11 @@
         // UX를 위해 여기서는 단순히 스킴만 호출하고, 설치 안내는 별도로 하지 않음.
         location.href = scheme;
       }
+      setTimeout(() => {
+        if (Date.now() - start < 1600){
+          window.open(webUrl, "_blank", "noopener");
+        }
+      }, 900);
     }
 
     function requestGeo(){
