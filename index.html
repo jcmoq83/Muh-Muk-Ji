@@ -668,10 +668,6 @@
             <button class="btn" id="shuffleStartBtn">후보 섞고 시작</button>
           </div>
 
-          <p class="small-note">
-            지도 연결은 모바일에서 가장 자연스럽게 동작합니다. PC에서는 “카카오맵 웹 검색”은 정상 동작하지만,
-            네이버 지도 앱 스킴은 환경에 따라 열리지 않을 수 있어요.
-          </p>
         </div>
 
         <div class="inner" id="playView" style="display:none;">
@@ -742,8 +738,7 @@
               <div class="hr"></div>
 
               <div class="row">
-                <button class="btn ok" id="againBtn">다시 토너먼트</button>
-                <button class="btn" id="backToSetupBtn">설정으로</button>
+                <button class="btn ok" id="homeBtn">처음으로</button>
               </div>
 
               <p class="small-note">
@@ -759,10 +754,10 @@
         <div class="inner">
           <h2 class="section-title">사용 방법</h2>
           <ol class="muted" style="line-height:1.6; margin: 0; padding-left: 18px;">
-            <li>참가 메뉴 수를 선택합니다. (4/6/8/12/16/24/32/48/64/96/128)</li>
-            <li>사진 2개 중 더 땡기는 메뉴를 클릭합니다.</li>
-            <li>최종 1개가 남을 때까지 반복합니다.</li>
-            <li>우승 메뉴를 지도 앱에서 바로 검색합니다.</li>
+            <li>참가 메뉴 수를 고른 뒤 <span class="kbd">토너먼트 시작</span> 또는 <span class="kbd">후보 섞고 시작</span>을 누릅니다.</li>
+            <li>두 메뉴 중 더 끌리는 메뉴를 클릭해서 다음 라운드로 올립니다.</li>
+            <li>필요하면 <span class="kbd">되돌리기</span>로 직전 선택을 되돌릴 수 있습니다.</li>
+            <li>우승 메뉴가 정해지면 지도/배달 앱 버튼으로 바로 검색하거나 주문을 이어갈 수 있습니다.</li>
           </ol>
         </div>
       </aside>
@@ -1070,8 +1065,7 @@
     const coupangEatsBtn = $("#coupangEatsBtn");
     const baeminBtn = $("#baeminBtn");
     const copyBtn = $("#copyBtn");
-    const againBtn = $("#againBtn");
-    const backToSetupBtn = $("#backToSetupBtn");
+    const homeBtn = $("#homeBtn");
 
     const toast = $("#toast");
 
@@ -1686,8 +1680,7 @@
       }
     });
 
-    againBtn.addEventListener("click", () => startTournament({shuffleFirst:true}));
-    backToSetupBtn.addEventListener("click", resetAll);
+    homeBtn.addEventListener("click", resetAll);
 
     /********************
      * Init
