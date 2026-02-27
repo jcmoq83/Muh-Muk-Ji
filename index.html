@@ -179,6 +179,36 @@
       background: rgba(45,212,191,.15);
       border-color: rgba(45,212,191,.35);
     }
+    .btn.naver{
+      background: #03c75a;
+      border-color: #03c75a;
+      color: #ffffff;
+      text-shadow: none;
+    }
+    .btn.kakao{
+      background: #fee500;
+      border-color: #fee500;
+      color: #191919;
+      text-shadow: none;
+    }
+    .btn.coupang{
+      background: #35c5f0;
+      border-color: #35c5f0;
+      color: #ffffff;
+      text-shadow: none;
+    }
+    .btn.baemin{
+      background: #2ac1bc;
+      border-color: #2ac1bc;
+      color: #ffffff;
+      text-shadow: none;
+    }
+    .btn.naver:hover,
+    .btn.kakao:hover,
+    .btn.coupang:hover,
+    .btn.baemin:hover{
+      filter: brightness(1.05);
+    }
     .btn:disabled{
       opacity:.55;
       cursor:not-allowed;
@@ -696,12 +726,13 @@
               <p class="sub" id="winnerDesc">우승 메뉴 확정! 지금 바로 맛집을 찾아볼까요?</p>
 
               <div class="row" style="margin-top:12px;">
-                <button class="btn primary" id="naverBtn">네이버 지도 앱에서 검색</button>
-                <button class="btn primary" id="kakaoBtn">카카오맵 앱에서 검색</button>
+                <button class="btn naver" id="naverBtn">네이버지도</button>
+                <button class="btn kakao" id="kakaoBtn">카카오맵</button>
+                <button class="btn coupang" id="coupangEatsBtn">쿠팡이츠</button>
+                <button class="btn baemin" id="baeminBtn">배달의민족</button>
               </div>
 
               <div class="row" style="margin-top:10px;">
-                <a class="btn ghost" id="kakaoWebLink" href="#" target="_blank" rel="noopener">카카오맵 웹으로 열기</a>
                 <button class="btn" id="copyBtn">결과 복사</button>
               </div>
 
@@ -1034,7 +1065,8 @@
     const winnerDesc = $("#winnerDesc");
     const naverBtn = $("#naverBtn");
     const kakaoBtn = $("#kakaoBtn");
-    const kakaoWebLink = $("#kakaoWebLink");
+    const coupangEatsBtn = $("#coupangEatsBtn");
+    const baeminBtn = $("#baeminBtn");
     const copyBtn = $("#copyBtn");
     const againBtn = $("#againBtn");
     const backToSetupBtn = $("#backToSetupBtn");
@@ -1405,10 +1437,6 @@
         winnerImg.innerHTML = `<div class="fallback" aria-hidden="true">🏆</div>`;
       }
 
-      // Kakao web link works on desktop too
-      const q = encodeURIComponent(`${winner.name} 맛집`);
-      kakaoWebLink.href = `https://map.kakao.com/link/search/${q}`;
-
       showToast("우승 메뉴가 결정됐어요!");
     }
 
@@ -1482,7 +1510,6 @@
         // Try app scheme first on mobile; otherwise open web scheme
         if (isMobile()){
           location.href = appUrl;
-          // If the app scheme is blocked, user can still click "카카오맵 웹으로" 버튼.
           showToast("카카오맵을 여는 중…");
         } else {
           window.open(`https://map.kakao.com/link/search/${q}`, "_blank", "noopener");
@@ -1491,6 +1518,40 @@
         // no geo: open web search
         window.open(`https://map.kakao.com/link/search/${q}`, "_blank", "noopener");
       }
+    }
+
+    function openWithSchemeFallback({appUrl, webUrl, toastMsg}){
+      if (toastMsg) showToast(toastMsg);
+      if (!isMobile()){
+        window.open(webUrl, "_blank", "noopener");
+        return;
+      }
+      const start = Date.now();
+      location.href = appUrl;
+      setTimeout(() => {
+        // 앱이 열리지 않은 경우 웹 fallback
+        if (Date.now() - start < 1600){
+          window.open(webUrl, "_blank", "noopener");
+        }
+      }, 900);
+    }
+
+    function openCoupangEatsSearch(query){
+      const q = encodeURIComponent(query);
+      openWithSchemeFallback({
+        appUrl: `coupangeats://search?keyword=${q}`,
+        webUrl: `https://www.coupangeats.com/kr/search?q=${q}`,
+        toastMsg: "쿠팡이츠를 여는 중…"
+      });
+    }
+
+    function openBaeminSearch(query){
+      const q = encodeURIComponent(query);
+      openWithSchemeFallback({
+        appUrl: `baemin://search?keyword=${q}`,
+        webUrl: `https://www.baemin.com/search?keyword=${q}`,
+        toastMsg: "배달의민족을 여는 중…"
+      });
     }
 
     /********************
@@ -1583,13 +1644,22 @@
 
     naverBtn.addEventListener("click", () => {
       if (!winner) return;
-      // "내 주변" 뉘앙스를 위해 '맛집' 포함 (네이버는 query 기반 검색)
-      openNaverMapSearch(`${winner.name} 맛집`);
+      openNaverMapSearch(winner.name);
     });
 
     kakaoBtn.addEventListener("click", async () => {
       if (!winner) return;
-      await openKakaoMapSearch(`${winner.name} 맛집`);
+      await openKakaoMapSearch(winner.name);
+    });
+
+    coupangEatsBtn.addEventListener("click", () => {
+      if (!winner) return;
+      openCoupangEatsSearch(winner.name);
+    });
+
+    baeminBtn.addEventListener("click", () => {
+      if (!winner) return;
+      openBaeminSearch(winner.name);
     });
 
     copyBtn.addEventListener("click", async () => {
