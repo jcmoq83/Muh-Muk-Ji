@@ -967,6 +967,28 @@
       "돈까스(일본식)": "일본식 돈까스",
       "떡볶이(일반)": "떡볶이",
     };
+    const MENU_LABEL_BREAKS = {
+      "고등어구이": ["고등어", "구이"],
+      "김치볶음밥": ["김치", "볶음밥"],
+      "까르보나라": ["까르", "보나라"],
+      "돌솥비빕밥": ["돌솥", "비빕밥"],
+      "로제떡볶이": ["로제", "떡볶이"],
+      "로제파스타": ["로제", "파스타"],
+      "순두부찌개": ["순두부", "찌개"],
+      "오므라이스": ["오므", "라이스"],
+      "오일파스타": ["오일", "파스타"],
+      "오징어순대": ["오징어", "순대"],
+      "쭈꾸미볶음": ["쭈꾸미", "볶음"],
+      "치즈닭갈비": ["치즈", "닭갈비"],
+      "치즈돈까스": ["치즈", "돈까스"],
+      "코다리조림": ["코다리", "조림"],
+      "타코라이스": ["타코", "라이스"],
+      "탄두리치킨": ["탄두리", "치킨"],
+      "토마토파스타": ["토마토", "파스타"],
+      "선지해장국": ["선지", "해장국"],
+      "콩나물국밥": ["콩나물", "국밥"],
+      "황태해장국": ["황태", "해장국"],
+    };
     const MENU_IMAGE_SOURCE_ALIASES = Object.fromEntries(
       Object.entries(MENU_NAME_ALIASES).map(([sourceName, displayName]) => [displayName, sourceName])
     );
@@ -1328,6 +1350,12 @@
       }
     }
 
+    function formatMenuOptionLabel(menuName){
+      const parts = MENU_LABEL_BREAKS[menuName];
+      if (!parts) return menuName;
+      return parts.join("<br>");
+    }
+
     function renderMenuPicker(){
       menuPicker.innerHTML = "";
       const frag = document.createDocumentFragment();
@@ -1336,7 +1364,7 @@
         btn.type = "button";
         btn.className = "menu-option";
         if (manualSelectedMenus.has(menuName)) btn.classList.add("selected");
-        btn.textContent = menuName;
+        btn.innerHTML = formatMenuOptionLabel(menuName);
         btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
         btn.addEventListener("click", () => {
           if (manualSelectedMenus.has(menuName)) manualSelectedMenus.delete(menuName);
