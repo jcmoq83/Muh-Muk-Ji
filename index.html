@@ -102,9 +102,9 @@
     .logo{
       width:54px;height:54px;border-radius:18px;
       background:
-        radial-gradient(circle at 30% 24%, rgba(255,255,255,.9), rgba(255,255,255,0) 22%),
-        linear-gradient(160deg, #ff955f, #ffc86b 62%, #fff4d8);
-      box-shadow: 0 10px 22px rgba(255,138,91,.28);
+        radial-gradient(circle at 50% 24%, rgba(255,255,255,.26), rgba(255,255,255,0) 34%),
+        linear-gradient(165deg, #ff8356, #ffb15f 58%, #ffe1ae);
+      box-shadow: 0 10px 22px rgba(255,138,91,.24);
       border:1px solid rgba(255,255,255,.72);
       position:relative;
       overflow:hidden;
@@ -117,82 +117,82 @@
       position:absolute;
       inset:0;
       background:
-        radial-gradient(circle at 50% 14%, rgba(255,255,255,.34), rgba(255,255,255,0) 44%),
+        radial-gradient(circle at 50% 112%, rgba(117,65,33,.14), rgba(117,65,33,0) 28%),
         linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0) 40%);
       pointer-events:none;
     }
     .logo-bowl{
       position:absolute;
-      left:10px;
-      right:10px;
-      bottom:10px;
-      height:16px;
-      border-radius: 0 0 18px 18px / 0 0 14px 14px;
-      background: linear-gradient(180deg, #fffdf8, #f7ecdc 72%, #dfbf9d);
-      border:1px solid rgba(133,88,54,.18);
+      left:8px;
+      right:8px;
+      bottom:11px;
+      height:15px;
+      border-radius: 0 0 16px 16px / 0 0 13px 13px;
+      background: linear-gradient(180deg, #fffefb, #f6ece0 68%, #e7ccb0);
+      border:1px solid rgba(121,79,45,.16);
       box-shadow:
-        inset 0 -2px 0 rgba(183,128,84,.2),
-        0 2px 0 rgba(255,255,255,.28);
+        inset 0 -2px 0 rgba(186,132,90,.18),
+        0 2px 0 rgba(255,255,255,.24);
     }
     .logo-bowl::before{
       content:"";
       position:absolute;
       left:-1px;
       right:-1px;
-      top:-4px;
-      height:6px;
+      top:-3px;
+      height:5px;
       border-radius: 999px;
-      background: linear-gradient(180deg, #fffefb, #f0deca);
-      border:1px solid rgba(133,88,54,.16);
+      background: linear-gradient(180deg, #ffffff, #f2dfcb);
+      border:1px solid rgba(121,79,45,.14);
     }
     .logo-rice{
       position:absolute;
-      left:11px;
-      right:11px;
+      left:10px;
+      right:10px;
       bottom:21px;
-      height:14px;
-      border-radius: 16px 16px 10px 10px;
+      height:13px;
+      border-radius: 14px 14px 9px 9px;
       background:
-        radial-gradient(circle at 22% 60%, rgba(255,255,255,.99), rgba(249,244,236,.96) 48%, rgba(234,223,206,.84) 100%),
-        radial-gradient(circle at 78% 34%, rgba(255,255,255,.92), rgba(255,255,255,0) 44%);
-      border:1px solid rgba(220,208,190,.52);
-      box-shadow: inset 0 -1px 0 rgba(214,198,175,.38);
+        radial-gradient(circle at 26% 56%, rgba(255,255,255,.99), rgba(248,243,234,.96) 52%, rgba(236,227,212,.82) 100%),
+        radial-gradient(circle at 74% 34%, rgba(255,255,255,.9), rgba(255,255,255,0) 44%);
+      border:1px solid rgba(221,210,194,.48);
+      box-shadow: inset 0 -1px 0 rgba(214,198,175,.34);
     }
     .logo-rice::before{
       content:"";
       position:absolute;
-      left:7px;
-      right:7px;
+      left:8px;
+      right:8px;
       top:-4px;
-      height:8px;
+      height:7px;
       border-radius: 50%;
-      background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.98), rgba(248,243,233,.92) 62%, rgba(236,226,211,.28) 100%);
+      background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.98), rgba(248,243,233,.92) 62%, rgba(236,226,211,.24) 100%);
     }
     .logo-steam{
       position:absolute;
-      top:7px;
-      width:10px;
-      height:16px;
+      top:6px;
+      width:8px;
+      height:17px;
       border:2px solid rgba(255,255,255,.9);
       border-bottom:none;
       border-left:none;
       border-radius: 50%;
-      opacity:.96;
-      filter: drop-shadow(0 1px 0 rgba(255,255,255,.16));
+      opacity:.9;
+      filter: drop-shadow(0 1px 0 rgba(255,255,255,.14));
     }
     .logo-steam.s1{
-      left:14px;
-      transform: rotate(-22deg);
+      left:15px;
+      transform: rotate(-18deg);
     }
     .logo-steam.s2{
       left:23px;
-      top:3px;
-      height:19px;
-      transform: rotate(2deg);
+      top:2px;
+      height:20px;
+      transform: rotate(4deg);
     }
     .logo-steam.s3{
-      left:32px;
-      transform: rotate(22deg);
+      left:31px;
+      transform: rotate(18deg);
     }
     h1{
       font-family: "Bebas Neue","Fredoka","Noto Sans KR",sans-serif;
@@ -1988,6 +1988,15 @@
       });
     }
 
+    async function copyWinnerQueryForDelivery(query){
+      try{
+        await navigator.clipboard.writeText(query);
+        showToast(`"${query}" 복사 후 앱을 여는 중…`);
+      }catch{
+        showToast("앱을 여는 중…");
+      }
+    }
+
     /********************
      * Start / restart
      ********************/
@@ -2100,13 +2109,15 @@
       await openKakaoMapSearch(winner.name);
     });
 
-    coupangEatsBtn.addEventListener("click", () => {
+    coupangEatsBtn.addEventListener("click", async () => {
       if (!winner) return;
+      await copyWinnerQueryForDelivery(winner.name);
       openCoupangEatsSearch(winner.name);
     });
 
-    baeminBtn.addEventListener("click", () => {
+    baeminBtn.addEventListener("click", async () => {
       if (!winner) return;
+      await copyWinnerQueryForDelivery(winner.name);
       openBaeminSearch(winner.name);
     });
 
