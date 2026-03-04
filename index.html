@@ -280,6 +280,20 @@
       align-items:center;
       margin-top:10px;
     }
+    .quick-counts{
+      margin-top:8px;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .quick-counts .btn{
+      min-width: 58px;
+    }
+    .quick-counts .btn.is-active{
+      background: linear-gradient(135deg, rgba(255,138,91,.96), rgba(255,209,102,.96));
+      border-color: rgba(255,138,91,.7);
+      color:#5a2f16;
+      box-shadow: 0 10px 18px rgba(255,138,91,.18);
+    }
     input[type="range"]{ width:100%; }
     input[type="number"]{
       width:100%;
@@ -550,6 +564,27 @@
       scrollbar-gutter: stable both-edges;
       overscroll-behavior: contain;
     }
+    .bracket-scroll-wrap{
+      display:none;
+      align-items:center;
+      gap:10px;
+      margin-top: 10px;
+      padding: 0 4px;
+    }
+    .bracket-scroll-wrap.is-visible{
+      display:flex;
+    }
+    .bracket-scroll-label{
+      flex:0 0 auto;
+      font-size: 11px;
+      color: rgba(109,67,45,.8);
+      letter-spacing: .3px;
+      white-space: nowrap;
+    }
+    .bracket-scroll{
+      flex:1 1 auto;
+      accent-color: #ff8a5b;
+    }
     .bracket-swipe-hint{
       display:none;
       margin: 8px 2px 0;
@@ -560,25 +595,25 @@
     .bracket-board{
       display:grid;
       grid-auto-flow: column;
-      grid-auto-columns: minmax(170px, 200px);
-      gap: 16px;
+      grid-auto-columns: minmax(132px, 148px);
+      gap: 12px;
       min-width: fit-content;
       align-items:start;
-      padding-right: 28px;
+      padding-right: 14px;
     }
     .bracket-split{
       display:grid;
       grid-template-columns: 1fr auto 1fr;
-      gap: 16px;
+      gap: 12px;
       min-width: fit-content;
       align-items:start;
-      padding-right: 28px;
+      padding-right: 14px;
     }
     .bracket-side{
       display:grid;
       grid-auto-flow: column;
-      grid-auto-columns: minmax(160px, 190px);
-      gap: 12px;
+      grid-auto-columns: minmax(126px, 142px);
+      gap: 10px;
       min-width: fit-content;
       align-items:start;
     }
@@ -598,7 +633,7 @@
       border:1px solid rgba(240,202,171,.88);
       border-radius: 10px;
       background: rgba(255,255,255,.88);
-      padding: 6px;
+      padding: 5px;
       display:grid;
       gap:4px;
       min-height: 58px;
@@ -606,14 +641,15 @@
     .br-team{
       border:1px solid rgba(240,202,171,.92);
       border-radius: 6px;
-      padding: 4px 6px;
-      font-size: 11px;
+      padding: 4px 5px;
+      font-size: 10.5px;
       color: #4f382c;
       background: rgba(255,248,235,.95);
-      white-space: nowrap;
+      white-space: normal;
       overflow: hidden;
-      text-overflow: ellipsis;
       line-height: 1.2;
+      overflow-wrap:anywhere;
+      word-break: keep-all;
     }
     .br-team.pending{
       color: rgba(127,106,95,.9);
@@ -775,7 +811,7 @@
             <div>
               <label class="muted" for="countRange">참가 메뉴 수</label>
               <input id="countRange" type="range" min="4" max="128" step="2" value="16" />
-              <div class="row" style="margin-top:8px;">
+              <div class="row quick-counts">
                 <button class="btn ghost" data-quick="4">4강</button>
                 <button class="btn ghost" data-quick="8">8강</button>
                 <button class="btn ghost" data-quick="16">16강</button>
@@ -856,6 +892,10 @@
 
           <p class="bracket-swipe-hint">(슬라이드 해서 대결 현황을 확인할 수 있습니다)</p>
           <div class="mini-bracket-wrap" id="miniBracketWrap" aria-label="토너먼트 표"></div>
+          <div class="bracket-scroll-wrap" id="bracketScrollWrap">
+            <span class="bracket-scroll-label">대진 위치</span>
+            <input class="bracket-scroll" id="bracketScroll" type="range" min="0" max="0" value="0" step="1" aria-label="대진 현황 가로 스크롤" />
+          </div>
         </div>
 
         <div class="inner" id="resultView" style="display:none;">
@@ -1257,6 +1297,7 @@
     const advancedToggleBtn = $("#advancedToggleBtn");
 
     const countRange = $("#countRange");
+    const quickCountButtons = $$(".btn[data-quick]");
     const startBtn = $("#startBtn");
     const manualStartBtn = $("#manualStartBtn");
     const menuPicker = $("#menuPicker");
@@ -1265,6 +1306,8 @@
 
     const roundChip = $("#roundChip");
     const miniBracketWrap = $("#miniBracketWrap");
+    const bracketScrollWrap = $("#bracketScrollWrap");
+    const bracketScroll = $("#bracketScroll");
 
     const pickLeft = $("#pickLeft");
     const pickRight = $("#pickRight");
@@ -1332,6 +1375,24 @@
       advancedToggleBtn.textContent = advanced.open ? "접기" : "펼치기";
     }
 
+    function syncQuickCountButtons(){
+      for (const btn of quickCountButtons){
+        const isActive = Number(btn.dataset.quick) === selectedCount;
+        btn.classList.toggle("is-active", isActive);
+        btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+      }
+    }
+
+    function syncBracketScrollUI(){
+      if (!miniBracketWrap || !bracketScroll || !bracketScrollWrap) return;
+      const maxScroll = Math.max(0, Math.round(miniBracketWrap.scrollWidth - miniBracketWrap.clientWidth));
+      const hasOverflow = maxScroll > 0;
+      bracketScrollWrap.classList.toggle("is-visible", hasOverflow);
+      bracketScroll.max = String(maxScroll);
+      bracketScroll.value = String(Math.min(maxScroll, Math.round(miniBracketWrap.scrollLeft)));
+      bracketScroll.disabled = !hasOverflow;
+    }
+
     function fitMenuOptionLabel(btn){
       const maxFontPt = 9;
       const minFontPt = 6;
@@ -1386,7 +1447,10 @@
       renderMenuPicker();
     }
 
-    window.addEventListener("resize", fitMenuOptionLabels);
+    window.addEventListener("resize", () => {
+      fitMenuOptionLabels();
+      syncBracketScrollUI();
+    });
 
     function loadDefaultPool(){
       pool = DEFAULT_MENUS.slice();
@@ -1520,12 +1584,16 @@
       if (!miniBracketWrap) return;
       if (!bracketMatches.length){
         miniBracketWrap.innerHTML = "";
+        miniBracketWrap.scrollLeft = 0;
+        syncBracketScrollUI();
         return;
       }
 
       const initialSize = bracketMatches[0].length * 2;
       if (initialSize <= 32){
         miniBracketWrap.innerHTML = `<div class="bracket-board">${renderRoundColumns(bracketMatches, {baseSize: initialSize})}</div>`;
+        miniBracketWrap.scrollLeft = 0;
+        syncBracketScrollUI();
         return;
       }
 
@@ -1544,6 +1612,8 @@
           <div class="bracket-side">${renderRoundColumns(right, {baseSize: right[0].length * 2, reverse:true})}</div>
         </div>
       `;
+      miniBracketWrap.scrollLeft = 0;
+      syncBracketScrollUI();
     }
 
     function recordAdvancement(left, right, picked){
@@ -1844,6 +1914,7 @@
 
       // selectedCount is from inputs (snap to allowed list)
       selectedCount = manualPool ? manualPool.length : snapCount(countRange.value);
+      syncCountUI(selectedCount);
 
       if (pool.length < 4){
         showToast("메뉴 후보가 너무 적어요(최소 4개).");
@@ -1888,12 +1959,18 @@
       const n = snapCount(val);
       selectedCount = n;
       countRange.value = String(n);
+      syncQuickCountButtons();
     }
 
     countRange.addEventListener("input", (e)=> syncCountUI(e.target.value));
 
-    $$(".btn[data-quick]").forEach(btn => {
+    quickCountButtons.forEach(btn => {
       btn.addEventListener("click", () => syncCountUI(btn.dataset.quick));
+    });
+    miniBracketWrap.addEventListener("scroll", syncBracketScrollUI);
+    bracketScroll.addEventListener("input", (e) => {
+      miniBracketWrap.scrollLeft = Number(e.target.value);
+      syncBracketScrollUI();
     });
 
     startBtn.addEventListener("click", () => startTournament());
