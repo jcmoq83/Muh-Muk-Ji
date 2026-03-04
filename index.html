@@ -310,8 +310,26 @@
       list-style:none;
     }
     #advanced summary{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
       background: linear-gradient(90deg, rgba(46,196,182,.18), rgba(255,255,255,.3));
       font-weight: 700;
+    }
+    .summary-title{
+      flex:1;
+    }
+    .summary-toggle{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(46,196,182,.28);
+      background: rgba(255,255,255,.74);
+      color:#2f5f56;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor:pointer;
     }
     summary::-webkit-details-marker{ display:none; }
     .details-inner{ padding: 0 14px 14px; color: var(--muted); }
@@ -333,8 +351,8 @@
     }
     .menu-picker{
       display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-      gap:10px;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap:8px;
       max-height: 360px;
       overflow:auto;
       padding: 6px;
@@ -349,16 +367,17 @@
       border:1px solid rgba(46,196,182,.22);
       background: rgba(255,255,255,.85);
       color:#355147;
-      border-radius: 16px;
-      min-height: 54px;
-      padding: 10px 12px;
+      border-radius: 14px;
+      min-height: 38px;
+      padding: 6px 6px;
       font: inherit;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 600;
-      line-height: 1.25;
+      line-height: 1.15;
       cursor:pointer;
       transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
       box-shadow: 0 8px 16px rgba(46,196,182,.08);
+      word-break: keep-all;
     }
     .menu-option:hover{
       transform: translateY(-1px);
@@ -373,6 +392,16 @@
     }
     .menu-option:active{
       transform: translateY(1px);
+    }
+    @media (max-width: 1100px){
+      .menu-picker{
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 720px){
+      .menu-picker{
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
     }
     textarea{
       width:100%;
@@ -756,26 +785,29 @@
 
           <div class="hr"></div>
 
+          <div class="row space">
+            <button class="btn primary" id="startBtn">랜덤 토너먼트 시작</button>
+          </div>
+
+          <div class="hr"></div>
+
           <details id="advanced">
-            <summary>고급 설정: 메뉴 직접 고르기</summary>
+            <summary>
+              <span class="summary-title">메뉴 직접 고르기</span>
+              <button type="button" class="summary-toggle" id="advancedToggleBtn">접기</button>
+            </summary>
             <div class="details-inner">
               <p class="hint" style="margin-top:0;">
                 메뉴를 클릭해서 직접 고르세요. 선택한 개수가 4/8/16/32/64/128개가 되면 수동 토너먼트를 시작할 수 있어요.
               </p>
               <div class="picker-toolbar">
-                <button class="btn" id="resetMenusBtn">기본 메뉴로 되돌리기</button>
+                <button class="btn" id="resetMenusBtn">모든 선택 취소</button>
                 <button class="btn primary" id="manualStartBtn" disabled>선택한 메뉴로 시작</button>
                 <span class="chip" id="menuCountChip">선택: 0개</span>
               </div>
               <div class="menu-picker" id="menuPicker" aria-label="메뉴 선택 보드"></div>
             </div>
           </details>
-
-          <div class="hr"></div>
-
-          <div class="row space">
-            <button class="btn primary" id="startBtn">토너먼트 시작</button>
-          </div>
 
         </div>
 
@@ -863,9 +895,9 @@
         <div class="inner">
           <h2 class="section-title">사용 방법</h2>
           <ol class="muted" style="line-height:1.6; margin: 0; padding-left: 18px;">
-            <li>참가 메뉴 수를 고른 뒤 <span class="kbd">토너먼트 시작</span>을 누르면 메뉴가 랜덤으로 섞여 대진이 시작됩니다.</li>
+            <li>참가 메뉴 수를 고른 뒤 <span class="kbd">랜덤 토너먼트 시작</span>을 누르면 메뉴가 랜덤으로 섞여 대진이 시작됩니다.</li>
             <li>두 메뉴 중 더 끌리는 메뉴를 클릭해서 다음 라운드로 올립니다.</li>
-            <li>고급 설정에서는 원하는 메뉴만 직접 클릭 선택해 수동 토너먼트를 시작할 수 있습니다.</li>
+            <li><span class="kbd">메뉴 직접 고르기</span>에서는 원하는 메뉴만 직접 클릭 선택해 수동 토너먼트를 시작할 수 있습니다.</li>
             <li>필요하면 <span class="kbd">되돌리기</span>로 직전 선택을 되돌릴 수 있습니다.</li>
             <li>우승 메뉴가 정해지면 지도/배달 앱 버튼으로 바로 검색하거나 주문을 이어갈 수 있습니다.</li>
           </ol>
@@ -1192,6 +1224,8 @@
     const setupView = $("#setupView");
     const playView = $("#playView");
     const resultView = $("#resultView");
+    const advanced = $("#advanced");
+    const advancedToggleBtn = $("#advancedToggleBtn");
 
     const countRange = $("#countRange");
     const startBtn = $("#startBtn");
@@ -1263,6 +1297,10 @@
       const count = manualSelectedMenus.size;
       menuCountChip.textContent = `선택: ${count}개`;
       manualStartBtn.disabled = !isValidTournamentCount(count);
+    }
+
+    function updateAdvancedToggleLabel(){
+      advancedToggleBtn.textContent = advanced.open ? "접기" : "펼치기";
     }
 
     function renderMenuPicker(){
@@ -1816,6 +1854,13 @@
       showToast("선택한 메뉴를 모두 비웠어요");
     });
 
+    advanced.addEventListener("toggle", updateAdvancedToggleLabel);
+    advancedToggleBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      advanced.open = !advanced.open;
+      updateAdvancedToggleLabel();
+    });
+
     pickLeft.addEventListener("click", () => choose("L"));
     pickRight.addEventListener("click", () => choose("R"));
 
@@ -1870,6 +1915,7 @@
       await syncMenusFromGitHubImages();
       loadDefaultPool();
       resetManualSelection();
+      updateAdvancedToggleLabel();
       syncCountUI(16);
     }
 
