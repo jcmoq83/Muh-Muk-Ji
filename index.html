@@ -101,20 +101,24 @@
     }
     .logo{
       width:54px;height:54px;border-radius:18px;
-      background: linear-gradient(160deg, #ff8a5b, #ffd166 55%, #fff3bf);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,0)),
+        url("images/돌솥비빕밥.png");
+      background-size: cover;
+      background-position: center;
       box-shadow: 0 10px 22px rgba(255,138,91,.28);
+      border:1px solid rgba(255,255,255,.72);
       position:relative;
       overflow:hidden;
     }
     .logo::after{
-      content:"🍜";
-      position:absolute; inset:-40%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      content:"";
+      position:absolute;
       inset:0;
-      font-size: 28px;
-      transform: rotate(-8deg);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.68), rgba(255,255,255,0) 48%),
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,0) 42%);
+      pointer-events:none;
     }
     h1{
       font-family: "Bebas Neue","Fredoka","Noto Sans KR",sans-serif;
