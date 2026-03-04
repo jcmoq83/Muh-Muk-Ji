@@ -63,10 +63,66 @@
       border-radius: 40px;
       opacity:.55;
     }
+    .floating-foods{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+    .food-float{
+      position:absolute;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:64px;
+      height:64px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.28);
+      border: 1px solid rgba(255,255,255,.42);
+      box-shadow: 0 18px 30px rgba(201,132,78,.12);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity:.78;
+      animation: floatFood var(--dur, 18s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+      transform: translate3d(0,0,0) rotate(var(--tilt, 0deg));
+    }
+    .food-float::before{
+      content: attr(data-food);
+      font-size: 30px;
+      line-height: 1;
+      filter: saturate(.95);
+    }
+    .food-float::after{
+      content:"";
+      position:absolute;
+      inset:8px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,0));
+      z-index:-1;
+    }
+    .food-float.f1{ top:9%; left:6%; }
+    .food-float.f2{ top:17%; right:8%; }
+    .food-float.f3{ top:32%; left:14%; }
+    .food-float.f4{ top:44%; right:13%; }
+    .food-float.f5{ top:61%; left:8%; }
+    .food-float.f6{ top:73%; right:9%; }
+    .food-float.f7{ top:82%; left:24%; }
+    .food-float.f8{ top:24%; left:46%; }
+    .food-float.f9{ top:68%; right:38%; }
+    @keyframes floatFood{
+      0%, 100%{ transform: translate3d(0,0,0) rotate(var(--tilt, 0deg)) scale(1); }
+      25%{ transform: translate3d(10px,-14px,0) rotate(calc(var(--tilt, 0deg) + 4deg)) scale(1.04); }
+      50%{ transform: translate3d(-8px,-28px,0) rotate(calc(var(--tilt, 0deg) - 3deg)) scale(.98); }
+      75%{ transform: translate3d(14px,-10px,0) rotate(calc(var(--tilt, 0deg) + 2deg)) scale(1.03); }
+    }
     a{ color:inherit; }
     .wrap{
       width:min(980px, 100%);
       padding: 54px 18px 68px;
+      position:relative;
+      z-index:1;
     }
     header{
       display:flex;
@@ -725,6 +781,20 @@
       .bracket-swipe-hint{ display:block; }
       .mini-bracket-wrap{ max-height: 320px; }
       .bracket-scroll-wrap.is-visible{ display:flex; }
+      .food-float{
+        width:54px;
+        height:54px;
+        border-radius: 18px;
+      }
+      .food-float::before{
+        font-size: 25px;
+      }
+      .food-float.f2,
+      .food-float.f4,
+      .food-float.f7,
+      .food-float.f9{
+        display:none;
+      }
     }
 
     /* Result */
@@ -820,6 +890,17 @@
 </head>
 
 <body>
+  <div class="floating-foods" aria-hidden="true">
+    <span class="food-float f1" data-food="🍚" style="--dur:17s; --delay:-2s; --tilt:-10deg;"></span>
+    <span class="food-float f2" data-food="🍜" style="--dur:19s; --delay:-6s; --tilt:8deg;"></span>
+    <span class="food-float f3" data-food="🍣" style="--dur:16s; --delay:-4s; --tilt:-6deg;"></span>
+    <span class="food-float f4" data-food="🍤" style="--dur:21s; --delay:-9s; --tilt:10deg;"></span>
+    <span class="food-float f5" data-food="🍕" style="--dur:18s; --delay:-5s; --tilt:-8deg;"></span>
+    <span class="food-float f6" data-food="🍔" style="--dur:20s; --delay:-11s; --tilt:7deg;"></span>
+    <span class="food-float f7" data-food="🍢" style="--dur:15s; --delay:-7s; --tilt:-4deg;"></span>
+    <span class="food-float f8" data-food="🍙" style="--dur:22s; --delay:-13s; --tilt:5deg;"></span>
+    <span class="food-float f9" data-food="🥟" style="--dur:18s; --delay:-8s; --tilt:-7deg;"></span>
+  </div>
   <div class="wrap">
     <header>
       <div class="brand">
