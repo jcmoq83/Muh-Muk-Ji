@@ -102,8 +102,8 @@
     .logo{
       width:54px;height:54px;border-radius:18px;
       background:
-        radial-gradient(circle at 28% 22%, rgba(255,255,255,.92), rgba(255,255,255,0) 28%),
-        linear-gradient(160deg, #ff9d72, #ffd166 58%, #fff3d1);
+        radial-gradient(circle at 30% 24%, rgba(255,255,255,.9), rgba(255,255,255,0) 22%),
+        linear-gradient(160deg, #ff955f, #ffc86b 62%, #fff4d8);
       box-shadow: 0 10px 22px rgba(255,138,91,.28);
       border:1px solid rgba(255,255,255,.72);
       position:relative;
@@ -117,57 +117,81 @@
       position:absolute;
       inset:0;
       background:
-        radial-gradient(circle at 50% 18%, rgba(255,255,255,.48), rgba(255,255,255,0) 48%),
-        linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,0) 42%);
+        radial-gradient(circle at 50% 14%, rgba(255,255,255,.34), rgba(255,255,255,0) 44%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0) 40%);
       pointer-events:none;
     }
     .logo-bowl{
       position:absolute;
-      left:9px;
-      right:9px;
-      bottom:9px;
-      height:18px;
-      border-radius: 0 0 16px 16px / 0 0 14px 14px;
-      background: linear-gradient(180deg, #fffaf0, #f4ead7 70%, #d7b898);
-      border:1px solid rgba(124,82,51,.18);
-      box-shadow: inset 0 -2px 0 rgba(176,121,76,.18);
+      left:10px;
+      right:10px;
+      bottom:10px;
+      height:16px;
+      border-radius: 0 0 18px 18px / 0 0 14px 14px;
+      background: linear-gradient(180deg, #fffdf8, #f7ecdc 72%, #dfbf9d);
+      border:1px solid rgba(133,88,54,.18);
+      box-shadow:
+        inset 0 -2px 0 rgba(183,128,84,.2),
+        0 2px 0 rgba(255,255,255,.28);
+    }
+    .logo-bowl::before{
+      content:"";
+      position:absolute;
+      left:-1px;
+      right:-1px;
+      top:-4px;
+      height:6px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #fffefb, #f0deca);
+      border:1px solid rgba(133,88,54,.16);
     }
     .logo-rice{
       position:absolute;
-      left:13px;
-      right:13px;
-      bottom:20px;
-      height:12px;
-      border-radius: 12px 12px 10px 10px;
+      left:11px;
+      right:11px;
+      bottom:21px;
+      height:14px;
+      border-radius: 16px 16px 10px 10px;
       background:
-        radial-gradient(circle at 18% 58%, rgba(255,255,255,.98), rgba(248,243,233,.96) 48%, rgba(234,223,207,.72) 100%),
-        radial-gradient(circle at 76% 32%, rgba(255,255,255,.88), rgba(255,255,255,0) 46%);
-      box-shadow: inset 0 -1px 0 rgba(214,198,175,.45);
+        radial-gradient(circle at 22% 60%, rgba(255,255,255,.99), rgba(249,244,236,.96) 48%, rgba(234,223,206,.84) 100%),
+        radial-gradient(circle at 78% 34%, rgba(255,255,255,.92), rgba(255,255,255,0) 44%);
+      border:1px solid rgba(220,208,190,.52);
+      box-shadow: inset 0 -1px 0 rgba(214,198,175,.38);
+    }
+    .logo-rice::before{
+      content:"";
+      position:absolute;
+      left:7px;
+      right:7px;
+      top:-4px;
+      height:8px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.98), rgba(248,243,233,.92) 62%, rgba(236,226,211,.28) 100%);
     }
     .logo-steam{
       position:absolute;
-      top:8px;
-      width:9px;
-      height:18px;
-      border:2px solid rgba(255,255,255,.88);
+      top:7px;
+      width:10px;
+      height:16px;
+      border:2px solid rgba(255,255,255,.9);
       border-bottom:none;
       border-left:none;
       border-radius: 50%;
-      opacity:.92;
-      filter: drop-shadow(0 1px 0 rgba(255,255,255,.2));
+      opacity:.96;
+      filter: drop-shadow(0 1px 0 rgba(255,255,255,.16));
     }
     .logo-steam.s1{
-      left:15px;
-      transform: rotate(-18deg);
+      left:14px;
+      transform: rotate(-22deg);
     }
     .logo-steam.s2{
       left:23px;
-      top:5px;
-      height:20px;
-      transform: rotate(8deg);
+      top:3px;
+      height:19px;
+      transform: rotate(2deg);
     }
     .logo-steam.s3{
-      left:31px;
+      left:32px;
       transform: rotate(22deg);
     }
     h1{
