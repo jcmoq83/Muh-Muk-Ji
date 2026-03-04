@@ -815,9 +815,14 @@
     const LOCAL_IMAGE_EXTENSIONS = ["webp","jpg","jpeg","png","gif","avif"];
     const GITHUB_IMAGE_API = "https://api.github.com/repos/jcmoq83/Muh-Muk-Ji/contents/images?ref=main";
     const MENU_NAME_ALIASES = {
+      "(분식집)라면": "라면",
       "돈까스(경양식)": "경양식 돈까스",
       "돈까스(일본식)": "일본식 돈까스",
+      "떡볶이(일반)": "떡볶이",
     };
+    const MENU_IMAGE_SOURCE_ALIASES = Object.fromEntries(
+      Object.entries(MENU_NAME_ALIASES).map(([sourceName, displayName]) => [displayName, sourceName])
+    );
     const MENU_IMAGES = {
       // 메뉴별 URL 매핑 (없으면 자동 이미지로 fallback)
       // 예시:
@@ -845,7 +850,9 @@
       if (!raw) return [];
 
       const normalized = normalizeMenuKey(raw);
+      const aliasedSource = MENU_IMAGE_SOURCE_ALIASES[raw];
       const bases = [raw];
+      if (aliasedSource && aliasedSource !== raw) bases.push(aliasedSource);
       if (normalized && normalized !== raw) bases.push(normalized);
 
       const out = [];
