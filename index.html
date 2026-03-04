@@ -296,6 +296,11 @@
       background: rgba(255,248,235,.84);
       overflow:hidden;
     }
+    #advanced{
+      border-color: rgba(46,196,182,.38);
+      background: linear-gradient(180deg, rgba(236,255,251,.95), rgba(224,251,246,.88));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+    }
     summary{
       padding: 12px 14px;
       cursor:pointer;
@@ -304,8 +309,71 @@
       font-size: 13.5px;
       list-style:none;
     }
+    #advanced summary{
+      background: linear-gradient(90deg, rgba(46,196,182,.18), rgba(255,255,255,.3));
+      font-weight: 700;
+    }
     summary::-webkit-details-marker{ display:none; }
     .details-inner{ padding: 0 14px 14px; color: var(--muted); }
+    .picker-toolbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+    .picker-toolbar .chip{
+      margin-left:auto;
+      background: rgba(255,255,255,.88);
+    }
+    .picker-toolbar .btn.primary:disabled{
+      filter: grayscale(.15);
+      opacity:.55;
+    }
+    .menu-picker{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap:10px;
+      max-height: 360px;
+      overflow:auto;
+      padding: 6px;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.28)),
+        rgba(255,255,255,.32);
+      border: 1px solid rgba(46,196,182,.18);
+    }
+    .menu-option{
+      appearance:none;
+      border:1px solid rgba(46,196,182,.22);
+      background: rgba(255,255,255,.85);
+      color:#355147;
+      border-radius: 16px;
+      min-height: 54px;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.25;
+      cursor:pointer;
+      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+      box-shadow: 0 8px 16px rgba(46,196,182,.08);
+    }
+    .menu-option:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,138,91,.4);
+      box-shadow: 0 12px 18px rgba(255,138,91,.12);
+    }
+    .menu-option.selected{
+      background: linear-gradient(135deg, rgba(255,209,102,.82), rgba(255,138,91,.78));
+      color:#563118;
+      border-color: rgba(255,138,91,.5);
+      box-shadow: 0 14px 20px rgba(255,138,91,.16);
+    }
+    .menu-option:active{
+      transform: translateY(1px);
+    }
     textarea{
       width:100%;
       min-height: 160px;
@@ -689,19 +757,17 @@
           <div class="hr"></div>
 
           <details id="advanced">
-            <summary>고급 설정: 메뉴 후보 편집(선택)</summary>
+            <summary>고급 설정: 메뉴 직접 고르기</summary>
             <div class="details-inner">
               <p class="hint" style="margin-top:0;">
-                줄바꿈으로 메뉴를 추가/삭제하세요. (중복/빈 줄은 자동 제거)
+                메뉴를 클릭해서 직접 고르세요. 선택한 개수가 4/8/16/32/64/128개가 되면 수동 토너먼트를 시작할 수 있어요.
               </p>
-              <textarea id="menuTextarea" spellcheck="false"></textarea>
-              <div class="row" style="margin-top:10px;">
+              <div class="picker-toolbar">
                 <button class="btn" id="resetMenusBtn">기본 메뉴로 되돌리기</button>
-                <span class="chip" id="menuCountChip">후보: 0개</span>
+                <button class="btn primary" id="manualStartBtn" disabled>선택한 메뉴로 시작</button>
+                <span class="chip" id="menuCountChip">선택: 0개</span>
               </div>
-              <p class="hint">
-                이미지: images 폴더에 메뉴명과 같은 파일명을 올리면 자동 매칭됩니다. 예) images/김치찌개.jpg (지원: webp/jpg/jpeg/png/gif/avif)
-              </p>
+              <div class="menu-picker" id="menuPicker" aria-label="메뉴 선택 보드"></div>
             </div>
           </details>
 
@@ -709,7 +775,6 @@
 
           <div class="row space">
             <button class="btn primary" id="startBtn">토너먼트 시작</button>
-            <button class="btn" id="shuffleStartBtn">후보 섞고 시작</button>
           </div>
 
         </div>
@@ -798,8 +863,9 @@
         <div class="inner">
           <h2 class="section-title">사용 방법</h2>
           <ol class="muted" style="line-height:1.6; margin: 0; padding-left: 18px;">
-            <li>참가 메뉴 수를 고른 뒤 <span class="kbd">토너먼트 시작</span> 또는 <span class="kbd">후보 섞고 시작</span>을 누릅니다.</li>
+            <li>참가 메뉴 수를 고른 뒤 <span class="kbd">토너먼트 시작</span>을 누르면 메뉴가 랜덤으로 섞여 대진이 시작됩니다.</li>
             <li>두 메뉴 중 더 끌리는 메뉴를 클릭해서 다음 라운드로 올립니다.</li>
+            <li>고급 설정에서는 원하는 메뉴만 직접 클릭 선택해 수동 토너먼트를 시작할 수 있습니다.</li>
             <li>필요하면 <span class="kbd">되돌리기</span>로 직전 선택을 되돌릴 수 있습니다.</li>
             <li>우승 메뉴가 정해지면 지도/배달 앱 버튼으로 바로 검색하거나 주문을 이어갈 수 있습니다.</li>
           </ol>
@@ -1067,7 +1133,7 @@
       "후라이드치킨"
     ]);
     let DEFAULT_MENUS = BASE_DEFAULT_MENUS.slice();
-    let LOCAL_IMAGE_MENU_SET = new Set(DEFAULT_MENUS.map(normalizeMenuKey));
+    let manualSelectedMenus = new Set();
 
     async function syncMenusFromGitHubImages(){
       try{
@@ -1093,7 +1159,6 @@
           .map((name) => resolveMenuLabel(name.replace(/\.[^.]+$/, "")));
 
         DEFAULT_MENUS = uniqClean([...BASE_DEFAULT_MENUS, ...imageMenus]);
-        LOCAL_IMAGE_MENU_SET = new Set(DEFAULT_MENUS.map(normalizeMenuKey));
       }catch(err){
         console.warn("GitHub images sync failed:", err);
       }
@@ -1130,9 +1195,8 @@
 
     const countRange = $("#countRange");
     const startBtn = $("#startBtn");
-    const shuffleStartBtn = $("#shuffleStartBtn");
-
-    const menuTextarea = $("#menuTextarea");
+    const manualStartBtn = $("#manualStartBtn");
+    const menuPicker = $("#menuPicker");
     const resetMenusBtn = $("#resetMenusBtn");
     const menuCountChip = $("#menuCountChip");
 
@@ -1191,21 +1255,46 @@
     /********************
      * Pool editing
      ********************/
-    function syncPoolFromTextarea(){
-      const lines = menuTextarea.value.split(/\r?\n/);
-      const cleaned = uniqClean(lines);
-      pool = cleaned.filter((name) => LOCAL_IMAGE_MENU_SET.has(normalizeMenuKey(name)));
-      const excluded = cleaned.length - pool.length;
-      if (excluded > 0){
-        showToast(`이미지 없는 메뉴 ${excluded}개는 제외됐어요`);
-      }
-      menuTextarea.value = pool.join("\n");
-      menuCountChip.textContent = `후보: ${pool.length}개`;
+    function isValidTournamentCount(n){
+      return ALLOWED_COUNTS.includes(Number(n));
     }
+
+    function updateManualSelectionUI(){
+      const count = manualSelectedMenus.size;
+      menuCountChip.textContent = `선택: ${count}개`;
+      manualStartBtn.disabled = !isValidTournamentCount(count);
+    }
+
+    function renderMenuPicker(){
+      menuPicker.innerHTML = "";
+      const frag = document.createDocumentFragment();
+      for (const menuName of DEFAULT_MENUS){
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "menu-option";
+        if (manualSelectedMenus.has(menuName)) btn.classList.add("selected");
+        btn.textContent = menuName;
+        btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
+        btn.addEventListener("click", () => {
+          if (manualSelectedMenus.has(menuName)) manualSelectedMenus.delete(menuName);
+          else manualSelectedMenus.add(menuName);
+          btn.classList.toggle("selected", manualSelectedMenus.has(menuName));
+          btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
+          updateManualSelectionUI();
+        });
+        frag.appendChild(btn);
+      }
+      menuPicker.appendChild(frag);
+      updateManualSelectionUI();
+    }
+
+    function resetManualSelection(){
+      manualSelectedMenus = new Set();
+      renderMenuPicker();
+    }
+
     function loadDefaultPool(){
       pool = DEFAULT_MENUS.slice();
-      menuTextarea.value = pool.join("\n");
-      menuCountChip.textContent = `후보: ${pool.length}개`;
     }
 
     /********************
@@ -1655,11 +1744,11 @@
     /********************
      * Start / restart
      ********************/
-    function startTournament({shuffleFirst=false} = {}){
-      syncPoolFromTextarea();
+    function startTournament({manualPool=null} = {}){
+      pool = Array.isArray(manualPool) ? uniqClean(manualPool) : DEFAULT_MENUS.slice();
 
       // selectedCount is from inputs (snap to allowed list)
-      selectedCount = snapCount(countRange.value);
+      selectedCount = manualPool ? manualPool.length : snapCount(countRange.value);
 
       if (pool.length < 4){
         showToast("메뉴 후보가 너무 적어요(최소 4개).");
@@ -1668,11 +1757,6 @@
       if (pool.length < selectedCount){
         showToast(`후보가 ${pool.length}개라서 ${selectedCount}강을 진행할 수 없어요.`);
         return;
-      }
-
-      if (shuffleFirst){
-        pool = shuffle(pool);
-        menuTextarea.value = pool.join("\n");
       }
 
       current = makeInitialBracket(selectedCount);
@@ -1717,15 +1801,20 @@
       btn.addEventListener("click", () => syncCountUI(btn.dataset.quick));
     });
 
-    startBtn.addEventListener("click", () => startTournament({shuffleFirst:false}));
-    shuffleStartBtn.addEventListener("click", () => startTournament({shuffleFirst:true}));
-
-    resetMenusBtn.addEventListener("click", () => {
-      loadDefaultPool();
-      showToast("기본 메뉴로 되돌렸어요");
+    startBtn.addEventListener("click", () => startTournament());
+    manualStartBtn.addEventListener("click", () => {
+      const selectedMenus = [...manualSelectedMenus];
+      if (!isValidTournamentCount(selectedMenus.length)){
+        showToast("선택한 메뉴 수를 4/8/16/32/64/128개로 맞춰주세요");
+        return;
+      }
+      startTournament({ manualPool: selectedMenus });
     });
 
-    menuTextarea.addEventListener("input", () => syncPoolFromTextarea());
+    resetMenusBtn.addEventListener("click", () => {
+      resetManualSelection();
+      showToast("선택한 메뉴를 모두 비웠어요");
+    });
 
     pickLeft.addEventListener("click", () => choose("L"));
     pickRight.addEventListener("click", () => choose("R"));
@@ -1780,6 +1869,7 @@
       envPill.textContent = getEnvText();
       await syncMenusFromGitHubImages();
       loadDefaultPool();
+      resetManualSelection();
       syncCountUI(16);
     }
 
