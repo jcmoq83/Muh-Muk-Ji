@@ -102,23 +102,73 @@
     .logo{
       width:54px;height:54px;border-radius:18px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,0)),
-        url("images/돌솥비빕밥.png");
-      background-size: cover;
-      background-position: center;
+        radial-gradient(circle at 28% 22%, rgba(255,255,255,.92), rgba(255,255,255,0) 28%),
+        linear-gradient(160deg, #ff9d72, #ffd166 58%, #fff3d1);
       box-shadow: 0 10px 22px rgba(255,138,91,.28);
       border:1px solid rgba(255,255,255,.72);
       position:relative;
       overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
     .logo::after{
       content:"";
       position:absolute;
       inset:0;
       background:
-        radial-gradient(circle at 50% 18%, rgba(255,255,255,.68), rgba(255,255,255,0) 48%),
-        linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,0) 42%);
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.48), rgba(255,255,255,0) 48%),
+        linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,0) 42%);
       pointer-events:none;
+    }
+    .logo-bowl{
+      position:absolute;
+      left:9px;
+      right:9px;
+      bottom:9px;
+      height:18px;
+      border-radius: 0 0 16px 16px / 0 0 14px 14px;
+      background: linear-gradient(180deg, #fffaf0, #f4ead7 70%, #d7b898);
+      border:1px solid rgba(124,82,51,.18);
+      box-shadow: inset 0 -2px 0 rgba(176,121,76,.18);
+    }
+    .logo-rice{
+      position:absolute;
+      left:13px;
+      right:13px;
+      bottom:20px;
+      height:12px;
+      border-radius: 12px 12px 10px 10px;
+      background:
+        radial-gradient(circle at 18% 58%, rgba(255,255,255,.98), rgba(248,243,233,.96) 48%, rgba(234,223,207,.72) 100%),
+        radial-gradient(circle at 76% 32%, rgba(255,255,255,.88), rgba(255,255,255,0) 46%);
+      box-shadow: inset 0 -1px 0 rgba(214,198,175,.45);
+    }
+    .logo-steam{
+      position:absolute;
+      top:8px;
+      width:9px;
+      height:18px;
+      border:2px solid rgba(255,255,255,.88);
+      border-bottom:none;
+      border-left:none;
+      border-radius: 50%;
+      opacity:.92;
+      filter: drop-shadow(0 1px 0 rgba(255,255,255,.2));
+    }
+    .logo-steam.s1{
+      left:15px;
+      transform: rotate(-18deg);
+    }
+    .logo-steam.s2{
+      left:23px;
+      top:5px;
+      height:20px;
+      transform: rotate(8deg);
+    }
+    .logo-steam.s3{
+      left:31px;
+      transform: rotate(22deg);
     }
     h1{
       font-family: "Bebas Neue","Fredoka","Noto Sans KR",sans-serif;
@@ -791,7 +841,13 @@
   <div class="wrap">
     <header>
       <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
+        <div class="logo" aria-hidden="true">
+          <span class="logo-steam s1"></span>
+          <span class="logo-steam s2"></span>
+          <span class="logo-steam s3"></span>
+          <span class="logo-rice"></span>
+          <span class="logo-bowl"></span>
+        </div>
         <div>
           <h1>머먹지!? <span class="brand-subtitle">(muh-muk-ji)</span></h1>
           <p class="sub">뭐 먹을지 고민은 이제 그만. 토너먼트로 정하고 바로 GO하자!!</p>
