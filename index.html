@@ -43,16 +43,7 @@
       padding: 6vh 0 8vh;
     }
     body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background-image:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,.8) 0 18px, transparent 19px),
-        radial-gradient(circle at 80% 24%, rgba(255,255,255,.55) 0 12px, transparent 13px),
-        radial-gradient(circle at 18% 76%, rgba(46,196,182,.14) 0 22px, transparent 23px),
-        radial-gradient(circle at 85% 78%, rgba(255,138,91,.15) 0 28px, transparent 29px);
-      opacity:.9;
+      content:none;
     }
     body::after{
       content:"";
@@ -75,8 +66,8 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      width:64px;
-      height:64px;
+      width:var(--size, 64px);
+      height:var(--size, 64px);
       border-radius: 22px;
       background: rgba(255,255,255,.28);
       border: 1px solid rgba(255,255,255,.42);
@@ -88,8 +79,8 @@
       animation-delay: var(--delay, 0s);
       transform: translate3d(0,0,0) rotate(var(--tilt, 0deg));
     }
-    .food-float::before{
-      content: attr(data-food);
+    .food-glyph{
+      position:relative;
       font-size: 30px;
       line-height: 1;
       filter: saturate(.95);
@@ -102,15 +93,87 @@
       background: linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,0));
       z-index:-1;
     }
-    .food-float.f1{ top:9%; left:6%; }
-    .food-float.f2{ top:17%; right:8%; }
-    .food-float.f3{ top:32%; left:14%; }
-    .food-float.f4{ top:44%; right:13%; }
-    .food-float.f5{ top:61%; left:8%; }
-    .food-float.f6{ top:73%; right:9%; }
-    .food-float.f7{ top:82%; left:24%; }
-    .food-float.f8{ top:24%; left:46%; }
-    .food-float.f9{ top:68%; right:38%; }
+    .food-float.food-shrimp .food-glyph{
+      width:34px;
+      height:24px;
+      font-size:0;
+      border:4px solid #ff946f;
+      border-left-color:transparent;
+      border-top-color:#ffb699;
+      border-radius: 18px 18px 16px 16px;
+      transform: rotate(-14deg);
+    }
+    .food-float.food-shrimp .food-glyph::before{
+      content:"";
+      position:absolute;
+      right:-7px;
+      top:7px;
+      width:10px;
+      height:10px;
+      background: linear-gradient(135deg, #ffb188, #ff8456);
+      clip-path: polygon(0 50%, 100% 0, 100% 100%);
+    }
+    .food-float.food-shrimp .food-glyph::after{
+      content:"";
+      position:absolute;
+      left:1px;
+      top:4px;
+      width:4px;
+      height:4px;
+      border-radius:50%;
+      background:#6c3f28;
+      box-shadow:
+        7px 5px 0 1px rgba(255,176,140,.92),
+        12px 9px 0 1px rgba(255,176,140,.82),
+        16px 12px 0 1px rgba(255,176,140,.72);
+    }
+    .food-float.food-skewer .food-glyph{
+      width:34px;
+      height:32px;
+      font-size:0;
+      transform: rotate(18deg);
+    }
+    .food-float.food-skewer .food-glyph::before{
+      content:"";
+      position:absolute;
+      left:15px;
+      top:1px;
+      width:3px;
+      height:30px;
+      background: linear-gradient(180deg, #d4a66d, #a97a48);
+      border-radius:999px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.12);
+    }
+    .food-float.food-skewer .food-glyph::after{
+      content:"";
+      position:absolute;
+      left:7px;
+      top:3px;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,.65) 0 24%, transparent 25%),
+        #f3d5cb;
+      box-shadow:
+        0 9px 0 0 #efc9bc,
+        0 18px 0 0 #e9bcad;
+      border:1px solid rgba(164,112,86,.12);
+    }
+    .food-float.f1{ top:8%; left:4%; }
+    .food-float.f2{ top:12%; left:28%; }
+    .food-float.f3{ top:10%; right:8%; }
+    .food-float.f4{ top:28%; left:8%; }
+    .food-float.f5{ top:22%; left:56%; }
+    .food-float.f6{ top:32%; right:9%; }
+    .food-float.f7{ top:48%; left:18%; }
+    .food-float.f8{ top:42%; left:44%; }
+    .food-float.f9{ top:56%; right:23%; }
+    .food-float.f10{ top:66%; left:6%; }
+    .food-float.f11{ top:72%; left:34%; }
+    .food-float.f12{ top:74%; right:8%; }
+    .food-float.f13{ top:86%; left:18%; }
+    .food-float.f14{ top:84%; right:31%; }
     @keyframes floatFood{
       0%, 100%{ transform: translate3d(0,0,0) rotate(var(--tilt, 0deg)) scale(1); }
       25%{ transform: translate3d(10px,-14px,0) rotate(calc(var(--tilt, 0deg) + 4deg)) scale(1.04); }
@@ -786,13 +849,15 @@
         height:54px;
         border-radius: 18px;
       }
-      .food-float::before{
+      .food-glyph{
         font-size: 25px;
       }
-      .food-float.f2,
-      .food-float.f4,
-      .food-float.f7,
-      .food-float.f9{
+      .food-float.f3,
+      .food-float.f5,
+      .food-float.f8,
+      .food-float.f10,
+      .food-float.f12,
+      .food-float.f14{
         display:none;
       }
     }
@@ -891,15 +956,20 @@
 
 <body>
   <div class="floating-foods" aria-hidden="true">
-    <span class="food-float f1" data-food="🍚" style="--dur:17s; --delay:-2s; --tilt:-10deg;"></span>
-    <span class="food-float f2" data-food="🍜" style="--dur:19s; --delay:-6s; --tilt:8deg;"></span>
-    <span class="food-float f3" data-food="🍣" style="--dur:16s; --delay:-4s; --tilt:-6deg;"></span>
-    <span class="food-float f4" data-food="🍤" style="--dur:21s; --delay:-9s; --tilt:10deg;"></span>
-    <span class="food-float f5" data-food="🍕" style="--dur:18s; --delay:-5s; --tilt:-8deg;"></span>
-    <span class="food-float f6" data-food="🍔" style="--dur:20s; --delay:-11s; --tilt:7deg;"></span>
-    <span class="food-float f7" data-food="🍢" style="--dur:15s; --delay:-7s; --tilt:-4deg;"></span>
-    <span class="food-float f8" data-food="🍙" style="--dur:22s; --delay:-13s; --tilt:5deg;"></span>
-    <span class="food-float f9" data-food="🥟" style="--dur:18s; --delay:-8s; --tilt:-7deg;"></span>
+    <span class="food-float f1" style="--dur:17s; --delay:-2s; --tilt:-10deg;"><span class="food-glyph">🍚</span></span>
+    <span class="food-float f2" style="--dur:19s; --delay:-6s; --tilt:8deg;"><span class="food-glyph">🍜</span></span>
+    <span class="food-float f3" style="--dur:16s; --delay:-4s; --tilt:-6deg;"><span class="food-glyph">🍣</span></span>
+    <span class="food-float f4 food-shrimp" style="--dur:21s; --delay:-9s; --tilt:10deg;"><span class="food-glyph"></span></span>
+    <span class="food-float f5" style="--dur:18s; --delay:-5s; --tilt:-8deg;"><span class="food-glyph">🍕</span></span>
+    <span class="food-float f6" style="--dur:20s; --delay:-11s; --tilt:7deg;"><span class="food-glyph">🍔</span></span>
+    <span class="food-float f7 food-skewer" style="--dur:15s; --delay:-7s; --tilt:-4deg;"><span class="food-glyph"></span></span>
+    <span class="food-float f8" style="--dur:22s; --delay:-13s; --tilt:5deg;"><span class="food-glyph">🍙</span></span>
+    <span class="food-float f9" style="--dur:18s; --delay:-8s; --tilt:-7deg;"><span class="food-glyph">🥟</span></span>
+    <span class="food-float f10" style="--dur:20s; --delay:-10s; --tilt:6deg;"><span class="food-glyph">🌮</span></span>
+    <span class="food-float f11" style="--dur:17s; --delay:-12s; --tilt:-5deg;"><span class="food-glyph">🥪</span></span>
+    <span class="food-float f12" style="--dur:23s; --delay:-14s; --tilt:9deg;"><span class="food-glyph">🍛</span></span>
+    <span class="food-float f13" style="--dur:18s; --delay:-3s; --tilt:-9deg;"><span class="food-glyph">🍲</span></span>
+    <span class="food-float f14" style="--dur:21s; --delay:-15s; --tilt:7deg;"><span class="food-glyph">🍟</span></span>
   </div>
   <div class="wrap">
     <header>
