@@ -1986,6 +1986,9 @@
         tuneCount.textContent = `${tuneState.touched ? tuneState.selectedMenus.size : 0}개`;
 
         tuneRange.addEventListener("input", () => {
+          tuneCount.textContent = `${Number(tuneRange.value)}개`;
+        });
+        tuneRange.addEventListener("change", () => {
           applyTierTuneSelection(tier, menus, Number(tuneRange.value));
           renderMenuPicker();
         });
