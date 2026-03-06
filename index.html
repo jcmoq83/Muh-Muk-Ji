@@ -587,6 +587,41 @@
       background: linear-gradient(90deg, rgba(186,235,228,.78), rgba(223,247,242,.74));
       border: 1px solid rgba(84,170,157,.34);
     }
+    .menu-group-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .menu-group-title{
+      white-space:nowrap;
+    }
+    .tier-tune-wrap{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-left:auto;
+      min-width: 210px;
+    }
+    .tier-tune-label{
+      font-size: 11px;
+      font-weight: 700;
+      opacity:.86;
+      white-space: nowrap;
+    }
+    .tier-tune-range{
+      flex:1 1 auto;
+      min-width: 110px;
+      accent-color: #ff8a5b;
+    }
+    .tier-tune-count{
+      min-width: 42px;
+      text-align:right;
+      font-size: 11px;
+      font-weight: 800;
+      color: inherit;
+    }
     .menu-option{
       appearance:none;
       border:1px solid rgba(46,196,182,.22);
@@ -1166,7 +1201,7 @@
             </section>
 
             <section class="setup-panel manual-panel">
-              <details id="advanced">
+              <details id="advanced" open>
                 <summary>
                   <span class="summary-title">메뉴 직접 고르기</span>
                   <button type="button" class="summary-toggle" id="advancedToggleBtn">펼치기</button>
@@ -1422,6 +1457,10 @@
       }
       return { tierByMenu, orderByMenu };
     })();
+    const TIER_KEYS = [1, 2, 3];
+    const tierTuneState = new Map(
+      TIER_KEYS.map((tier) => [tier, { touched: false, count: 1, selectedMenus: new Set() }])
+    );
 
     function normalizeMenuKey(menuName){
       return String(menuName || "")
@@ -1863,6 +1902,41 @@
       return Number.isInteger(idx) ? idx : Number.MAX_SAFE_INTEGER;
     }
 
+    function getTierTuneState(tier){
+      if (!tierTuneState.has(tier)){
+        tierTuneState.set(tier, { touched: false, count: 1, selectedMenus: new Set() });
+      }
+      return tierTuneState.get(tier);
+    }
+
+    function resetTierTuneSelection(){
+      for (const tier of TIER_KEYS){
+        const state = getTierTuneState(tier);
+        state.touched = false;
+        state.count = 1;
+        state.selectedMenus = new Set();
+      }
+    }
+
+    function applyTierTuneSelection(tier, menus, desiredCount){
+      const state = getTierTuneState(tier);
+      for (const menuName of state.selectedMenus){
+        manualSelectedMenus.delete(menuName);
+      }
+
+      const safeCount = clampMin(Math.floor(Number(desiredCount) || 1), 1);
+      const count = Math.min(safeCount, menus.length);
+      const sampled = shuffle(menus).slice(0, count);
+
+      state.count = count;
+      state.touched = true;
+      state.selectedMenus = new Set(sampled);
+
+      for (const menuName of state.selectedMenus){
+        manualSelectedMenus.add(menuName);
+      }
+    }
+
     function renderMenuPicker(){
       menuPicker.innerHTML = "";
       const frag = document.createDocumentFragment();
@@ -1872,7 +1946,7 @@
         groupedMenus.get(tier).push(menuName);
       }
 
-      for (const tier of [1, 2, 3]){
+      for (const tier of TIER_KEYS){
         const menus = groupedMenus.get(tier);
         if (!menus || menus.length === 0) continue;
         menus.sort((a, b) => {
@@ -1883,8 +1957,41 @@
         });
 
         const groupLabel = document.createElement("div");
-        groupLabel.className = `menu-group-label tier-${tier}`;
-        groupLabel.textContent = `${tier}군 메뉴 (${menus.length})`;
+        groupLabel.className = `menu-group-label tier-${tier} menu-group-head`;
+
+        const title = document.createElement("span");
+        title.className = "menu-group-title";
+        title.textContent = `${tier}군 메뉴 (${menus.length})`;
+
+        const tuneWrap = document.createElement("div");
+        tuneWrap.className = "tier-tune-wrap";
+
+        const tuneText = document.createElement("span");
+        tuneText.className = "tier-tune-label";
+        tuneText.textContent = "튠";
+
+        const tuneRange = document.createElement("input");
+        tuneRange.type = "range";
+        tuneRange.min = "1";
+        tuneRange.max = String(menus.length);
+        tuneRange.step = "1";
+        tuneRange.className = "tier-tune-range";
+
+        const tuneState = getTierTuneState(tier);
+        const value = Math.min(Math.max(1, tuneState.count || 1), menus.length);
+        tuneRange.value = String(value);
+
+        const tuneCount = document.createElement("span");
+        tuneCount.className = "tier-tune-count";
+        tuneCount.textContent = `${tuneState.touched ? tuneState.selectedMenus.size : 0}개`;
+
+        tuneRange.addEventListener("input", () => {
+          applyTierTuneSelection(tier, menus, Number(tuneRange.value));
+          renderMenuPicker();
+        });
+
+        tuneWrap.append(tuneText, tuneRange, tuneCount);
+        groupLabel.append(title, tuneWrap);
         frag.appendChild(groupLabel);
 
         for (const menuName of menus){
@@ -1895,6 +2002,10 @@
           btn.innerHTML = formatMenuOptionLabel(menuName);
           btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
           btn.addEventListener("click", () => {
+            const tuneState = getTierTuneState(tier);
+            if (tuneState.selectedMenus.has(menuName)){
+              tuneState.selectedMenus.delete(menuName);
+            }
             if (manualSelectedMenus.has(menuName)) manualSelectedMenus.delete(menuName);
             else manualSelectedMenus.add(menuName);
             btn.classList.toggle("selected", manualSelectedMenus.has(menuName));
@@ -1937,6 +2048,7 @@
 
     function resetManualSelection(){
       manualSelectedMenus = new Set();
+      resetTierTuneSelection();
       renderMenuPicker();
     }
 
