@@ -560,6 +560,33 @@
         rgba(255,255,255,.32);
       border: 1px solid rgba(46,196,182,.18);
     }
+    .menu-group-label{
+      grid-column: 1 / -1;
+      margin: 2px 0 0;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+    .menu-group-label:first-child{
+      margin-top: 0;
+    }
+    .menu-group-label.tier-1{
+      color:#6a2f1e;
+      background: linear-gradient(90deg, rgba(255,201,167,.85), rgba(255,233,205,.75));
+      border: 1px solid rgba(219,123,87,.35);
+    }
+    .menu-group-label.tier-2{
+      color:#5d4520;
+      background: linear-gradient(90deg, rgba(255,222,170,.78), rgba(255,241,210,.72));
+      border: 1px solid rgba(214,171,95,.36);
+    }
+    .menu-group-label.tier-3{
+      color:#235352;
+      background: linear-gradient(90deg, rgba(186,235,228,.78), rgba(223,247,242,.74));
+      border: 1px solid rgba(84,170,157,.34);
+    }
     .menu-option{
       appearance:none;
       border:1px solid rgba(46,196,182,.22);
@@ -583,6 +610,24 @@
       word-break: keep-all;
       overflow-wrap:anywhere;
     }
+    .menu-option.tier-1{
+      border-color: rgba(219,123,87,.35);
+      background: linear-gradient(180deg, rgba(255,244,236,.95), rgba(255,233,221,.88));
+      color:#6a2f1e;
+      box-shadow: 0 8px 16px rgba(219,123,87,.12);
+    }
+    .menu-option.tier-2{
+      border-color: rgba(214,171,95,.34);
+      background: linear-gradient(180deg, rgba(255,248,232,.95), rgba(255,241,216,.88));
+      color:#5d4520;
+      box-shadow: 0 8px 16px rgba(214,171,95,.12);
+    }
+    .menu-option.tier-3{
+      border-color: rgba(84,170,157,.34);
+      background: linear-gradient(180deg, rgba(236,252,249,.95), rgba(221,246,241,.9));
+      color:#235352;
+      box-shadow: 0 8px 16px rgba(84,170,157,.11);
+    }
     .menu-option:hover{
       transform: translateY(-1px);
       border-color: rgba(255,138,91,.4);
@@ -593,6 +638,24 @@
       color:#563118;
       border-color: rgba(255,138,91,.5);
       box-shadow: 0 14px 20px rgba(255,138,91,.16);
+    }
+    .menu-option.tier-1.selected{
+      background: linear-gradient(135deg, rgba(255,197,170,.94), rgba(242,121,80,.9));
+      color:#4f1f13;
+      border-color: rgba(190,86,56,.55);
+      box-shadow: 0 14px 20px rgba(190,86,56,.18);
+    }
+    .menu-option.tier-2.selected{
+      background: linear-gradient(135deg, rgba(255,223,163,.94), rgba(229,178,77,.9));
+      color:#4f3808;
+      border-color: rgba(185,136,45,.55);
+      box-shadow: 0 14px 20px rgba(185,136,45,.18);
+    }
+    .menu-option.tier-3.selected{
+      background: linear-gradient(135deg, rgba(177,233,222,.95), rgba(80,182,165,.9));
+      color:#153d3b;
+      border-color: rgba(53,145,130,.54);
+      box-shadow: 0 14px 20px rgba(53,145,130,.17);
     }
     .menu-option:active{
       transform: translateY(1px);
@@ -1263,6 +1326,53 @@
       "막창": "images/막창.png?v=20260306-1",
       "목살": "images/목살.png?v=20260306-1",
     };
+    const MENU_TIER_DEFINITIONS = [
+      {
+        tier: 1,
+        label: "1군 메뉴",
+        menus: [
+          "김치찌개","된장찌개","순두부찌개","부대찌개","비빔밥","제육볶음","불고기","삼겹살","목살","돼지갈비","소고기",
+          "경양식 돈까스","일본식 돈까스","치즈돈까스","(분식집)라면","김밥","떡볶이","라볶이","칼국수","우동","짜장면","짬뽕",
+          "탕수육","설렁탕","갈비탕","순대국","콩나물국밥","감자탕","평양냉면","함흥냉면","비빔냉면","후라이드치킨","양념치킨",
+          "간장치킨","피자(미국식)","피자(이태리식)","프랜차이즈버거","도시락","샐러드","타코","인도커리","일본라멘","오일파스타",
+          "까르보나라","토마토파스타","낙곱새","보쌈","족발","아구찜","동태탕","고등어구이","쌀국수","마라탕","초밥","숙성회(사시미)",
+          "활어회","막국수"
+        ]
+      },
+      {
+        tier: 2,
+        label: "2군 메뉴",
+        menus: [
+          "가츠동","규동","일본카레","카레우동","메밀소바","텐동","오므라이스","로제파스타","로제떡볶이","닭갈비","치즈닭갈비","찜닭",
+          "닭볶음탕","닭한마리","낙지볶음","쭈꾸미볶음","곱창","대창","곱창전골","매운탕","코다리조림","삼치구이","장어구이","회덮밥",
+          "만둣국","삼계탕","한정식","샤브샤브","스테이크","딤섬","마파두부","마라샹궈","탄탄면","오리구이","소갈비","차돌박이","콩국수",
+          "간장게장","잔치국수","육개장","돼지국밥","황태해장국","선지해장국","토스트","리조또","참치회","국수전골","돌솥비빕밥",
+          "김치볶음밥","샌드위치"
+        ]
+      },
+      {
+        tier: 3,
+        label: "3군 메뉴",
+        menus: [
+          "고기국수","김치나베돈까스","똠얌꿍","나시고렝","팟타이","반미","부리또","부리또볼","타코라이스","포케","탄두리치킨","수프카레",
+          "우나기동","오코노미야키","오징어순대","라자냐","북경오리","동파육","훠거(훠궈)","훠거","랍스타","킹크랩","편의점","핫도그",
+          "꽃게탕","갈치조림","물회","조개구이","닭똥집","닭강정","닭발","모듬전","해물파전","해물찜","카츠산도","수육","추어탕","청국장","막창"
+        ]
+      }
+    ];
+    const MENU_TIER_INDEX = (() => {
+      const tierByMenu = new Map();
+      const orderByMenu = new Map();
+      for (const def of MENU_TIER_DEFINITIONS){
+        def.menus.forEach((menuName, idx) => {
+          const key = normalizeMenuKey(menuName);
+          if (!key) return;
+          tierByMenu.set(key, def.tier);
+          orderByMenu.set(key, idx);
+        });
+      }
+      return { tierByMenu, orderByMenu };
+    })();
 
     function normalizeMenuKey(menuName){
       return String(menuName || "")
@@ -1643,25 +1753,84 @@
       return parts.join("<br>");
     }
 
+    function getMenuTier(menuName){
+      const key = normalizeMenuKey(menuName);
+      return MENU_TIER_INDEX.tierByMenu.get(key) || 0;
+    }
+
+    function getTierOrderIndex(menuName){
+      const key = normalizeMenuKey(menuName);
+      const idx = MENU_TIER_INDEX.orderByMenu.get(key);
+      return Number.isInteger(idx) ? idx : Number.MAX_SAFE_INTEGER;
+    }
+
     function renderMenuPicker(){
       menuPicker.innerHTML = "";
       const frag = document.createDocumentFragment();
+      const groupedMenus = new Map([[1, []], [2, []], [3, []], [0, []]]);
       for (const menuName of DEFAULT_MENUS){
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "menu-option";
-        if (manualSelectedMenus.has(menuName)) btn.classList.add("selected");
-        btn.innerHTML = formatMenuOptionLabel(menuName);
-        btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
-        btn.addEventListener("click", () => {
-          if (manualSelectedMenus.has(menuName)) manualSelectedMenus.delete(menuName);
-          else manualSelectedMenus.add(menuName);
-          btn.classList.toggle("selected", manualSelectedMenus.has(menuName));
-          btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
-          updateManualSelectionUI();
-        });
-        frag.appendChild(btn);
+        const tier = getMenuTier(menuName);
+        groupedMenus.get(tier).push(menuName);
       }
+
+      for (const tier of [1, 2, 3]){
+        const menus = groupedMenus.get(tier);
+        if (!menus || menus.length === 0) continue;
+        menus.sort((a, b) => {
+          const ai = getTierOrderIndex(a);
+          const bi = getTierOrderIndex(b);
+          if (ai !== bi) return ai - bi;
+          return a.localeCompare(b, "ko");
+        });
+
+        const groupLabel = document.createElement("div");
+        groupLabel.className = `menu-group-label tier-${tier}`;
+        groupLabel.textContent = `${tier}군 메뉴 (${menus.length})`;
+        frag.appendChild(groupLabel);
+
+        for (const menuName of menus){
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `menu-option tier-${tier}`;
+          if (manualSelectedMenus.has(menuName)) btn.classList.add("selected");
+          btn.innerHTML = formatMenuOptionLabel(menuName);
+          btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
+          btn.addEventListener("click", () => {
+            if (manualSelectedMenus.has(menuName)) manualSelectedMenus.delete(menuName);
+            else manualSelectedMenus.add(menuName);
+            btn.classList.toggle("selected", manualSelectedMenus.has(menuName));
+            btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
+            updateManualSelectionUI();
+          });
+          frag.appendChild(btn);
+        }
+      }
+
+      const uncategorizedMenus = groupedMenus.get(0) || [];
+      if (uncategorizedMenus.length){
+        uncategorizedMenus.sort((a, b) => a.localeCompare(b, "ko"));
+        const groupLabel = document.createElement("div");
+        groupLabel.className = "menu-group-label tier-3";
+        groupLabel.textContent = `기타 메뉴 (${uncategorizedMenus.length})`;
+        frag.appendChild(groupLabel);
+        for (const menuName of uncategorizedMenus){
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "menu-option tier-3";
+          if (manualSelectedMenus.has(menuName)) btn.classList.add("selected");
+          btn.innerHTML = formatMenuOptionLabel(menuName);
+          btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
+          btn.addEventListener("click", () => {
+            if (manualSelectedMenus.has(menuName)) manualSelectedMenus.delete(menuName);
+            else manualSelectedMenus.add(menuName);
+            btn.classList.toggle("selected", manualSelectedMenus.has(menuName));
+            btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
+            updateManualSelectionUI();
+          });
+          frag.appendChild(btn);
+        }
+      }
+
       menuPicker.appendChild(frag);
       fitMenuOptionLabels();
       updateManualSelectionUI();
