@@ -590,19 +590,20 @@
     .menu-group-head{
       display:flex;
       align-items:center;
-      justify-content:space-between;
+      justify-content:flex-start;
       gap:10px;
       flex-wrap:wrap;
     }
     .menu-group-title{
       white-space:nowrap;
+      flex:0 0 auto;
     }
     .tier-tune-wrap{
       display:flex;
       align-items:center;
       gap:8px;
-      margin-left:auto;
-      min-width: 210px;
+      min-width: 190px;
+      flex: 0 1 300px;
     }
     .tier-tune-label{
       font-size: 11px;
@@ -621,6 +622,17 @@
       font-size: 11px;
       font-weight: 800;
       color: inherit;
+    }
+    .menu-group-toggle{
+      margin-left:auto;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(46,196,182,.32);
+      background: rgba(255,255,255,.74);
+      color:#2f5f56;
+      font-size: 12px;
+      font-weight: 700;
+      cursor:pointer;
     }
     .menu-option{
       appearance:none;
@@ -1461,6 +1473,9 @@
     const tierTuneState = new Map(
       TIER_KEYS.map((tier) => [tier, { touched: false, count: 1, selectedMenus: new Set() }])
     );
+    const tierFoldState = new Map(
+      TIER_KEYS.map((tier) => [tier, { collapsed: true }])
+    );
 
     function normalizeMenuKey(menuName){
       return String(menuName || "")
@@ -1909,6 +1924,13 @@
       return tierTuneState.get(tier);
     }
 
+    function getTierFoldState(tier){
+      if (!tierFoldState.has(tier)){
+        tierFoldState.set(tier, { collapsed: true });
+      }
+      return tierFoldState.get(tier);
+    }
+
     function resetTierTuneSelection(){
       for (const tier of TIER_KEYS){
         const state = getTierTuneState(tier);
@@ -1993,9 +2015,23 @@
           renderMenuPicker();
         });
 
+        const foldState = getTierFoldState(tier);
+        const toggleBtn = document.createElement("button");
+        toggleBtn.type = "button";
+        toggleBtn.className = "menu-group-toggle";
+        toggleBtn.textContent = foldState.collapsed ? "펼치기" : "접기";
+        toggleBtn.addEventListener("click", () => {
+          foldState.collapsed = !foldState.collapsed;
+          renderMenuPicker();
+        });
+
         tuneWrap.append(tuneText, tuneRange, tuneCount);
-        groupLabel.append(title, tuneWrap);
+        groupLabel.append(title, tuneWrap, toggleBtn);
         frag.appendChild(groupLabel);
+
+        if (foldState.collapsed){
+          continue;
+        }
 
         for (const menuName of menus){
           const btn = document.createElement("button");
