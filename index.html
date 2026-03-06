@@ -549,7 +549,7 @@
     }
     .menu-picker{
       display:grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(8, minmax(0, 1fr));
       gap:8px;
       max-height: 360px;
       overflow:auto;
@@ -663,11 +663,6 @@
     @media (max-width: 980px){
       .menu-picker{
         grid-template-columns: repeat(5, minmax(0, 1fr));
-      }
-    }
-    @media (max-width: 720px){
-      .menu-picker{
-        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
     }
     textarea{
@@ -1006,6 +1001,50 @@
       opacity: 1;
       transform: translateX(-50%) translateY(-2px);
     }
+    .modal-backdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(38,22,12,.5);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 20px;
+      z-index: 99;
+    }
+    .modal-backdrop[hidden]{
+      display:none;
+    }
+    .modal-card{
+      width: min(520px, 100%);
+      border-radius: 20px;
+      border:1px solid rgba(255,255,255,.8);
+      background: linear-gradient(180deg, rgba(255,253,247,.98), rgba(255,246,234,.96));
+      box-shadow: 0 20px 40px rgba(43,26,15,.3);
+      padding: 16px;
+    }
+    .modal-title{
+      margin: 0 0 8px;
+      color:#5d3522;
+      font-size: 18px;
+    }
+    .modal-text{
+      margin: 0 0 14px;
+      color:var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+    .modal-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .modal-actions .btn{
+      flex: 1 1 110px;
+    }
+    .modal-actions.secondary{
+      margin-top: 10px;
+      justify-content:flex-end;
+    }
     .small-note{
       font-size: 12px;
       color: var(--muted);
@@ -1235,6 +1274,16 @@
     </div>
 
     <div class="toast" id="toast">-</div>
+    <div class="modal-backdrop" id="manualStartModal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="manualStartTitle">
+        <h3 class="modal-title" id="manualStartTitle">수동 토너먼트 시작</h3>
+        <p class="modal-text" id="manualStartMessage">-</p>
+        <div class="modal-actions" id="manualStartActions"></div>
+        <div class="modal-actions secondary">
+          <button class="btn ghost" id="manualStartCancelBtn" type="button">취소</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1664,6 +1713,10 @@
     const homeBtn = $("#homeBtn");
 
     const toast = $("#toast");
+    const manualStartModal = $("#manualStartModal");
+    const manualStartMessage = $("#manualStartMessage");
+    const manualStartActions = $("#manualStartActions");
+    const manualStartCancelBtn = $("#manualStartCancelBtn");
 
     /********************
      * Environment badge
@@ -1700,10 +1753,17 @@
       return ALLOWED_COUNTS.includes(Number(n));
     }
 
+    function getManualStartOptions(selectedMenuCount){
+      const n = Number(selectedMenuCount);
+      if (!Number.isInteger(n) || n < 1) return [];
+      const candidates = ALLOWED_COUNTS.filter((count) => count >= Math.max(4, n));
+      return candidates.slice(0, 3);
+    }
+
     function updateManualSelectionUI(){
       const count = manualSelectedMenus.size;
       menuCountChip.textContent = `선택: ${count}개`;
-      manualStartBtn.disabled = !isValidTournamentCount(count);
+      manualStartBtn.disabled = getManualStartOptions(count).length === 0;
     }
 
     function updateAdvancedToggleLabel(){
@@ -1751,6 +1811,45 @@
       const parts = MENU_LABEL_BREAKS[menuName];
       if (!parts) return menuName;
       return parts.join("<br>");
+    }
+
+    function buildManualPoolWithRandomFill(selectedMenus, targetCount){
+      const chosen = uniqClean(selectedMenus);
+      if (chosen.length >= targetCount) return chosen.slice(0, targetCount);
+
+      const selectedSet = new Set(chosen);
+      const randomFill = shuffle(
+        DEFAULT_MENUS.filter((menuName) => !selectedSet.has(menuName))
+      ).slice(0, targetCount - chosen.length);
+
+      return uniqClean([...chosen, ...randomFill]).slice(0, targetCount);
+    }
+
+    function closeManualStartModal(){
+      manualStartModal.hidden = true;
+      manualStartActions.innerHTML = "";
+      manualStartMessage.textContent = "-";
+    }
+
+    function openManualStartModal(selectedMenus, options){
+      manualStartActions.innerHTML = "";
+      const optionText = options.map((n) => `${n}강`).join(", ");
+      manualStartMessage.textContent = `나머지는 랜덤으로 채워서 ${optionText}으로 시작하겠습니다.`;
+
+      for (const count of options){
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn primary";
+        btn.textContent = `${count}강으로 시작`;
+        btn.addEventListener("click", () => {
+          const manualPool = buildManualPoolWithRandomFill(selectedMenus, count);
+          closeManualStartModal();
+          startTournament({ manualPool });
+        });
+        manualStartActions.appendChild(btn);
+      }
+
+      manualStartModal.hidden = false;
     }
 
     function getMenuTier(menuName){
@@ -2379,16 +2478,31 @@
     startBtn.addEventListener("click", () => startTournament());
     manualStartBtn.addEventListener("click", () => {
       const selectedMenus = [...manualSelectedMenus];
-      if (!isValidTournamentCount(selectedMenus.length)){
-        showToast("선택한 메뉴 수를 4/8/16/32/64/128개로 맞춰주세요");
+      const options = getManualStartOptions(selectedMenus.length);
+      if (options.length === 0){
+        showToast("메뉴를 1개 이상, 최대 128개까지 선택해 주세요");
         return;
       }
-      startTournament({ manualPool: selectedMenus });
+      if (isValidTournamentCount(selectedMenus.length)){
+        startTournament({ manualPool: selectedMenus });
+        return;
+      }
+      openManualStartModal(selectedMenus, options);
     });
 
     resetMenusBtn.addEventListener("click", () => {
       resetManualSelection();
       showToast("선택한 메뉴를 모두 비웠어요");
+    });
+
+    manualStartCancelBtn.addEventListener("click", closeManualStartModal);
+    manualStartModal.addEventListener("click", (e) => {
+      if (e.target === manualStartModal) closeManualStartModal();
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !manualStartModal.hidden){
+        closeManualStartModal();
+      }
     });
 
     advanced.addEventListener("toggle", updateAdvancedToggleLabel);
