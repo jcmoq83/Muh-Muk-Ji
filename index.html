@@ -430,10 +430,6 @@
 
     /* Setup controls */
     .range-wrap{
-      display:grid;
-      grid-template-columns: 1fr 120px;
-      gap:10px;
-      align-items:center;
       margin-top:10px;
     }
     .quick-counts{
@@ -712,6 +708,17 @@
         grid-template-columns: repeat(5, minmax(0, 1fr));
       }
     }
+    @media (max-width: 720px){
+      .quick-counts{
+        display:grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width:100%;
+      }
+      .quick-counts .btn{
+        width:100%;
+        min-width: 0;
+      }
+    }
     textarea{
       width:100%;
       min-height: 160px;
@@ -726,6 +733,17 @@
       font-size: 13px;
     }
     .hint{ font-size:12px; color:var(--muted); line-height:1.4; margin-top:8px; }
+    .usage-list{
+      line-height:1.6;
+      margin: 0;
+      padding-left: 18px;
+      font-size: 13px;
+    }
+    @media (max-width: 720px){
+      .usage-list{
+        font-size: 12px;
+      }
+    }
 
     body.state-play header{
       display:none;
@@ -1177,20 +1195,13 @@
               </div>
 
               <div class="range-wrap">
-                <div>
-                  <label class="muted" for="countRange">참가 메뉴 수</label>
-                  <input id="countRange" type="range" min="4" max="128" step="2" value="16" />
-                  <div class="row quick-counts">
-                    <button class="btn ghost" data-quick="4">4강</button>
-                    <button class="btn ghost" data-quick="8">8강</button>
-                    <button class="btn ghost" data-quick="16">16강</button>
-                    <button class="btn ghost" data-quick="32">32강</button>
-                    <button class="btn ghost" data-quick="64">64강</button>
-                    <button class="btn ghost" data-quick="128">128강</button>
-                  </div>
-                  <p class="hint">
-                    * 2의 거듭제곱 강수(4/8/16/32/64/128)만 지원합니다.
-                  </p>
+                <div class="row quick-counts">
+                  <button class="btn ghost" data-quick="4">4강</button>
+                  <button class="btn ghost" data-quick="8">8강</button>
+                  <button class="btn ghost" data-quick="16">16강</button>
+                  <button class="btn ghost" data-quick="32">32강</button>
+                  <button class="btn ghost" data-quick="64">64강</button>
+                  <button class="btn ghost" data-quick="128">128강</button>
                 </div>
               </div>
 
@@ -1203,7 +1214,7 @@
 
             <section class="setup-panel usage-panel">
               <h2 class="section-title">사용 방법</h2>
-              <ol class="muted" style="line-height:1.6; margin: 0; padding-left: 18px;">
+              <ol class="muted usage-list">
                 <li>참가 메뉴 수를 고른 뒤 <span class="kbd">토너먼트 시작(랜덤)</span>을 누르면 메뉴가 랜덤으로 섞여 대진이 시작됩니다.</li>
                 <li>두 메뉴 중 더 끌리는 메뉴를 클릭해서 다음 라운드로 올립니다.</li>
                 <li><span class="kbd">메뉴 직접 고르기</span>에서는 원하는 메뉴만 직접 클릭 선택해 수동 토너먼트를 시작할 수 있습니다.</li>
@@ -1471,7 +1482,7 @@
     })();
     const TIER_KEYS = [1, 2, 3];
     const tierTuneState = new Map(
-      TIER_KEYS.map((tier) => [tier, { touched: false, count: 1, selectedMenus: new Set() }])
+      TIER_KEYS.map((tier) => [tier, { touched: false, count: 0, selectedMenus: new Set() }])
     );
     const tierFoldState = new Map(
       TIER_KEYS.map((tier) => [tier, { collapsed: true }])
@@ -1734,7 +1745,6 @@
     const advanced = $("#advanced");
     const advancedToggleBtn = $("#advancedToggleBtn");
 
-    const countRange = $("#countRange");
     const quickCountButtons = $$(".btn[data-quick]");
     const startBtn = $("#startBtn");
     const manualStartBtn = $("#manualStartBtn");
@@ -1919,7 +1929,7 @@
 
     function getTierTuneState(tier){
       if (!tierTuneState.has(tier)){
-        tierTuneState.set(tier, { touched: false, count: 1, selectedMenus: new Set() });
+        tierTuneState.set(tier, { touched: false, count: 0, selectedMenus: new Set() });
       }
       return tierTuneState.get(tier);
     }
@@ -1935,7 +1945,7 @@
       for (const tier of TIER_KEYS){
         const state = getTierTuneState(tier);
         state.touched = false;
-        state.count = 1;
+        state.count = 0;
         state.selectedMenus = new Set();
       }
     }
@@ -1946,7 +1956,7 @@
         manualSelectedMenus.delete(menuName);
       }
 
-      const safeCount = clampMin(Math.floor(Number(desiredCount) || 1), 1);
+      const safeCount = clampMin(Math.floor(Number(desiredCount) || 0), 0);
       const count = Math.min(safeCount, menus.length);
       const sampled = shuffle(menus).slice(0, count);
 
@@ -1994,13 +2004,13 @@
 
         const tuneRange = document.createElement("input");
         tuneRange.type = "range";
-        tuneRange.min = "1";
+        tuneRange.min = "0";
         tuneRange.max = String(menus.length);
         tuneRange.step = "1";
         tuneRange.className = "tier-tune-range";
 
         const tuneState = getTierTuneState(tier);
-        const value = Math.min(Math.max(1, tuneState.count || 1), menus.length);
+        const value = Math.min(Math.max(0, tuneState.count || 0), menus.length);
         tuneRange.value = String(value);
 
         const tuneCount = document.createElement("span");
@@ -2566,7 +2576,7 @@
       pool = Array.isArray(manualPool) ? uniqClean(manualPool) : DEFAULT_MENUS.slice();
 
       // selectedCount is from inputs (snap to allowed list)
-      selectedCount = manualPool ? manualPool.length : snapCount(countRange.value);
+      selectedCount = manualPool ? manualPool.length : snapCount(selectedCount);
       syncCountUI(selectedCount);
 
       if (pool.length < 4){
@@ -2608,14 +2618,11 @@
     /********************
      * Events
      ********************/
-    function syncCountUI(val, {fromInput=false} = {}){
+    function syncCountUI(val){
       const n = snapCount(val);
       selectedCount = n;
-      countRange.value = String(n);
       syncQuickCountButtons();
     }
-
-    countRange.addEventListener("input", (e)=> syncCountUI(e.target.value));
 
     quickCountButtons.forEach(btn => {
       btn.addEventListener("click", () => syncCountUI(btn.dataset.quick));
