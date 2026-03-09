@@ -562,12 +562,18 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,.82);
     }
     .summary-title{
-      flex:1;
       margin: 0;
       font-size: 24px;
       line-height: 1.05;
       color:#5b331f;
       letter-spacing: -.02em;
+    }
+    .summary-copy{
+      display:flex;
+      flex:1;
+      min-width:0;
+      flex-direction:column;
+      gap:4px;
     }
     .summary-toggle{
       padding: 6px 10px;
@@ -1313,13 +1319,13 @@
             <section class="setup-panel manual-panel mode-panel">
               <details id="advanced" open>
                 <summary>
-                  <span class="summary-title">수동 토너먼트</span>
+                  <span class="summary-copy">
+                    <span class="summary-title">수동 토너먼트</span>
+                    <span class="mode-sub">메뉴를 클릭해서 직접 고르거나 군별로 메뉴 비중을 조절 할 수 있습니다. 선택 개수에 따라 시작 가능한 강수를 고르면, 부족한 메뉴는 랜덤으로 채워 수동 토너먼트를 시작할 수 있습니다.</span>
+                  </span>
                   <button type="button" class="summary-toggle" id="advancedToggleBtn">펼치기</button>
                 </summary>
                 <div class="details-inner">
-                  <p class="hint" style="margin-top:0;">
-                    메뉴를 클릭해서 직접 고르세요. 선택 개수에 따라 시작 가능한 강수를 고르면, 부족한 메뉴는 랜덤으로 채워 수동 토너먼트를 시작할 수 있어요.
-                  </p>
                   <div class="picker-toolbar">
                     <button class="btn" id="resetMenusBtn">모든 선택 취소</button>
                     <button class="btn primary" id="manualStartBtn" disabled>선택한 메뉴로 시작</button>
