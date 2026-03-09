@@ -469,7 +469,11 @@
       padding: 14px;
     }
     .setup-panel.config-panel{
-      background: linear-gradient(180deg, rgba(255,253,247,.95), rgba(255,246,234,.9));
+      background:
+        radial-gradient(circle at top left, rgba(255,210,120,.26), transparent 44%),
+        linear-gradient(180deg, rgba(255,253,247,.98), rgba(255,244,227,.94));
+      border-color: rgba(255,182,93,.48);
+      box-shadow: 0 18px 36px rgba(255,168,82,.12);
     }
     .setup-panel.usage-panel{
       background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(250,246,240,.9));
@@ -479,6 +483,101 @@
       border-color: rgba(46,196,182,.38);
       background: linear-gradient(180deg, rgba(236,255,251,.95), rgba(224,251,246,.88));
       box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    .setup-panel.mode-panel{
+      position: relative;
+    }
+    .setup-panel.mode-panel::before{
+      content:"";
+      position:absolute;
+      inset:0 auto 0 0;
+      width: 6px;
+      border-radius: inherit 0 0 inherit;
+      background: linear-gradient(180deg, rgba(255,138,91,.92), rgba(255,209,102,.92));
+    }
+    .setup-panel.manual-panel::before{
+      background: linear-gradient(180deg, rgba(46,196,182,.92), rgba(130,222,199,.92));
+    }
+    .setup-panel.usage-panel{
+      position: relative;
+    }
+    .panel-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      border:1px solid rgba(240,202,171,.92);
+      color:#8b5b2f;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .panel-kicker.manual{
+      border-color: rgba(46,196,182,.34);
+      color:#1f6f65;
+      background: rgba(255,255,255,.78);
+    }
+    .panel-kicker.usage{
+      border-color: rgba(203,190,174,.4);
+      color:#7b6759;
+    }
+    .panel-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 10px;
+    }
+    .panel-head-text{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .panel-lead{
+      margin: 0;
+      color:#7f6556;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .panel-highlight{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      margin-top: 12px;
+      background: rgba(255,255,255,.72);
+      border:1px solid rgba(255,204,137,.72);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    .panel-highlight.manual{
+      border-color: rgba(46,196,182,.34);
+      background: rgba(255,255,255,.62);
+    }
+    .panel-highlight strong{
+      display:block;
+      color:#624028;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .panel-highlight.manual strong{
+      color:#1f5f58;
+    }
+    .panel-highlight span{
+      color:#836554;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .panel-highlight .chip{
+      white-space: nowrap;
+      background: rgba(255,247,232,.92);
+    }
+    .panel-highlight.manual .chip{
+      background: rgba(238,255,251,.92);
     }
     #advanced{
       border-radius: 18px;
@@ -525,6 +624,18 @@
       }
       .setup-panel.manual-panel{
         grid-column: auto;
+      }
+    }
+    @media (max-width: 720px){
+      .setup-panel.usage-panel{
+        order:-1;
+      }
+      .panel-head{
+        flex-direction:column;
+      }
+      .panel-highlight{
+        flex-direction:column;
+        align-items:flex-start;
       }
     }
     .picker-toolbar{
@@ -741,6 +852,9 @@
     }
     @media (max-width: 720px){
       .usage-list{
+        font-size: 12px;
+      }
+      .panel-lead{
         font-size: 12px;
       }
     }
@@ -1188,10 +1302,14 @@
       <section class="card" id="mainCard">
         <div class="inner" id="setupView">
           <div class="setup-layout">
-            <section class="setup-panel config-panel">
-              <h2 class="section-title">토너먼트 설정</h2>
-              <div class="row space">
-                <span class="chip">4~128강 선택 (2의 거듭제곱)</span>
+            <section class="setup-panel config-panel mode-panel">
+              <div class="panel-head">
+                <div class="panel-head-text">
+                  <span class="panel-kicker">빠른 시작</span>
+                  <h2 class="section-title">자동 토너먼트</h2>
+                  <p class="panel-lead">참가 메뉴 수만 고르면 바로 랜덤 대진을 시작합니다.</p>
+                </div>
+                <span class="chip">4~128강 선택</span>
               </div>
 
               <div class="range-wrap">
@@ -1210,26 +1328,44 @@
               <div class="row space">
                 <button class="btn primary" id="startBtn">토너먼트 시작(랜덤)</button>
               </div>
+              <div class="panel-highlight">
+                <div>
+                  <strong>빠르게 결정할 때</strong>
+                  <span>메뉴를 따로 고르지 않고 전체 후보에서 바로 토너먼트를 돌립니다.</span>
+                </div>
+                <span class="chip">추천 모드</span>
+              </div>
             </section>
 
             <section class="setup-panel usage-panel">
-              <h2 class="section-title">사용 방법</h2>
+              <div class="panel-head">
+                <div class="panel-head-text">
+                  <span class="panel-kicker usage">guide</span>
+                  <h2 class="section-title">사용 방법</h2>
+                </div>
+              </div>
               <ol class="muted usage-list">
                 <li>참가 메뉴 수를 고른 뒤 <span class="kbd">토너먼트 시작(랜덤)</span>을 누르면 메뉴가 랜덤으로 섞여 대진이 시작됩니다.</li>
                 <li>두 메뉴 중 더 끌리는 메뉴를 클릭해서 다음 라운드로 올립니다.</li>
-                <li><span class="kbd">메뉴 직접 고르기</span>에서는 원하는 메뉴만 직접 클릭 선택해 수동 토너먼트를 시작할 수 있습니다.</li>
+                <li><span class="kbd">수동 토너먼트</span>에서는 원하는 메뉴만 직접 클릭 선택해 시작할 수 있습니다.</li>
                 <li>필요하면 <span class="kbd">되돌리기</span>로 직전 선택을 되돌릴 수 있습니다.</li>
                 <li>우승 메뉴가 정해지면 지도/배달 앱 버튼으로 바로 검색하거나 주문을 이어갈 수 있습니다.</li>
               </ol>
             </section>
 
-            <section class="setup-panel manual-panel">
+            <section class="setup-panel manual-panel mode-panel">
               <details id="advanced" open>
                 <summary>
-                  <span class="summary-title">메뉴 직접 고르기</span>
+                  <span class="summary-title">수동 토너먼트</span>
                   <button type="button" class="summary-toggle" id="advancedToggleBtn">펼치기</button>
                 </summary>
                 <div class="details-inner">
+                  <div class="panel-head" style="margin-bottom:8px;">
+                    <div class="panel-head-text">
+                      <span class="panel-kicker manual">직접 선택</span>
+                      <p class="panel-lead" style="margin:0;">원하는 메뉴만 골라서 맞춤 토너먼트를 시작합니다.</p>
+                    </div>
+                  </div>
                   <p class="hint" style="margin-top:0;">
                     메뉴를 클릭해서 직접 고르세요. 선택 개수에 따라 시작 가능한 강수를 고르면, 부족한 메뉴는 랜덤으로 채워 수동 토너먼트를 시작할 수 있어요.
                   </p>
@@ -1237,6 +1373,13 @@
                     <button class="btn" id="resetMenusBtn">모든 선택 취소</button>
                     <button class="btn primary" id="manualStartBtn" disabled>선택한 메뉴로 시작</button>
                     <span class="chip" id="menuCountChip">선택: 0개</span>
+                  </div>
+                  <div class="panel-highlight manual" style="margin-top:0; margin-bottom:12px;">
+                    <div>
+                      <strong>메뉴를 직접 고르고 싶다면</strong>
+                      <span>티어별 비중을 조절하거나 메뉴를 눌러 원하는 조합으로 시작할 수 있습니다.</span>
+                    </div>
+                    <span class="chip">세부 조절</span>
                   </div>
                   <div class="menu-picker" id="menuPicker" aria-label="메뉴 선택 보드"></div>
                 </div>
@@ -1996,7 +2139,7 @@
 
         const title = document.createElement("span");
         title.className = "menu-group-title";
-        title.textContent = `${tier}군 메뉴 (${menus.length})`;
+        title.textContent = `${tier}군 메뉴 (${menus.length}개)`;
 
         const tuneWrap = document.createElement("div");
         tuneWrap.className = "tier-tune-wrap";
@@ -2070,7 +2213,7 @@
         uncategorizedMenus.sort((a, b) => a.localeCompare(b, "ko"));
         const groupLabel = document.createElement("div");
         groupLabel.className = "menu-group-label tier-3";
-        groupLabel.textContent = `기타 메뉴 (${uncategorizedMenus.length})`;
+        groupLabel.textContent = `기타 메뉴 (${uncategorizedMenus.length}개)`;
         frag.appendChild(groupLabel);
         for (const menuName of uncategorizedMenus){
           const btn = document.createElement("button");
