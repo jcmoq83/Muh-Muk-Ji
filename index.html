@@ -642,6 +642,30 @@
       filter: grayscale(.15);
       opacity:.55;
     }
+    .picker-options{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin: -2px 0 12px;
+    }
+    .toggle-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.9);
+      border:1px solid rgba(239,203,169,.88);
+      color:#7a5e4d;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .toggle-chip input{
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color:#3db4a3;
+    }
     .menu-picker{
       display:grid;
       grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -1407,6 +1431,12 @@
                     <button class="btn primary" id="manualStartBtn" disabled>선택한 메뉴로 시작</button>
                     <span class="chip" id="menuCountChip">선택: 0개</span>
                   </div>
+                  <div class="picker-options">
+                    <label class="toggle-chip" for="lowCalorieToggle">
+                      <input id="lowCalorieToggle" type="checkbox" />
+                      <span>저칼로리 순으로</span>
+                    </label>
+                  </div>
                   <div class="menu-picker" id="menuPicker" aria-label="메뉴 선택 보드"></div>
                 </div>
               </details>
@@ -1666,6 +1696,27 @@
         .replace(/[^0-9a-zA-Z가-힣]/g, "");
     }
 
+    const LOW_CALORIE_MENU_ORDER = [
+      "샐러드","포케","숙성회(사시미)","활어회","참치회","물회","회덮밥","초밥","조개구이","쌀국수",
+      "메밀소바","콩국수","막국수","잔치국수","평양냉면","함흥냉면","비빔냉면","고기국수","우동","칼국수",
+      "국수전골","동태탕","매운탕","갈치조림","고등어구이","삼치구이","코다리조림","아구찜","장어구이","갈비탕",
+      "설렁탕","순두부찌개","된장찌개","김치찌개","콩나물국밥","황태해장국","선지해장국","추어탕","만둣국","육개장",
+      "감자탕","부대찌개","청국장","삼계탕","닭한마리","샤브샤브","수육","보쌈","제육볶음","불고기",
+      "소고기","스테이크","차돌박이","오리구이","돼지국밥","한정식","비빔밥","돌솥비빕밥","오므라이스","일본카레",
+      "인도커리","카레우동","수프카레","마파두부","탄두리치킨","타코","타코라이스","반미","샌드위치","토스트",
+      "도시락","김밥","가츠동","규동","우나기동","텐동","오코노미야키","오징어순대","딤섬","카츠산도",
+      "파스타","리조또","라자냐","팟타이","똠얌꿍","탄탄면","일본라멘","짜장면","짬뽕","(분식집)라면","떡볶이",
+      "라볶이","로제떡볶이","닭갈비","치즈닭갈비","찜닭","닭볶음탕","낙지볶음","쭈꾸미볶음","닭똥집","닭발",
+      "닭강정","양념치킨","간장치킨","후라이드치킨","수제버거","프랜차이즈버거","핫도그","피자(이태리식)","피자(미국식)","부리또볼",
+      "부리또","나시고렝","김치볶음밥","편의점","마라탕","훠거(훠궈)","훠거","마라샹궈","탕수육","김치나베돈까스","일본식 돈까스",
+      "경양식 돈까스","치즈돈까스","낙곱새","곱창전골","곱창","대창","막창","족발","돼지갈비","목살",
+      "삼겹살","떡갈비","순대국","양꼬치","소갈비","간장게장","해물파전","모듬전","해물찜","킹크랩",
+      "꽃게탕","랍스타","북경오리","동파육"
+    ];
+    const LOW_CALORIE_RANK = new Map(
+      LOW_CALORIE_MENU_ORDER.map((menuName, idx) => [normalizeMenuKey(menuName), idx])
+    );
+
     function resolveMenuLabel(menuName){
       const raw = String(menuName || "").trim();
       return MENU_NAME_ALIASES[raw] || raw;
@@ -1924,6 +1975,7 @@
     const quickCountButtons = $$(".btn[data-quick]");
     const startBtn = $("#startBtn");
     const manualStartBtn = $("#manualStartBtn");
+    const lowCalorieToggle = $("#lowCalorieToggle");
     const menuPicker = $("#menuPicker");
     const resetMenusBtn = $("#resetMenusBtn");
     const menuCountChip = $("#menuCountChip");
@@ -2101,8 +2153,24 @@
 
     function getTierOrderIndex(menuName){
       const key = normalizeMenuKey(menuName);
+      const calorieRank = LOW_CALORIE_RANK.get(key);
+      if (Number.isInteger(calorieRank)) return calorieRank;
       const idx = MENU_TIER_INDEX.orderByMenu.get(key);
       return Number.isInteger(idx) ? idx : Number.MAX_SAFE_INTEGER;
+    }
+
+    function sortMenusByLowCalorie(menus, {descending=false} = {}){
+      const ranked = menus.slice().sort((a, b) => {
+        const ai = getTierOrderIndex(a);
+        const bi = getTierOrderIndex(b);
+        if (ai !== bi) return ai - bi;
+        return a.localeCompare(b, "ko");
+      });
+      return descending ? ranked.reverse() : ranked;
+    }
+
+    function isLowCalorieModeEnabled(){
+      return !!lowCalorieToggle?.checked;
     }
 
     function getTierFoldState(tier){
@@ -2133,13 +2201,15 @@
       const targetCount = Math.min(safeCount, menus.length);
       const selectedMenusInTier = menus.filter((menuName) => manualSelectedMenus.has(menuName));
       const currentCount = selectedMenusInTier.length;
+      const lowCalorieMode = isLowCalorieModeEnabled();
 
       if (targetCount > currentCount){
         const missingCount = targetCount - currentCount;
-        const randomFill = shuffle(
-          menus.filter((menuName) => !manualSelectedMenus.has(menuName))
-        ).slice(0, missingCount);
-        for (const menuName of randomFill){
+        const candidates = menus.filter((menuName) => !manualSelectedMenus.has(menuName));
+        const additions = lowCalorieMode
+          ? sortMenusByLowCalorie(candidates).slice(0, missingCount)
+          : shuffle(candidates).slice(0, missingCount);
+        for (const menuName of additions){
           manualSelectedMenus.add(menuName);
         }
         return;
@@ -2147,7 +2217,9 @@
 
       if (targetCount < currentCount){
         const removeCount = currentCount - targetCount;
-        const removals = shuffle(selectedMenusInTier).slice(0, removeCount);
+        const removals = lowCalorieMode
+          ? sortMenusByLowCalorie(selectedMenusInTier, { descending: true }).slice(0, removeCount)
+          : shuffle(selectedMenusInTier).slice(0, removeCount);
         for (const menuName of removals){
           manualSelectedMenus.delete(menuName);
         }
@@ -2866,6 +2938,10 @@
     resetMenusBtn.addEventListener("click", () => {
       resetManualSelection();
       showToast("선택한 메뉴를 모두 비웠어요");
+    });
+    lowCalorieToggle?.addEventListener("change", () => {
+      renderMenuPicker();
+      showToast(lowCalorieToggle.checked ? "저칼로리 순 정렬을 적용했어요" : "기본 정렬로 돌아왔어요");
     });
 
     manualStartCancelBtn.addEventListener("click", closeManualStartModal);
