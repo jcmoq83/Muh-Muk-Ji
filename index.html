@@ -1481,9 +1481,6 @@
       return { tierByMenu, orderByMenu };
     })();
     const TIER_KEYS = [1, 2, 3];
-    const tierTuneState = new Map(
-      TIER_KEYS.map((tier) => [tier, { touched: false, count: 0, selectedMenus: new Set() }])
-    );
     const tierFoldState = new Map(
       TIER_KEYS.map((tier) => [tier, { collapsed: true }])
     );
@@ -1927,13 +1924,6 @@
       return Number.isInteger(idx) ? idx : Number.MAX_SAFE_INTEGER;
     }
 
-    function getTierTuneState(tier){
-      if (!tierTuneState.has(tier)){
-        tierTuneState.set(tier, { touched: false, count: 0, selectedMenus: new Set() });
-      }
-      return tierTuneState.get(tier);
-    }
-
     function getTierFoldState(tier){
       if (!tierFoldState.has(tier)){
         tierFoldState.set(tier, { collapsed: true });
@@ -1941,31 +1931,45 @@
       return tierFoldState.get(tier);
     }
 
-    function resetTierTuneSelection(){
-      for (const tier of TIER_KEYS){
-        const state = getTierTuneState(tier);
-        state.touched = false;
-        state.count = 0;
-        state.selectedMenus = new Set();
+    function countSelectedMenus(menus){
+      let count = 0;
+      for (const menuName of menus){
+        if (manualSelectedMenus.has(menuName)) count += 1;
       }
+      return count;
     }
 
-    function applyTierTuneSelection(tier, menus, desiredCount){
-      const state = getTierTuneState(tier);
-      for (const menuName of state.selectedMenus){
-        manualSelectedMenus.delete(menuName);
+    function syncTierTuneUI(tier, menus){
+      const count = countSelectedMenus(menus);
+      const tuneRange = menuPicker.querySelector(`.tier-tune-range[data-tier="${tier}"]`);
+      const tuneCount = menuPicker.querySelector(`.tier-tune-count[data-tier="${tier}"]`);
+      if (tuneRange) tuneRange.value = String(count);
+      if (tuneCount) tuneCount.textContent = `${count}개`;
+    }
+
+    function applyTierTuneSelection(menus, desiredCount){
+      const safeCount = clampMin(Math.floor(Number(desiredCount) || 0), 0);
+      const targetCount = Math.min(safeCount, menus.length);
+      const selectedMenusInTier = menus.filter((menuName) => manualSelectedMenus.has(menuName));
+      const currentCount = selectedMenusInTier.length;
+
+      if (targetCount > currentCount){
+        const missingCount = targetCount - currentCount;
+        const randomFill = shuffle(
+          menus.filter((menuName) => !manualSelectedMenus.has(menuName))
+        ).slice(0, missingCount);
+        for (const menuName of randomFill){
+          manualSelectedMenus.add(menuName);
+        }
+        return;
       }
 
-      const safeCount = clampMin(Math.floor(Number(desiredCount) || 0), 0);
-      const count = Math.min(safeCount, menus.length);
-      const sampled = shuffle(menus).slice(0, count);
-
-      state.count = count;
-      state.touched = true;
-      state.selectedMenus = new Set(sampled);
-
-      for (const menuName of state.selectedMenus){
-        manualSelectedMenus.add(menuName);
+      if (targetCount < currentCount){
+        const removeCount = currentCount - targetCount;
+        const removals = shuffle(selectedMenusInTier).slice(0, removeCount);
+        for (const menuName of removals){
+          manualSelectedMenus.delete(menuName);
+        }
       }
     }
 
@@ -2009,19 +2013,19 @@
         tuneRange.step = "1";
         tuneRange.className = "tier-tune-range";
 
-        const tuneState = getTierTuneState(tier);
-        const value = Math.min(Math.max(0, tuneState.count || 0), menus.length);
-        tuneRange.value = String(value);
+        tuneRange.dataset.tier = String(tier);
+        tuneRange.value = String(countSelectedMenus(menus));
 
         const tuneCount = document.createElement("span");
         tuneCount.className = "tier-tune-count";
-        tuneCount.textContent = `${tuneState.touched ? tuneState.selectedMenus.size : 0}개`;
+        tuneCount.dataset.tier = String(tier);
+        tuneCount.textContent = `${countSelectedMenus(menus)}개`;
 
         tuneRange.addEventListener("input", () => {
           tuneCount.textContent = `${Number(tuneRange.value)}개`;
         });
         tuneRange.addEventListener("change", () => {
-          applyTierTuneSelection(tier, menus, Number(tuneRange.value));
+          applyTierTuneSelection(menus, Number(tuneRange.value));
           renderMenuPicker();
         });
 
@@ -2051,15 +2055,12 @@
           btn.innerHTML = formatMenuOptionLabel(menuName);
           btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
           btn.addEventListener("click", () => {
-            const tuneState = getTierTuneState(tier);
-            if (tuneState.selectedMenus.has(menuName)){
-              tuneState.selectedMenus.delete(menuName);
-            }
             if (manualSelectedMenus.has(menuName)) manualSelectedMenus.delete(menuName);
             else manualSelectedMenus.add(menuName);
             btn.classList.toggle("selected", manualSelectedMenus.has(menuName));
             btn.setAttribute("aria-pressed", manualSelectedMenus.has(menuName) ? "true" : "false");
             updateManualSelectionUI();
+            syncTierTuneUI(tier, menus);
           });
           frag.appendChild(btn);
         }
@@ -2097,7 +2098,6 @@
 
     function resetManualSelection(){
       manualSelectedMenus = new Set();
-      resetTierTuneSelection();
       renderMenuPicker();
     }
 
