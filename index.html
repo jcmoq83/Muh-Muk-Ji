@@ -874,7 +874,7 @@
         grid-template-columns: 1fr;
       }
       .vs{
-        min-height: 84px;
+        min-height: 64px;
       }
     }
     .pick{
@@ -943,6 +943,21 @@
       font-size: 13px;
       line-height:1.35;
     }
+    @media (max-width: 880px){
+      .pick{
+        min-height: 236px;
+      }
+      .imgbox{
+        min-height: 196px;
+      }
+      .label{
+        padding: 10px 10px 10px;
+        gap:4px;
+      }
+      .menu-sub{
+        font-size: 12px;
+      }
+    }
     .vs{
       position: relative;
       display:flex;
@@ -960,13 +975,15 @@
       overflow:hidden;
       isolation:isolate;
       --vs-progress: 0%;
+      --vs-accent-start: rgba(255,209,102,.82);
+      --vs-accent-end: rgba(255,138,91,.88);
     }
     .vs::before{
       content:"";
       position:absolute;
       inset:auto 0 0 0;
       height: var(--vs-progress);
-      background: linear-gradient(180deg, rgba(255,209,102,.82), rgba(255,138,91,.88));
+      background: linear-gradient(180deg, var(--vs-accent-start), var(--vs-accent-end));
       z-index: 0;
       transition: height .28s ease, width .28s ease;
     }
@@ -997,7 +1014,7 @@
         inset:0 auto 0 0;
         width: var(--vs-progress);
         height: auto;
-        background: linear-gradient(90deg, rgba(255,209,102,.82), rgba(255,138,91,.88));
+        background: linear-gradient(90deg, var(--vs-accent-start), var(--vs-accent-end));
       }
     }
     .mini-bracket-wrap{
@@ -1883,6 +1900,15 @@
 
     // winner
     let winner = null; // {name,img}
+    const VS_PROGRESS_COLORS = {
+      128: ["rgba(123,92,255,.82)", "rgba(71,60,201,.9)"],
+      64: ["rgba(90,122,255,.82)", "rgba(60,87,214,.9)"],
+      32: ["rgba(46,196,182,.82)", "rgba(34,152,139,.9)"],
+      16: ["rgba(255,209,102,.82)", "rgba(255,138,91,.88)"],
+      8: ["rgba(255,164,87,.84)", "rgba(237,104,72,.9)"],
+      4: ["rgba(255,122,138,.84)", "rgba(214,76,104,.9)"],
+      2: ["rgba(255,96,126,.86)", "rgba(186,45,88,.92)"]
+    };
 
     /********************
      * DOM refs
@@ -2467,12 +2493,16 @@
     function updateVsProgressUI(){
       if (!vsCard || !vsProgressText) return;
       const { completed, total, ratio } = getTournamentProgress();
+      const stageSize = current.length || selectedCount || 0;
+      const [startColor, endColor] = VS_PROGRESS_COLORS[stageSize] || VS_PROGRESS_COLORS[16];
       vsCard.style.setProperty("--vs-progress", `${ratio * 100}%`);
+      vsCard.style.setProperty("--vs-accent-start", startColor);
+      vsCard.style.setProperty("--vs-accent-end", endColor);
       if (!total){
-        vsProgressText.textContent = "0%";
+        vsProgressText.textContent = `${stageLabel(stageSize || 16)} 진행중 : 0%`;
         return;
       }
-      vsProgressText.textContent = `${completed}/${total}`;
+      vsProgressText.textContent = `${stageLabel(stageSize)} 진행중 : ${completed}/${total}`;
     }
 
     function setImg(el, url, menuName, fallbackIcon = "🍽️"){
