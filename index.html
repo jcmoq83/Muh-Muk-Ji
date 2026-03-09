@@ -478,6 +478,8 @@
       background:
         radial-gradient(circle at top left, rgba(255,213,133,.18), transparent 40%),
         linear-gradient(180deg, rgba(255,252,244,.98), rgba(255,245,231,.95));
+      border-color: rgba(134,196,187,.52);
+      box-shadow: 0 18px 36px rgba(53,145,130,.09);
     }
     .setup-panel.mode-panel{
       position: relative;
@@ -491,6 +493,9 @@
       height: 5px;
       border-radius: inherit inherit 0 0;
       background: linear-gradient(90deg, rgba(255,138,91,.95), rgba(255,209,102,.95));
+    }
+    .setup-panel.manual-panel::before{
+      background: linear-gradient(90deg, rgba(61,180,163,.95), rgba(151,224,208,.95));
     }
     .setup-panel.usage-panel{
       position: relative;
@@ -517,6 +522,7 @@
     .mode-title{
       margin: 0;
       font-size: 24px;
+      font-weight: 800;
       line-height: 1.05;
       color:#5b331f;
       letter-spacing: -.02em;
@@ -564,6 +570,7 @@
     .summary-title{
       margin: 0;
       font-size: 24px;
+      font-weight: 800;
       line-height: 1.05;
       color:#5b331f;
       letter-spacing: -.02em;
@@ -1321,7 +1328,7 @@
                 <summary>
                   <span class="summary-copy">
                     <span class="summary-title">수동 토너먼트</span>
-                    <span class="mode-sub">메뉴를 클릭해서 직접 고르거나 군별로 메뉴 비중을 조절 할 수 있습니다. 선택 개수에 따라 시작 가능한 강수를 고르면, 부족한 메뉴는 랜덤으로 채워 수동 토너먼트를 시작할 수 있습니다.</span>
+                    <span class="mode-sub">메뉴를 클릭해서 직접 고르거나 군별로 메뉴 비중을 조절 할 수 있습니다.</span>
                   </span>
                   <button type="button" class="summary-toggle" id="advancedToggleBtn">펼치기</button>
                 </summary>
