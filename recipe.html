@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>레시피 | 머먹지!?</title>
+  <meta name="description" content="머먹지!? 토너먼트에 들어 있는 메뉴를 집에서 바로 따라 하기 쉽게 정리한 레시피 허브입니다." />
+  <link rel="canonical" href="https://muh-muk-ji.pages.dev/recipe.html" />
+  <link rel="stylesheet" href="/site-pages.css" />
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"머먹지!?","url":"https://muh-muk-ji.pages.dev/","description":"오늘 먹을 메뉴를 빠르게 고를 수 있는 메뉴 토너먼트 서비스"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://muh-muk-ji.pages.dev/"},{"@type":"ListItem","position":2,"name":"레시피","item":"https://muh-muk-ji.pages.dev/recipe.html"}]},{"@context":"https://schema.org","@type":"CollectionPage","name":"레시피","description":"머먹지!? 토너먼트 메뉴 대부분을 집에서 따라 하기 쉽게 정리한 레시피 허브","url":"https://muh-muk-ji.pages.dev/recipe.html"}]</script>
+</head>
+<body>
+  <main class="page">
+    <header class="site-header">
+      <div class="site-header-bar">
+        <a class="brand-link" href="/">머먹지!?</a>
+        <nav class="top-nav" aria-label="주요 메뉴">
+          <a class="top-nav-link" href="/#mainCard">머먹지!?</a>
+          <a class="top-nav-link" href="/recipe.html" aria-current="page">레시피</a>
+          <a class="top-nav-link" href="/about.html">소개</a>
+          <a class="top-nav-link" href="/contact.html">문의</a>
+        </nav>
+      </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="breadcrumb"><a href="/">홈</a><span class="crumb-sep">/</span><span aria-current="page">레시피</span></nav>
+
+    <section class="hero recipe-hero">
+      <div class="recipe-hero-copy">
+        <span class="eyebrow">Muh-Muk-Ji Recipes</span>
+        <h1>지금 바로 만들 수 있는 메뉴 토너먼트 레시피</h1>
+        <p class="lead">토너먼트에 들어 있는 146개 메뉴를 집에서 따라 하기 쉬운 버전으로 한곳에 모았습니다. 카테고리별로 바로 좁히고, 각 카드에서 핵심 재료와 3단계 조리 흐름까지 바로 볼 수 있습니다.</p>
+        <div class="recipe-stat-row" aria-label="레시피 핵심 지표">
+          <div class="recipe-stat">
+            <strong>146</strong>
+            <span>레시피 카드</span>
+          </div>
+          <div class="recipe-stat">
+            <strong>6</strong>
+            <span>직관적 카테고리</span>
+          </div>
+          <div class="recipe-stat">
+            <strong>3</strong>
+            <span>빠른 조리 단계</span>
+          </div>
+        </div>
+      </div>
+      <div class="recipe-hero-panel" aria-label="레시피 탐색 하이라이트">
+        <div class="recipe-orbit recipe-orbit-a"></div>
+        <div class="recipe-orbit recipe-orbit-b"></div>
+        <div class="recipe-highlight">
+          <span class="recipe-highlight-label">빠르게 찾기</span>
+          <strong>국물, 고기, 면, 가벼운 식사, 세계요리</strong>
+          <p>검색창 없이도 감으로 찾을 수 있게 묶었습니다.</p>
+        </div>
+        <div class="recipe-highlight alt">
+          <span class="recipe-highlight-label">카드 안에서 끝내기</span>
+          <strong>핵심 재료 + 빠른 순서 + 마무리 팁</strong>
+          <p>외식 메뉴를 집밥 버전으로 단순화해 바로 따라가기 쉽게 정리했습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel recipe-controls-panel">
+      <div class="recipe-toolbar">
+        <label class="recipe-search" for="recipeSearch">
+          <span>메뉴 검색</span>
+          <input id="recipeSearch" type="search" placeholder="예: 김치찌개, 포케, 파스타" autocomplete="off" />
+        </label>
+        <div class="recipe-toolbar-copy">
+          <strong id="recipeCountLabel">146개 레시피</strong>
+          <span>현재 토너먼트 메뉴를 기준으로 집에서 만들기 쉬운 버전만 추렸습니다.</span>
+        </div>
+      </div>
+      <div class="filter-block">
+        <span class="filter-label">카테고리</span>
+        <div class="filter-pills" id="categoryFilters">
+          <button class="filter-pill is-active" type="button" data-category="all">전체</button>
+          <button class="filter-pill" type="button" data-category="rice">집밥/한그릇</button>
+          <button class="filter-pill" type="button" data-category="soup">국물/탕</button>
+          <button class="filter-pill" type="button" data-category="grill">고기/구이</button>
+          <button class="filter-pill" type="button" data-category="noodle">면/분식</button>
+          <button class="filter-pill" type="button" data-category="light">가벼운 식사</button>
+          <button class="filter-pill" type="button" data-category="global">세계요리</button>
+        </div>
+      </div>
+      <div class="filter-block">
+        <span class="filter-label">메뉴군</span>
+        <div class="filter-pills" id="tierFilters">
+          <button class="filter-pill is-active" type="button" data-tier="all">전체</button>
+          <button class="filter-pill" type="button" data-tier="1">1군 메뉴</button>
+          <button class="filter-pill" type="button" data-tier="2">2군 메뉴</button>
+          <button class="filter-pill" type="button" data-tier="3">3군 메뉴</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel recipe-catalog-panel">
+      <div class="section-heading">
+        <div>
+          <h2>레시피 카드 아카이브</h2>
+          <p class="lead">각 카드는 집에서 바로 실행할 수 있게 압축했습니다. 디테일보다는 시작 속도에 초점을 맞춘 버전입니다.</p>
+        </div>
+      </div>
+      <div class="recipe-grid" id="recipesGrid"></div>
+      <div class="recipe-empty" id="recipeEmpty" hidden>
+        <strong>조건에 맞는 메뉴가 없습니다.</strong>
+        <p>검색어를 줄이거나 카테고리 필터를 전체로 바꿔 보세요.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="cta-box">
+        <strong>다시 고르기로 돌아가고 싶다면</strong>
+        <p>레시피를 훑어보고도 고민되면 메인 토너먼트에서 바로 후보를 줄일 수 있습니다.</p>
+        <div class="cta-row">
+          <a class="button primary" href="/#mainCard">머먹지!?로 돌아가기</a>
+          <a class="button" href="/about.html">서비스 소개 보기</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <nav class="footer-nav" aria-label="사이트 정보 링크">
+        <a class="footer-link" href="/">홈</a>
+        <a class="footer-link" href="/recipe.html">레시피</a>
+        <a class="footer-link" href="/about.html">소개</a>
+        <a class="footer-link" href="/contact.html">문의</a>
+        <a class="footer-link" href="/privacy.html">개인정보처리방침</a>
+      </nav>
+      <div class="footer-meta">
+        <span>머먹지!?는 메뉴 선택과 레시피 탐색을 한 흐름으로 연결하는 한국어 메뉴 서비스입니다.</span>
+        <span>문의 이메일: jcmoq83@gmail.com</span>
+        <span>© 2026 Muh-Muk-Ji. All rights reserved.</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const MENU_TIER_DEFINITIONS = [
+      {
+        tier: 1,
+        label: "1군 메뉴",
+        menus: [
+          "김치찌개","된장찌개","순두부찌개","부대찌개","비빔밥","제육볶음","불고기","삼겹살","목살","돼지갈비","소고기",
+          "경양식 돈까스","일본식 돈까스","치즈돈까스","(분식집)라면","김밥","떡볶이","라볶이","칼국수","우동","짜장면","짬뽕",
+          "탕수육","설렁탕","갈비탕","순대국","콩나물국밥","감자탕","평양냉면","함흥냉면","비빔냉면","후라이드치킨","양념치킨",
+          "간장치킨","피자(미국식)","피자(이태리식)","프랜차이즈버거","도시락","샐러드","타코","인도커리","일본라멘","파스타",
+          "낙곱새","보쌈","족발","아구찜","동태탕","고등어구이","쌀국수","마라탕","초밥","숙성회(사시미)",
+          "활어회","막국수","수제버거"
+        ]
+      },
+      {
+        tier: 2,
+        label: "2군 메뉴",
+        menus: [
+          "가츠동","규동","일본카레","카레우동","메밀소바","텐동","오므라이스","로제떡볶이","닭갈비","치즈닭갈비","찜닭",
+          "닭볶음탕","닭한마리","낙지볶음","쭈꾸미볶음","곱창","대창","곱창전골","매운탕","코다리조림","삼치구이","장어구이","회덮밥",
+          "만둣국","삼계탕","한정식","샤브샤브","스테이크","딤섬","마파두부","마라샹궈","탄탄면","오리구이","소갈비","차돌박이","콩국수",
+          "간장게장","잔치국수","육개장","돼지국밥","황태해장국","선지해장국","토스트","리조또","참치회","국수전골","돌솥비빕밥",
+          "김치볶음밥","샌드위치"
+        ]
+      },
+      {
+        tier: 3,
+        label: "3군 메뉴",
+        menus: [
+          "고기국수","김치나베돈까스","똠얌꿍","나시고렝","팟타이","반미","부리또","부리또볼","타코라이스","포케","탄두리치킨","수프카레",
+          "우나기동","오코노미야키","오징어순대","라자냐","북경오리","동파육","훠거(훠궈)","훠거","랍스타","킹크랩","편의점","핫도그",
+          "꽃게탕","갈치조림","물회","조개구이","닭똥집","닭강정","닭발","모듬전","해물파전","해물찜","카츠산도","수육","추어탕","청국장","막창","떡갈비","양꼬치"
+        ]
+      }
+    ];
+
+    const CATEGORY_META = {
+      all: { label: "전체", color: "#ff8a5b", tone: "#fff0e6" },
+      rice: { label: "집밥/한그릇", color: "#ff8a5b", tone: "#fff1e1" },
+      soup: { label: "국물/탕", color: "#2ec4b6", tone: "#e6fbf7" },
+      grill: { label: "고기/구이", color: "#ef476f", tone: "#ffe7ed" },
+      noodle: { label: "면/분식", color: "#f4a261", tone: "#fff0db" },
+      light: { label: "가벼운 식사", color: "#70b77e", tone: "#eff9f0" },
+      global: { label: "세계요리", color: "#577590", tone: "#edf3ff" }
+    };
+
+    const CATEGORY_RULES = {
+      light: ["샐러드","포케","회","초밥","물회","샌드위치","토스트","콩국수","메밀소바","평양냉면","함흥냉면","비빔냉면","막국수","회덮밥"],
+      soup: ["찌개","탕","국","전골","샤브","나베","훠거","훠궈","해장","수프카레","닭한마리","만둣국","국수전골"],
+      grill: ["갈비","삼겹살","목살","불고기","제육","보쌈","족발","수육","스테이크","곱창","대창","막창","장어","구이","차돌","양꼬치","떡갈비","동파육","북경오리","소고기","오리","닭발","닭똥집"],
+      noodle: ["라면","국수","우동","소바","파스타","쌀국수","짬뽕","짜장면","칼국수","탄탄면","팟타이","라자냐","냉면","로제떡볶이","떡볶이","라볶이","오코노미야키","카츠산도"],
+      global: ["타코","부리또","포케","나시고렝","반미","딤섬","마라","카레","훠거","훠궈","똠얌","수프카레","피자","버거","리조또","라멘","가츠동","규동","텐동","오므라이스","우나기동","초밥","숙성회","활어회","참치회","일본식","경양식"],
+      rice: []
+    };
+
+    const recipes = MENU_TIER_DEFINITIONS.flatMap((group) =>
+      group.menus.map((menuName) => ({
+        menuName,
+        tier: group.tier,
+        tierLabel: group.label
+      }))
+    );
+
+    const state = {
+      category: "all",
+      tier: "all",
+      query: ""
+    };
+
+    const recipesGrid = document.getElementById("recipesGrid");
+    const recipeEmpty = document.getElementById("recipeEmpty");
+    const recipeSearch = document.getElementById("recipeSearch");
+    const recipeCountLabel = document.getElementById("recipeCountLabel");
+
+    function normalize(value){
+      return String(value || "")
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/[^0-9a-z가-힣]/g, "");
+    }
+
+    function escapeHtml(value){
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function includesAny(menuName, keywords){
+      return keywords.some((keyword) => menuName.includes(keyword));
+    }
+
+    function getCategory(menuName){
+      if (includesAny(menuName, CATEGORY_RULES.light)) return "light";
+      if (includesAny(menuName, CATEGORY_RULES.soup)) return "soup";
+      if (includesAny(menuName, CATEGORY_RULES.grill)) return "grill";
+      if (includesAny(menuName, CATEGORY_RULES.noodle)) return "noodle";
+      if (includesAny(menuName, CATEGORY_RULES.global)) return "global";
+      return "rice";
+    }
+
+    function inferProtein(menuName){
+      if (/(치킨|닭|삼계탕|찜닭|닭볶음탕|닭갈비|닭강정|닭발|닭한마리|탄두리치킨|닭똥집)/.test(menuName)) return "닭고기";
+      if (/(돼지|보쌈|족발|삼겹살|목살|제육|돈까스|가츠|카츠|수육|막창|곱창|대창|순대|돼지국밥)/.test(menuName)) return "돼지고기";
+      if (/(소고기|불고기|갈비|차돌|설렁탕|갈비탕|육개장|스테이크|규동|우나기동|떡갈비)/.test(menuName)) return "소고기";
+      if (/(회|초밥|포케|회덮밥|장어|삼치|고등어|동태|코다리|조개|꽃게|랍스타|킹크랩|아구|낙지|쭈꾸미|낙곱새|해물|물회|매운탕|참치|오징어)/.test(menuName)) return "해산물";
+      if (/(두부|순두부|청국장|된장|마파두부|샐러드|콩국수)/.test(menuName)) return "두부/콩류";
+      if (/(버거|샌드위치|토스트|편의점)/.test(menuName)) return "기본 속재료";
+      return "주재료";
+    }
+
+    function inferBase(menuName, category){
+      if (category === "soup") return "육수 또는 물";
+      if (category === "grill") return "곁들임 채소";
+      if (category === "noodle") return "면 또는 떡";
+      if (category === "light") return "채소 또는 밥";
+      if (category === "global") return "향신료와 기본 탄수화물";
+      return "밥 또는 메인 베이스";
+    }
+
+    function inferSauce(menuName, category){
+      if (/(김치|부대|떡볶이|라볶이|양념치킨|닭발|육개장|매운탕|마라|쭈꾸미|낙지|제육|짬뽕)/.test(menuName)) return "고추장/고춧가루 베이스";
+      if (/(불고기|갈비|간장치킨|간장게장|규동|장어|찜닭|동파육)/.test(menuName)) return "간장 베이스";
+      if (/(카레|커리|탄두리|똠얌|팟타이|나시고렝)/.test(menuName)) return "향신료 소스";
+      if (/(샐러드|포케|회|초밥|물회)/.test(menuName)) return "가벼운 드레싱";
+      if (/(피자|파스타|리조또|라자냐)/.test(menuName)) return "토마토/크림 소스";
+      if (category === "soup") return "양념장";
+      return "기본 간";
+    }
+
+    function getDifficulty(menuName, category){
+      if (/(랍스타|킹크랩|북경오리|양꼬치|수제버거|훠거|훠궈|샤브샤브|장어|족발|보쌈)/.test(menuName)) return "도전";
+      if (category === "global" || /(갈비|찜|탕|아구|코다리|해물찜|닭볶음탕|삼계탕)/.test(menuName)) return "보통";
+      return "쉬움";
+    }
+
+    function getCookTime(menuName, category){
+      if (/(찌개|국|탕|찜|갈비|삼계탕|감자탕|족발|보쌈|해물찜|꽃게탕|갈치조림)/.test(menuName)) return "35~55분";
+      if (/(피자|라자냐|수제버거|스테이크|양꼬치|샤브샤브|훠거)/.test(menuName)) return "30~45분";
+      if (category === "light") return "15~20분";
+      if (category === "noodle") return "15~25분";
+      return "20~30분";
+    }
+
+    function getSummary(menuName, category){
+      if (category === "soup") return `${menuName}의 핵심 맛을 집에서 빠르게 재현하는 국물 중심 버전입니다. 먼저 베이스를 끓이고 재료를 순서대로 넣으면 안정적으로 완성됩니다.`;
+      if (category === "grill") return `${menuName}를 집에서 만들기 좋게 단순화한 팬 조리 버전입니다. 밑간과 굽기 타이밍만 맞추면 식당 느낌이 확 살아납니다.`;
+      if (category === "noodle") return `${menuName}를 바쁜 날에도 만들 수 있도록 면과 소스를 최소 단계로 정리했습니다. 면 삶는 타이밍과 간 맞추기가 핵심입니다.`;
+      if (category === "light") return `${menuName}를 무겁지 않게 즐길 수 있는 가벼운 구성의 레시피입니다. 신선한 재료와 마무리 소스 균형이 맛을 좌우합니다.`;
+      if (category === "global") return `${menuName}의 개성을 살리되 구하기 쉬운 재료 위주로 조정한 홈쿠킹 버전입니다. 향신료는 한 번에 과하지 않게 넣는 편이 안전합니다.`;
+      return `${menuName}를 집밥 스타일로 빠르게 구현할 수 있게 정리한 한 그릇 레시피입니다. 메인 재료와 소스만 잡으면 완성도가 안정적입니다.`;
+    }
+
+    function buildIngredients(menuName, category){
+      const protein = inferProtein(menuName);
+      const base = inferBase(menuName, category);
+      const sauce = inferSauce(menuName, category);
+      if (category === "light") return ["신선 채소", protein, "레몬 또는 식초", sauce, "견과 또는 토핑"];
+      if (category === "soup") return [protein, base, "대파", "마늘", sauce];
+      if (category === "grill") return [protein, "양파", "마늘", sauce, "기름 또는 버터"];
+      if (category === "noodle") return [base, protein, "파/양파", sauce, "고명 채소"];
+      if (category === "global") return [protein, base, "향신료", sauce, "산미 또는 허브"];
+      return [protein, "밥 또는 베이스", "양파", sauce, "고명 채소"];
+    }
+
+    function buildSteps(menuName, category){
+      if (category === "soup") {
+        return [
+          `${menuName}용 주재료와 대파, 마늘을 손질하고 냄비에 기름을 살짝 두른 뒤 향을 먼저 냅니다.`,
+          `육수 또는 물을 붓고 양념장을 풀어 10분 이상 끓인 다음 메인 재료를 넣어 국물 농도를 맞춥니다.`,
+          `간을 보고 마지막에 파나 고명을 더해 마무리하면 집에서도 ${menuName} 느낌이 깔끔하게 살아납니다.`
+        ];
+      }
+      if (category === "grill") {
+        return [
+          `${menuName}의 핵심 재료를 한입 크기로 준비하고 간장 또는 양념 베이스에 10분 정도 밑간합니다.`,
+          `팬을 충분히 달군 뒤 센 불에서 겉면을 먼저 잡고, 중약불로 줄여 속까지 익히며 소스를 졸입니다.`,
+          `불을 끄기 직전 향채와 참기름 또는 버터를 더해 윤기를 내면 한층 완성도가 높아집니다.`
+        ];
+      }
+      if (category === "noodle") {
+        return [
+          `${menuName}에 들어갈 소스나 국물을 먼저 만들어 두고, 고명 재료는 면보다 먼저 볶거나 데워 둡니다.`,
+          `면 또는 떡을 알맞게 익힌 뒤 찬물 또는 뜨거운 물로 상태를 맞춰 원하는 식감을 잡습니다.`,
+          `그릇에 베이스와 면을 합친 뒤 고명을 올리고 마지막 간을 맞추면 ${menuName} 흐름이 깔끔하게 완성됩니다.`
+        ];
+      }
+      if (category === "light") {
+        return [
+          `${menuName}에 들어갈 채소와 토핑을 차갑고 산뜻하게 준비하고, 단백질 재료는 따로 굽거나 데칩니다.`,
+          `드레싱은 짠맛보다 산미와 고소함을 먼저 맞추고, 밥이나 곡물이 있다면 너무 뜨겁지 않게 식혀 둡니다.`,
+          `모든 재료를 넓게 담아 식감을 살리고 먹기 직전에 드레싱을 둘러야 ${menuName}의 밸런스가 살아납니다.`
+        ];
+      }
+      if (category === "global") {
+        return [
+          `${menuName}의 향을 좌우하는 향신채와 핵심 소스를 먼저 준비해 팬이나 냄비 옆에 모두 세팅합니다.`,
+          `기름에 향신료와 채소를 볶아 베이스 향을 만들고, 단백질과 탄수화물 재료를 순서대로 넣어 익힙니다.`,
+          `마지막에 소스 농도와 산미를 맞추고 허브나 토핑을 올리면 집에서도 ${menuName}의 개성이 또렷하게 납니다.`
+        ];
+      }
+      return [
+        `${menuName}에 들어갈 핵심 재료를 먼저 손질하고, 양념 또는 볶음장을 작은 볼에 미리 만들어 둡니다.`,
+        `팬이나 냄비에서 메인 재료를 먼저 익혀 향을 낸 뒤 밥이나 베이스 재료를 더해 전체 간을 맞춥니다.`,
+        `고명과 마지막 간만 정리하면 ${menuName} 특유의 한 그릇 완성감이 빠르게 살아납니다.`
+      ];
+    }
+
+    function getTip(menuName, category){
+      if (category === "soup") return "국물 메뉴는 소금보다 마지막 한 숟갈의 양념장으로 맛을 맞추는 편이 실패가 적습니다.";
+      if (category === "grill") return "고기 메뉴는 팬을 먼저 충분히 달군 뒤 뒤집는 횟수를 줄이면 풍미가 살아납니다.";
+      if (category === "noodle") return "면 메뉴는 소스 완성보다 면 식감이 더 중요하니, 예상 시간보다 30초 빠르게 건져 보세요.";
+      if (category === "light") return "가벼운 메뉴는 드레싱을 미리 많이 넣지 말고 먹기 직전에 나눠 섞는 편이 신선합니다.";
+      if (category === "global") return "세계요리는 향신료를 한 번에 세게 넣기보다 중간에 맛을 보며 단계적으로 올리는 쪽이 안전합니다.";
+      return `${menuName}는 완성 직전 고명이나 향채를 더해야 식당보다 덜 밋밋하게 마무리됩니다.`;
+    }
+
+    function getTierTone(tier){
+      if (tier === 1) return "대표 메뉴";
+      if (tier === 2) return "확장 메뉴";
+      return "탐험 메뉴";
+    }
+
+    function renderCards(){
+      const filtered = recipes.filter((recipe) => {
+        const category = getCategory(recipe.menuName);
+        const matchesCategory = state.category === "all" || category === state.category;
+        const matchesTier = state.tier === "all" || String(recipe.tier) === state.tier;
+        const matchesQuery = !state.query || normalize(recipe.menuName).includes(normalize(state.query));
+        return matchesCategory && matchesTier && matchesQuery;
+      });
+
+      recipeCountLabel.textContent = `${filtered.length}개 레시피`;
+      recipeEmpty.hidden = filtered.length !== 0;
+
+      recipesGrid.innerHTML = filtered.map((recipe) => {
+        const category = getCategory(recipe.menuName);
+        const meta = CATEGORY_META[category];
+        const ingredients = buildIngredients(recipe.menuName, category);
+        const steps = buildSteps(recipe.menuName, category);
+        const difficulty = getDifficulty(recipe.menuName, category);
+        const cookTime = getCookTime(recipe.menuName, category);
+        const summary = getSummary(recipe.menuName, category);
+        const tip = getTip(recipe.menuName, category);
+
+        return `
+          <article class="recipe-card" style="--recipe-accent:${meta.color};--recipe-soft:${meta.tone};">
+            <div class="recipe-card-top">
+              <div class="recipe-badge-row">
+                <span class="recipe-badge">${escapeHtml(meta.label)}</span>
+                <span class="recipe-badge ghost">${escapeHtml(recipe.tierLabel)}</span>
+                <span class="recipe-badge ghost">${escapeHtml(getTierTone(recipe.tier))}</span>
+              </div>
+              <h3>${escapeHtml(recipe.menuName)}</h3>
+              <p>${escapeHtml(summary)}</p>
+            </div>
+            <div class="recipe-quick-meta">
+              <span>조리 시간 ${escapeHtml(cookTime)}</span>
+              <span>난이도 ${escapeHtml(difficulty)}</span>
+              <span>2인 기준</span>
+            </div>
+            <div class="recipe-section">
+              <strong>핵심 재료</strong>
+              <div class="ingredient-list">
+                ${ingredients.map((item) => `<span class="ingredient-chip">${escapeHtml(item)}</span>`).join("")}
+              </div>
+            </div>
+            <div class="recipe-section">
+              <strong>빠른 순서</strong>
+              <ol class="recipe-steps">
+                ${steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
+              </ol>
+            </div>
+            <div class="recipe-tip">
+              <span>실전 팁</span>
+              <p>${escapeHtml(tip)}</p>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    document.getElementById("categoryFilters").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-category]");
+      if (!button) return;
+      state.category = button.dataset.category;
+      document.querySelectorAll("#categoryFilters .filter-pill").forEach((item) => {
+        item.classList.toggle("is-active", item === button);
+      });
+      renderCards();
+    });
+
+    document.getElementById("tierFilters").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-tier]");
+      if (!button) return;
+      state.tier = button.dataset.tier;
+      document.querySelectorAll("#tierFilters .filter-pill").forEach((item) => {
+        item.classList.toggle("is-active", item === button);
+      });
+      renderCards();
+    });
+
+    recipeSearch.addEventListener("input", () => {
+      state.query = recipeSearch.value;
+      renderCards();
+    });
+
+    renderCards();
+  </script>
+</body>
+</html>
