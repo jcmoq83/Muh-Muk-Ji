@@ -500,6 +500,8 @@
     .setup-panel.usage-panel{
       position: relative;
       background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(250,246,240,.94));
+      align-self: start;
+      height: fit-content;
     }
     .panel-head{
       display:flex;
@@ -2045,6 +2047,7 @@
     const bracketScroll = $("#bracketScroll");
     const vsCard = $("#vsCard");
     const vsProgressText = $("#vsProgressText");
+    const arena = $("#arena");
 
     const pickLeft = $("#pickLeft");
     const pickRight = $("#pickRight");
@@ -2657,6 +2660,24 @@
       vsProgressText.textContent = `${stageLabel(stageSize)} 진행중 : ${completed}/${total}`;
     }
 
+    function scrollPlayFocusIntoView(){
+      if (!window.matchMedia("(max-width: 880px)").matches) return;
+      if (!vsCard || !arena) return;
+
+      const arenaRect = arena.getBoundingClientRect();
+      const vsRect = vsCard.getBoundingClientRect();
+      const absoluteVsCenter = window.scrollY + vsRect.top + (vsRect.height / 2);
+      const viewportCenter = window.innerHeight / 2;
+      const minTop = window.scrollY + arenaRect.top - 12;
+      const maxTop = window.scrollY + arenaRect.bottom - window.innerHeight + 12;
+      const targetTop = Math.max(minTop, Math.min(absoluteVsCenter - viewportCenter, maxTop));
+
+      window.scrollTo({
+        top: Math.max(0, targetTop),
+        behavior: "smooth"
+      });
+    }
+
     function setImg(el, url, menuName, fallbackIcon = "🍽️"){
       el.innerHTML = ""; // clear
       const img = document.createElement("img");
@@ -2968,6 +2989,9 @@
       renderMiniBracket();
       updateTopInfo();
       renderCurrentMatch();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(scrollPlayFocusIntoView);
+      });
     }
 
     function resetAll(){
