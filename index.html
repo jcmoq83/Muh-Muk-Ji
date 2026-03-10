@@ -460,7 +460,6 @@
       display:grid;
       grid-template-columns: 1.05fr .95fr;
       gap:14px;
-      align-items:start;
     }
     .setup-panel{
       border-radius: var(--radius);
@@ -501,8 +500,13 @@
     .setup-panel.usage-panel{
       position: relative;
       background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(250,246,240,.94));
-      align-self: start;
-      height: fit-content;
+    }
+    .usage-panel .panel-head{
+      margin-bottom: 10px;
+      padding: 10px 12px;
+    }
+    .usage-panel .section-title{
+      margin-bottom: 0;
     }
     .panel-head{
       display:flex;
