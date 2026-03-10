@@ -1960,6 +1960,7 @@
     ]);
     let DEFAULT_MENUS = BASE_DEFAULT_MENUS.slice();
     let manualSelectedMenus = new Set();
+    let manualMenuDisplayOrder = new Map();
 
     async function syncMenusFromGitHubImages(){
       try{
@@ -2231,6 +2232,17 @@
       return !!lowCalorieToggle?.checked;
     }
 
+    function refreshManualMenuDisplayOrder(){
+      manualMenuDisplayOrder = new Map(
+        shuffle(DEFAULT_MENUS).map((menuName, idx) => [menuName, idx])
+      );
+    }
+
+    function getManualMenuDisplayIndex(menuName){
+      const idx = manualMenuDisplayOrder.get(menuName);
+      return Number.isInteger(idx) ? idx : Number.MAX_SAFE_INTEGER;
+    }
+
     function getTierFoldState(tier){
       if (!tierFoldState.has(tier)){
         tierFoldState.set(tier, { collapsed: true });
@@ -2296,12 +2308,21 @@
       for (const tier of TIER_KEYS){
         const menus = groupedMenus.get(tier);
         if (!menus || menus.length === 0) continue;
-        menus.sort((a, b) => {
-          const ai = getTierOrderIndex(a);
-          const bi = getTierOrderIndex(b);
-          if (ai !== bi) return ai - bi;
-          return a.localeCompare(b, "ko");
-        });
+        if (isLowCalorieModeEnabled()){
+          menus.sort((a, b) => {
+            const ai = getTierOrderIndex(a);
+            const bi = getTierOrderIndex(b);
+            if (ai !== bi) return ai - bi;
+            return a.localeCompare(b, "ko");
+          });
+        }else{
+          menus.sort((a, b) => {
+            const ai = getManualMenuDisplayIndex(a);
+            const bi = getManualMenuDisplayIndex(b);
+            if (ai !== bi) return ai - bi;
+            return a.localeCompare(b, "ko");
+          });
+        }
 
         const groupLabel = document.createElement("div");
         groupLabel.className = `menu-group-label tier-${tier} menu-group-head`;
@@ -2409,6 +2430,7 @@
 
     function resetManualSelection(){
       manualSelectedMenus = new Set();
+      if (!isLowCalorieModeEnabled()) refreshManualMenuDisplayOrder();
       renderMenuPicker();
     }
 
@@ -2998,6 +3020,7 @@
       showToast("선택한 메뉴를 모두 비웠어요");
     });
     lowCalorieToggle?.addEventListener("change", () => {
+      if (!lowCalorieToggle.checked) refreshManualMenuDisplayOrder();
       renderMenuPicker();
       showToast(lowCalorieToggle.checked ? "건강식 위주 정렬을 적용했어요" : "기본 정렬로 돌아왔어요");
     });
