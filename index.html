@@ -2258,6 +2258,15 @@
       return tierFoldState.get(tier);
     }
 
+    function getGroupedMenusByTier(){
+      const groupedMenus = new Map([[1, []], [2, []], [3, []], [0, []]]);
+      for (const menuName of DEFAULT_MENUS){
+        const tier = getMenuTier(menuName);
+        groupedMenus.get(tier).push(menuName);
+      }
+      return groupedMenus;
+    }
+
     function countSelectedMenus(menus){
       let count = 0;
       for (const menuName of menus){
@@ -2304,14 +2313,31 @@
       }
     }
 
+    function reseedManualSelectionForCurrentMode(){
+      const groupedMenus = getGroupedMenusByTier();
+      for (const tier of TIER_KEYS){
+        const menus = groupedMenus.get(tier) || [];
+        const targetCount = countSelectedMenus(menus);
+        if (targetCount === 0) continue;
+
+        for (const menuName of menus){
+          manualSelectedMenus.delete(menuName);
+        }
+
+        const nextSelection = isLowCalorieModeEnabled()
+          ? sortMenusByLowCalorie(menus).slice(0, targetCount)
+          : shuffle(menus).slice(0, targetCount);
+
+        for (const menuName of nextSelection){
+          manualSelectedMenus.add(menuName);
+        }
+      }
+    }
+
     function renderMenuPicker(){
       menuPicker.innerHTML = "";
       const frag = document.createDocumentFragment();
-      const groupedMenus = new Map([[1, []], [2, []], [3, []], [0, []]]);
-      for (const menuName of DEFAULT_MENUS){
-        const tier = getMenuTier(menuName);
-        groupedMenus.get(tier).push(menuName);
-      }
+      const groupedMenus = getGroupedMenusByTier();
 
       for (const tier of TIER_KEYS){
         const menus = groupedMenus.get(tier);
@@ -3050,6 +3076,7 @@
     });
     lowCalorieToggle?.addEventListener("change", () => {
       if (!lowCalorieToggle.checked) refreshManualMenuDisplayOrder();
+      reseedManualSelectionForCurrentMode();
       renderMenuPicker();
       showToast(lowCalorieToggle.checked ? "건강식 위주 정렬을 적용했어요" : "기본 정렬로 돌아왔어요");
     });
