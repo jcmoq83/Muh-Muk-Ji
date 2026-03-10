@@ -649,6 +649,7 @@
       margin: -2px 0 12px;
     }
     .toggle-chip{
+      position:relative;
       display:inline-flex;
       align-items:center;
       gap:8px;
@@ -659,6 +660,59 @@
       color:#7a5e4d;
       font-size: 12px;
       font-weight: 700;
+    }
+    .toggle-copy{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .toggle-help{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width: 18px;
+      height: 18px;
+      border-radius:50%;
+      background: rgba(61,180,163,.16);
+      color:#2f6f64;
+      font-size: 11px;
+      font-weight: 800;
+      line-height:1;
+      cursor:help;
+    }
+    .toggle-tip{
+      position:absolute;
+      left: 0;
+      top: calc(100% + 8px);
+      min-width: 220px;
+      max-width: min(280px, calc(100vw - 48px));
+      padding: 9px 11px;
+      border-radius: 14px;
+      background: rgba(77,45,23,.96);
+      color: rgba(255,250,243,.96);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.45;
+      box-shadow: 0 16px 28px rgba(43,26,15,.24);
+      opacity: 0;
+      pointer-events:none;
+      transform: translateY(4px);
+      transition: opacity .14s ease, transform .14s ease;
+      z-index: 4;
+    }
+    .toggle-tip::before{
+      content:"";
+      position:absolute;
+      left: 18px;
+      bottom: 100%;
+      border-width: 0 6px 7px 6px;
+      border-style: solid;
+      border-color: transparent transparent rgba(77,45,23,.96) transparent;
+    }
+    .toggle-chip:hover .toggle-tip,
+    .toggle-chip:focus-within .toggle-tip{
+      opacity: 1;
+      transform: translateY(0);
     }
     .toggle-chip input{
       width: 16px;
@@ -1434,7 +1488,11 @@
                   <div class="picker-options">
                     <label class="toggle-chip" for="lowCalorieToggle">
                       <input id="lowCalorieToggle" type="checkbox" />
-                      <span>저칼로리 순으로</span>
+                      <span class="toggle-copy">
+                        <span>건강식 위주</span>
+                        <span class="toggle-help" tabindex="0" aria-label="건강식 위주 정렬 설명">?</span>
+                      </span>
+                      <span class="toggle-tip" role="tooltip">저칼로리, 저탄고지, 영향균형 등 반영</span>
                     </label>
                   </div>
                   <div class="menu-picker" id="menuPicker" aria-label="메뉴 선택 보드"></div>
@@ -1697,21 +1755,21 @@
     }
 
     const LOW_CALORIE_MENU_ORDER = [
-      "샐러드","포케","숙성회(사시미)","활어회","참치회","물회","회덮밥","초밥","조개구이","쌀국수",
-      "메밀소바","콩국수","막국수","잔치국수","평양냉면","함흥냉면","비빔냉면","고기국수","우동","칼국수",
-      "국수전골","동태탕","매운탕","갈치조림","고등어구이","삼치구이","코다리조림","아구찜","장어구이","갈비탕",
-      "설렁탕","순두부찌개","된장찌개","김치찌개","콩나물국밥","황태해장국","선지해장국","추어탕","만둣국","육개장",
-      "감자탕","부대찌개","청국장","삼계탕","닭한마리","샤브샤브","수육","보쌈","제육볶음","불고기",
-      "소고기","스테이크","차돌박이","오리구이","돼지국밥","한정식","비빔밥","돌솥비빕밥","오므라이스","일본카레",
-      "인도커리","카레우동","수프카레","마파두부","탄두리치킨","타코","타코라이스","반미","샌드위치","토스트",
-      "도시락","김밥","가츠동","규동","우나기동","텐동","오코노미야키","오징어순대","딤섬","카츠산도",
-      "파스타","리조또","라자냐","팟타이","똠얌꿍","탄탄면","일본라멘","짜장면","짬뽕","(분식집)라면","떡볶이",
-      "라볶이","로제떡볶이","닭갈비","치즈닭갈비","찜닭","닭볶음탕","낙지볶음","쭈꾸미볶음","닭똥집","닭발",
-      "닭강정","양념치킨","간장치킨","후라이드치킨","수제버거","프랜차이즈버거","핫도그","피자(이태리식)","피자(미국식)","부리또볼",
-      "부리또","나시고렝","김치볶음밥","편의점","마라탕","훠거(훠궈)","훠거","마라샹궈","탕수육","김치나베돈까스","일본식 돈까스",
-      "경양식 돈까스","치즈돈까스","낙곱새","곱창전골","곱창","대창","막창","족발","돼지갈비","목살",
-      "삼겹살","떡갈비","순대국","양꼬치","소갈비","간장게장","해물파전","모듬전","해물찜","킹크랩",
-      "꽃게탕","랍스타","북경오리","동파육"
+      "샐러드","포케","활어회","숙성회(사시미)","참치회","물회","랍스타","킹크랩","꽃게탕","똠얌꿍",
+      "아구찜","코다리조림","고등어구이","삼치구이","갈치조림","북경오리","오리구이","간장게장","타코","마파두부",
+      "딤섬","조개구이","샤브샤브","수육","장어구이","비빔밥","보쌈","닭똥집","동태탕","회덮밥",
+      "부리또볼","타코라이스","돌솥비빕밥","반미","탄두리치킨","족발","낙지볶음","쭈꾸미볶음","목살","돼지갈비",
+      "양꼬치","삼겹살","스테이크","소고기","소갈비","차돌박이","동파육","파스타","닭발","떡갈비",
+      "불고기","매운탕","해물찜","훠거","훠거(훠궈)","낙곱새","닭한마리","피자(이태리식)","초밥","찜닭",
+      "닭볶음탕","닭갈비","치즈닭갈비","오징어순대","만둣국","샌드위치","도시락","막창","곱창","한정식",
+      "편의점","김밥","토스트","핫도그","메밀소바","평양냉면","함흥냉면","부리또","우나기동","규동",
+      "가츠동","오므라이스","일본카레","카레우동","김치볶음밥","해물파전","잔치국수","쌀국수","막국수","카츠산도",
+      "제육볶음","리조또","팟타이","나시고렝","비빔냉면","황태해장국","순두부찌개","콩나물국밥","된장찌개","청국장",
+      "후라이드치킨","간장치킨","양념치킨","닭강정","수프카레","인도커리","우동","콩국수","고기국수","갈비탕",
+      "설렁탕","김치찌개","추어탕","짜장면","육개장","라자냐","일본식 돈까스","칼국수","선지해장국","돼지국밥",
+      "순대국","국수전골","부대찌개","수제버거","감자탕","삼계탕","짬뽕","탕수육","일본 라멘","일본라멘",
+      "탄탄면","마라탕","경양식 돈까스","치즈돈까스","김치나베돈까스","오코노미야키","모듬전","곱창전골","프랜차이즈버거","대창",
+      "(분식집)라면","떡볶이","라볶이","로제떡볶이","텐동","마라샹궈","피자(미국식)"
     ];
     const LOW_CALORIE_RANK = new Map(
       LOW_CALORIE_MENU_ORDER.map((menuName, idx) => [normalizeMenuKey(menuName), idx])
@@ -2941,7 +2999,7 @@
     });
     lowCalorieToggle?.addEventListener("change", () => {
       renderMenuPicker();
-      showToast(lowCalorieToggle.checked ? "저칼로리 순 정렬을 적용했어요" : "기본 정렬로 돌아왔어요");
+      showToast(lowCalorieToggle.checked ? "건강식 위주 정렬을 적용했어요" : "기본 정렬로 돌아왔어요");
     });
 
     manualStartCancelBtn.addEventListener("click", closeManualStartModal);
