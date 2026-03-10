@@ -1363,6 +1363,88 @@
       line-height:1.45;
       margin: 10px 0 0;
     }
+    .trust-section{
+      margin-top: 18px;
+      display:grid;
+      gap:14px;
+    }
+    .trust-card{
+      border-radius: 24px;
+      border:1px solid rgba(240,202,171,.92);
+      background: linear-gradient(180deg, rgba(255,252,244,.98), rgba(255,246,234,.96));
+      padding: 18px;
+      box-shadow: 0 16px 30px rgba(205,131,78,.1);
+    }
+    .trust-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+      margin-top: 12px;
+    }
+    .trust-item{
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,.78);
+      border:1px solid rgba(239,203,169,.78);
+    }
+    .trust-item h3{
+      margin: 0 0 6px;
+      font-size: 15px;
+      color:#5d3522;
+    }
+    .trust-item p,
+    .trust-card p,
+    .trust-card li{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .trust-card ul{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      display:grid;
+      gap:6px;
+    }
+    .site-footer{
+      margin-top: 18px;
+      padding: 18px 20px 24px;
+      border-radius: 26px;
+      background: rgba(255,252,244,.78);
+      border: 1px solid rgba(255,255,255,.85);
+      box-shadow: var(--shadow);
+    }
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom: 12px;
+    }
+    .footer-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.85);
+      border:1px solid rgba(239,203,169,.88);
+      text-decoration:none;
+      color:#6b4a35;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .footer-meta{
+      display:grid;
+      gap:4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    @media (max-width: 880px){
+      .trust-grid{
+        grid-template-columns: 1fr;
+      }
+    }
     @keyframes riseIn{
       from{ opacity:0; transform: translateY(16px); }
       to{ opacity:1; transform: translateY(0); }
@@ -1508,6 +1590,37 @@
             </section>
           </div>
 
+          <section class="trust-section" aria-labelledby="serviceInfoTitle">
+            <div class="trust-card">
+              <h2 class="section-title" id="serviceInfoTitle">서비스 소개</h2>
+              <p>머먹지!?는 메뉴를 랜덤 대진과 수동 선택으로 좁혀 오늘 먹을 한 끼를 빠르게 정할 수 있도록 만든 메뉴 선택 도구입니다. 취향대로 직접 메뉴를 고르거나, 군별 비중과 건강식 위주 정렬을 조절해 후보군을 다듬을 수 있습니다.</p>
+              <div class="trust-grid">
+                <article class="trust-item">
+                  <h3>추천 방식</h3>
+                  <p>랜덤 토너먼트와 수동 토너먼트를 모두 제공하며, 건강식 위주 정렬은 메뉴 특성과 일반적인 식단 인식을 바탕으로 한 휴리스틱 순위입니다.</p>
+                </article>
+                <article class="trust-item">
+                  <h3>건강식 안내</h3>
+                  <p>건강식 위주 기능은 저칼로리, 저탄고지, 영양균형 등을 함께 고려한 참고용 정렬이며, 의학적 조언이나 영양 상담을 대체하지 않습니다.</p>
+                </article>
+                <article class="trust-item">
+                  <h3>이용 환경</h3>
+                  <p>모바일과 데스크톱에서 모두 사용할 수 있고, 결과 메뉴는 네이버지도·카카오맵·배달 앱 검색으로 바로 이어집니다.</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="trust-card">
+              <h2 class="section-title">운영 및 정책 안내</h2>
+              <p>이 사이트는 사용자가 직접 메뉴를 비교하고 선택하는 데 도움을 주기 위한 도구형 서비스입니다. 위치 권한, 클립보드 복사, 외부 지도/배달 서비스 연결은 모두 사용자가 해당 버튼을 눌렀을 때만 동작합니다.</p>
+              <ul>
+                <li>운영자: JC Won</li>
+                <li>문의: <a href="mailto:jcmoq83@gmail.com">jcmoq83@gmail.com</a></li>
+                <li>도메인: <a href="https://muh-muk-ji.pages.dev/">https://muh-muk-ji.pages.dev/</a></li>
+              </ul>
+            </div>
+          </section>
+
         </div>
 
         <div class="inner" id="playView" style="display:none;">
@@ -1597,6 +1710,21 @@
       </section>
 
     </div>
+
+    <footer class="site-footer">
+      <nav class="footer-links" aria-label="사이트 정보 링크">
+        <a class="footer-link" href="/">홈</a>
+        <a class="footer-link" href="/about.html">소개</a>
+        <a class="footer-link" href="/how-it-works.html">이용안내</a>
+        <a class="footer-link" href="/privacy.html">개인정보처리방침</a>
+        <a class="footer-link" href="/contact.html">문의</a>
+      </nav>
+      <div class="footer-meta">
+        <span>머먹지!?는 메뉴 선택을 돕는 도구형 웹서비스입니다.</span>
+        <span>운영자: JC Won · 문의: jcmoq83@gmail.com</span>
+        <span>건강식 위주 정렬은 참고용 기준이며, 최종 선택은 사용자 판단에 따릅니다.</span>
+      </div>
+    </footer>
 
     <div class="toast" id="toast">-</div>
     <div class="modal-backdrop" id="manualStartModal" hidden>
