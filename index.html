@@ -3,8 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>머먹지!?</title>
-  <meta name="description" content="메뉴 토너먼트로 오늘의 한 끼를 결정하세요. 최종 메뉴는 네이버지도/카카오맵으로 바로 검색!" />
+  <title>머먹지!? | 메뉴 토너먼트로 오늘 메뉴 고르기</title>
+  <meta name="description" content="메뉴 토너먼트로 오늘의 한 끼를 빠르게 결정하세요. 건강식 기준, 메뉴 사전, 메뉴 비교, 상황별 추천까지 한 곳에서 확인할 수 있습니다." />
+  <link rel="canonical" href="https://muh-muk-ji.pages.dev/" />
+  <script type="application/ld+json">
+    [{
+      "@context":"https://schema.org",
+      "@type":"WebSite",
+      "name":"머먹지!?",
+      "url":"https://muh-muk-ji.pages.dev/",
+      "description":"메뉴 토너먼트로 오늘 먹을 메뉴를 빠르게 고를 수 있는 한국어 웹서비스"
+    }]
+  </script>
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredoka:wght@400;600;700&family=Noto+Sans+KR:wght@400;600;700&family=Press+Start+2P&display=swap");
     :root{
@@ -188,6 +198,44 @@
       padding: 54px 18px 68px;
       position:relative;
       z-index:1;
+    }
+    .site-top-nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:14px;
+      padding: 14px 16px;
+      border-radius: 24px;
+      background: rgba(255,252,244,.8);
+      border: 1px solid rgba(255,255,255,.9);
+      box-shadow: var(--shadow);
+    }
+    .site-top-nav .brand-mini{
+      text-decoration:none;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -.04em;
+      color:#5d3522;
+    }
+    .top-nav-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .top-nav-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.9);
+      border:1px solid rgba(239,203,169,.88);
+      text-decoration:none;
+      color:#6b4a35;
+      font-size: 12px;
+      font-weight: 800;
     }
     header{
       display:flex;
@@ -1440,8 +1488,87 @@
       font-size: 12px;
       line-height: 1.5;
     }
+    .support-home{
+      margin-top: 18px;
+      display:grid;
+      gap:14px;
+    }
+    .support-card{
+      border-radius: 24px;
+      border:1px solid rgba(240,202,171,.92);
+      background: linear-gradient(180deg, rgba(255,252,244,.98), rgba(255,246,234,.96));
+      padding: 18px;
+      box-shadow: 0 16px 30px rgba(205,131,78,.1);
+    }
+    .support-card p,
+    .support-card li{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .support-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+      margin-top: 12px;
+    }
+    .support-link-card{
+      display:block;
+      text-decoration:none;
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,.8);
+      border:1px solid rgba(239,203,169,.82);
+      color:inherit;
+    }
+    .support-link-card h3{
+      margin: 0 0 6px;
+      font-size: 15px;
+      color:#5d3522;
+    }
+    .support-link-card p{
+      margin: 0;
+    }
+    .support-link-card .more{
+      display:inline-flex;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      color:#6b4a35;
+    }
+    .support-list{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      display:grid;
+      gap:6px;
+    }
+    .lower-cta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(255,240,210,.86), rgba(255,255,255,.9));
+      border:1px solid rgba(239,203,169,.88);
+      margin-top: 12px;
+    }
+    .lower-cta p{
+      margin:0;
+      flex:1 1 240px;
+    }
     @media (max-width: 880px){
+      .site-top-nav{
+        align-items:flex-start;
+      }
+      .top-nav-links{
+        width:100%;
+      }
       .trust-grid{
+        grid-template-columns: 1fr;
+      }
+      .support-grid{
         grid-template-columns: 1fr;
       }
     }
@@ -1473,6 +1600,9 @@
     body.state-result #winnerImg{
       animation: trophyPulse 1.6s ease-in-out infinite;
     }
+    body.state-play .site-top-nav{
+      display:none;
+    }
   </style>
 </head>
 
@@ -1495,6 +1625,19 @@
     <span class="food-float f16" style="--dur:22s; --delay:-16s; --tilt:8deg;"><span class="food-glyph">🍖</span></span>
   </div>
   <div class="wrap">
+    <nav class="site-top-nav" aria-label="주요 메뉴">
+      <a class="brand-mini" href="/">머먹지!?</a>
+      <div class="top-nav-links">
+        <a class="top-nav-link" href="/">홈</a>
+        <a class="top-nav-link" href="#mainCard">메뉴 토너먼트</a>
+        <a class="top-nav-link" href="/dictionary/">메뉴 사전</a>
+        <a class="top-nav-link" href="/compare/">메뉴 비교</a>
+        <a class="top-nav-link" href="/situations/">상황별 추천</a>
+        <a class="top-nav-link" href="/healthy-criteria/">건강식 기준</a>
+        <a class="top-nav-link" href="/about.html">소개</a>
+        <a class="top-nav-link" href="/contact.html">문의</a>
+      </div>
+    </nav>
     <header>
       <div class="brand">
         <div class="logo" aria-hidden="true">
@@ -1621,6 +1764,135 @@
             </div>
           </section>
 
+          <section class="support-home" aria-labelledby="supportHomeTitle">
+            <div class="support-card">
+              <h2 class="section-title" id="supportHomeTitle">이 사이트는 이런 분께 좋아요</h2>
+              <div class="support-grid">
+                <article class="support-link-card">
+                  <h3>점심 메뉴를 빨리 정해야 할 때</h3>
+                  <p>회의 전 짧은 시간 안에 선택을 끝내야 할 때, 토너먼트가 가장 빠르게 후보를 줄여줍니다.</p>
+                </article>
+                <article class="support-link-card">
+                  <h3>친구와 메뉴 합의가 안 될 때</h3>
+                  <p>메뉴 비교와 상황별 추천을 보고, 마지막 결정은 토너먼트로 넘기면 의견 정리가 쉬워집니다.</p>
+                </article>
+                <article class="support-link-card">
+                  <h3>건강식 기준도 같이 보고 싶을 때</h3>
+                  <p>건강식 위주 정렬과 기준 설명 페이지를 함께 보면 오늘 컨디션에 맞는 선택이 더 쉬워집니다.</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="support-card">
+              <h2 class="section-title">토너먼트 사용 방법</h2>
+              <ol class="support-list">
+                <li>먼저 자동 토너먼트 또는 수동 토너먼트 중 하나를 고릅니다.</li>
+                <li>건강식 위주를 켜면 1군부터 3군까지 후보가 현재 기준으로 다시 정렬됩니다.</li>
+                <li>메뉴 사전이나 비교 페이지에서 후보를 본 뒤 토너먼트로 돌아오면 훨씬 빠르게 결정을 끝낼 수 있습니다.</li>
+              </ol>
+            </div>
+
+            <div class="support-card">
+              <h2 class="section-title">메뉴 사전에서 많이 보는 항목</h2>
+              <div class="support-grid">
+                <a class="support-link-card" href="/dictionary/bibimbap/">
+                  <h3>비빔밥</h3>
+                  <p>균형형 한 그릇 메뉴로 왜 자주 살아남는지 정리했습니다.</p>
+                  <span class="more">메뉴 가이드 보기</span>
+                </a>
+                <a class="support-link-card" href="/dictionary/poke/">
+                  <h3>포케</h3>
+                  <p>가볍지만 식사감 있는 선택이 왜 강한지 설명합니다.</p>
+                  <span class="more">메뉴 가이드 보기</span>
+                </a>
+                <a class="support-link-card" href="/dictionary/jjajangmyeon/">
+                  <h3>짜장면</h3>
+                  <p>익숙한 만족감이 왜 토너먼트에서 강한지 다룹니다.</p>
+                  <span class="more">메뉴 가이드 보기</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="support-card">
+              <h2 class="section-title">많이 보는 메뉴 비교</h2>
+              <div class="support-grid">
+                <a class="support-link-card" href="/compare/jjajangmyeon-vs-jjamppong/">
+                  <h3>짜장면 vs 짬뽕</h3>
+                  <p>무난함과 강한 국물 만족감 사이에서 어떻게 고를지 정리했습니다.</p>
+                  <span class="more">비교 읽기</span>
+                </a>
+                <a class="support-link-card" href="/compare/bibimbap-vs-poke/">
+                  <h3>비빔밥 vs 포케</h3>
+                  <p>균형형 메뉴 두 가지를 상황과 건강식 관점으로 비교합니다.</p>
+                  <span class="more">비교 읽기</span>
+                </a>
+                <a class="support-link-card" href="/compare/samgyetang-vs-galbitang/">
+                  <h3>삼계탕 vs 갈비탕</h3>
+                  <p>보양식 느낌과 깔끔한 국물 만족감의 차이를 정리했습니다.</p>
+                  <span class="more">비교 읽기</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="support-card">
+              <h2 class="section-title">상황별 추천</h2>
+              <div class="support-grid">
+                <a class="support-link-card" href="/situations/solo-meal/">
+                  <h3>혼밥 메뉴 추천</h3>
+                  <p>혼자 먹을 때 실패 확률이 낮은 메뉴를 상황별로 정리했습니다.</p>
+                  <span class="more">추천 보기</span>
+                </a>
+                <a class="support-link-card" href="/situations/hangover/">
+                  <h3>해장용 메뉴 추천</h3>
+                  <p>강한 해장과 편한 해장을 나눠 추천합니다.</p>
+                  <span class="more">추천 보기</span>
+                </a>
+                <a class="support-link-card" href="/situations/healthy-first/">
+                  <h3>건강식 위주로 고르기</h3>
+                  <p>실전에서 건강식 느낌을 살리는 메뉴 선택법을 정리했습니다.</p>
+                  <span class="more">추천 보기</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="support-card">
+              <h2 class="section-title">건강식 기준은 이렇게 봅니다</h2>
+              <p>머먹지!?의 건강식 위주 정렬은 의학적 진단이 아니라, 실제 외식과 배달 상황에서 덜 무겁고 더 균형 잡힌 메뉴를 고르기 위한 실용 기준입니다. 총열량, 탄수화물 대비 단백질·지방 경향, 채소와 전체 구성의 균형을 함께 봅니다.</p>
+              <div class="lower-cta">
+                <p>기준을 먼저 이해하고 싶다면 설명 페이지를 보고, 바로 체감해 보고 싶다면 토너먼트에서 건강식 위주를 켜 보세요.</p>
+                <div class="row">
+                  <a class="btn" href="/healthy-criteria/">건강식 기준 보기</a>
+                  <a class="btn primary" href="#mainCard">토너먼트 바로 시작</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="support-card">
+              <h2 class="section-title">추천 읽을거리</h2>
+              <div class="support-grid">
+                <a class="support-link-card" href="/dictionary/hoedeopbap/">
+                  <h3>회덮밥 메뉴 가이드</h3>
+                  <p>포케와 비빔밥 사이에서 회덮밥이 왜 실전 선택지로 강한지 정리했습니다.</p>
+                  <span class="more">읽어보기</span>
+                </a>
+                <a class="support-link-card" href="/compare/sushi-vs-hoedeopbap/">
+                  <h3>초밥 vs 회덮밥</h3>
+                  <p>깔끔한 외식과 든든한 한 그릇 사이에서 어떤 차이가 있는지 비교했습니다.</p>
+                  <span class="more">읽어보기</span>
+                </a>
+                <a class="support-link-card" href="/situations/rainy-day/">
+                  <h3>비 오는 날 생각나는 메뉴</h3>
+                  <p>날씨 때문에 메뉴가 더 강하게 끌리는 순간을 묶어 설명했습니다.</p>
+                  <span class="more">읽어보기</span>
+                </a>
+              </div>
+              <div class="lower-cta">
+                <p>읽을거리로 후보를 좁혔다면, 마지막 선택은 토너먼트가 제일 빠릅니다.</p>
+                <a class="btn primary" href="#mainCard">토너먼트 바로 시작하기</a>
+              </div>
+            </div>
+          </section>
+
         </div>
 
         <div class="inner" id="playView" style="display:none;">
@@ -1714,15 +1986,20 @@
     <footer class="site-footer">
       <nav class="footer-links" aria-label="사이트 정보 링크">
         <a class="footer-link" href="/">홈</a>
+        <a class="footer-link" href="#mainCard">메뉴 토너먼트</a>
+        <a class="footer-link" href="/dictionary/">메뉴 사전</a>
+        <a class="footer-link" href="/compare/">메뉴 비교</a>
+        <a class="footer-link" href="/situations/">상황별 추천</a>
+        <a class="footer-link" href="/healthy-criteria/">건강식 기준</a>
         <a class="footer-link" href="/about.html">소개</a>
         <a class="footer-link" href="/how-it-works.html">이용안내</a>
         <a class="footer-link" href="/privacy.html">개인정보처리방침</a>
         <a class="footer-link" href="/contact.html">문의</a>
       </nav>
       <div class="footer-meta">
-        <span>머먹지!?는 메뉴 선택을 돕는 도구형 웹서비스입니다.</span>
+        <span>머먹지!?는 메뉴 토너먼트를 중심으로 메뉴 사전, 비교 가이드, 상황별 추천을 함께 제공하는 한국어 메뉴 선택 서비스입니다.</span>
         <span>운영자: JC Won · 문의: jcmoq83@gmail.com</span>
-        <span>건강식 위주 정렬은 참고용 기준이며, 최종 선택은 사용자 판단에 따릅니다.</span>
+        <span>© 2026 Muh-Muk-Ji. 건강식 위주 정렬은 참고용 기준이며, 최종 선택은 사용자 판단에 따릅니다.</span>
       </div>
     </footer>
 
